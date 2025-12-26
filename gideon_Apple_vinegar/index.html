@@ -475,7 +475,7 @@
                         <!-- UPDATED: Added interactive hero border -->
                         <div class="relative">
                             <div class="hero-frame-border"></div>
-                            <img id="img-hero" src="https://images.unsplash.com/photo-1597481499750-3e6b22637e12?auto=format&fit=crop&w=600&q=80" alt="Gid's ACV Bottle" class="max-h-[400px] lg:max-h-[600px] w-auto drop-shadow-2xl filter contrast-110 object-contain relative z-20 opacity-0 transition-opacity duration-700">
+                            <img id="img-hero" src="" alt="Gid's ACV Bottle" class="max-h-[400px] lg:max-h-[600px] w-auto drop-shadow-2xl filter contrast-110 object-contain relative z-20 opacity-0 transition-opacity duration-700">
                             <!-- Light Reflection Overlay -->
                              <div class="hero-sheen" id="hero-reflection"></div>
                         </div>
@@ -615,7 +615,8 @@
 
                 <div class="order-1 lg:order-2 relative h-[500px] rounded-[2.5rem] overflow-hidden shadow-2xl reveal delay-100 group cursor-pointer tilt-card" onclick="openProcessModal()">
                     <div id="process-content-wrapper" class="w-full h-full relative">
-                        <img id="process-img" src="https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover transition duration-700 group-hover:scale-105 filter brightness-90">
+                        <!-- REMOVED SRC TO PREVENT PLACEHOLDER FLASHING -->
+                        <img id="process-img" src="" class="w-full h-full object-cover transition duration-700 group-hover:scale-105 filter brightness-90 opacity-0 transition-opacity duration-300" onload="this.classList.remove('opacity-0')">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-10 flex flex-col justify-end">
                             <div class="flex justify-between items-end mb-4">
                                 <div>
@@ -668,7 +669,7 @@
                             <p class="text-sm text-gray-500 dark:text-gray-400 mt-2 pl-7">Plot No. 78,79 Amamoma, UCC, Cape Coast</p>
                         </div>
                         <div class="h-64 relative overflow-hidden">
-                            <img id="img-factory" src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=800&q=80" alt="Factory Store" class="w-full h-full object-cover group-hover:scale-110 transition duration-1000">
+                            <img id="img-factory" src="" alt="Factory Store" class="w-full h-full object-cover group-hover:scale-110 transition duration-1000 opacity-0" onload="this.classList.remove('opacity-0')">
                             <div class="absolute bottom-4 left-4 bg-brand-900/90 backdrop-blur-sm text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow-lg">Factory Store</div>
                         </div>
                         <div class="relative flex-1 min-h-[250px] border-t border-white/20">
@@ -692,23 +693,9 @@
                             <button onclick="openRetailersModal()" class="text-xs font-bold text-brand-600 dark:text-gold-400 hover:bg-brand-50 dark:hover:bg-wood-800 px-4 py-2 rounded-xl transition-colors border border-transparent hover:border-brand-200">View All</button>
                         </div>
                         
-                        <div class="grid grid-cols-2 gap-6 flex-1">
-                            <div class="bg-gray-50 dark:bg-wood-800 p-6 rounded-2xl border border-gray-100 dark:border-brand-800 flex flex-col items-center text-center justify-center hover:bg-white dark:hover:bg-[#3e1a1a] hover:shadow-lg dark:hover:border-gold-500/30 transition-all duration-300 cursor-pointer group/partner relative overflow-hidden tilt-card">
-                                <div class="w-14 h-14 rounded-full bg-white dark:bg-wood-900 flex items-center justify-center mb-4 shadow-sm group-hover/partner:scale-110 transition-transform text-xl"><i class="fas fa-shopping-cart text-brand-500"></i></div>
-                                <p class="text-sm font-bold text-brand-900 dark:text-white">Shoprite</p><p class="text-[10px] text-gray-500 dark:text-gray-400 mt-1">Accra Mall</p>
-                            </div>
-                            <div class="bg-gray-50 dark:bg-wood-800 p-6 rounded-2xl border border-gray-100 dark:border-brand-800 flex flex-col items-center text-center justify-center hover:bg-white dark:hover:bg-[#3e1a1a] hover:shadow-lg dark:hover:border-gold-500/30 transition-all duration-300 cursor-pointer group/partner relative overflow-hidden tilt-card">
-                                <div class="w-14 h-14 rounded-full bg-white dark:bg-wood-900 flex items-center justify-center mb-4 shadow-sm group-hover/partner:scale-110 transition-transform text-xl"><i class="fas fa-building text-brand-500"></i></div>
-                                <p class="text-sm font-bold text-brand-900 dark:text-white">Melcom</p><p class="text-[10px] text-gray-500 dark:text-gray-400 mt-1">Nationwide</p>
-                            </div>
-                            <div class="bg-gray-50 dark:bg-wood-800 p-6 rounded-2xl border border-gray-100 dark:border-brand-800 flex flex-col items-center text-center justify-center hover:bg-white dark:hover:bg-[#3e1a1a] hover:shadow-lg dark:hover:border-gold-500/30 transition-all duration-300 cursor-pointer group/partner relative overflow-hidden tilt-card">
-                                <div class="w-14 h-14 rounded-full bg-white dark:bg-wood-900 flex items-center justify-center mb-4 shadow-sm group-hover/partner:scale-110 transition-transform text-xl"><i class="fas fa-gamepad text-brand-500"></i></div>
-                                <p class="text-sm font-bold text-brand-900 dark:text-white">Game</p><p class="text-[10px] text-gray-500 dark:text-gray-400 mt-1">Accra Mall</p>
-                            </div>
-                            <div class="bg-gray-50 dark:bg-wood-800 p-6 rounded-2xl border border-gray-100 dark:border-brand-800 flex flex-col items-center text-center justify-center hover:bg-white dark:hover:bg-[#3e1a1a] hover:shadow-lg dark:hover:border-gold-500/30 transition-all duration-300 cursor-pointer group/partner relative overflow-hidden tilt-card">
-                                <div class="w-14 h-14 rounded-full bg-white dark:bg-wood-900 flex items-center justify-center mb-4 shadow-sm group-hover/partner:scale-110 transition-transform text-xl"><i class="fas fa-leaf text-brand-500"></i></div>
-                                <p class="text-sm font-bold text-brand-900 dark:text-white">Max Mart</p><p class="text-[10px] text-gray-500 dark:text-gray-400 mt-1">37 & East Legon</p>
-                            </div>
+                        <!-- Dynamic Shops List injected here -->
+                        <div id="retail-partners-grid" class="grid grid-cols-2 gap-6 flex-1">
+                            <div class="col-span-2 text-center py-4 text-gray-400"><i class="fas fa-spinner fa-spin"></i> Loading locations...</div>
                         </div>
                     </div>
                 </div>
@@ -955,10 +942,10 @@
         
         // UPDATED PROCESS STEPS BASED ON PDF DATA
         let processSteps=[
-            { title:"Selective Harvesting", tag: "Phase 01", text:"We manually select only the ripest, organic apples from the Ayensu orchards. Every apple is tree-picked.", img:"https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?auto=format&fit=crop&w=600&q=80", specs: [ {label: "Standard", val: "Organic Grade A"}, {label: "Region", val: "Ayensu Valley"}, {label: "Method", val: "Hand-picked"}, {label: "Quality", val: "High Brix Lvl"} ] },
-            { title:"Cold Press Extraction", tag: "Phase 02", text:"Apples are washed and cold-pressed within 24 hours of harvest to preserve delicate enzymes.", img:"https://images.unsplash.com/photo-1516594915697-87eb3b1c14ea?auto=format&fit=crop&w=600&q=80", specs: [ {label: "Temp", val: "< 4°C"}, {label: "Timeframe", val: "24h post-harvest"}, {label: "Yield", val: "Pure Juice"}, {label: "Filtration", val: "None"} ] },
-            { title:"Oak Barrel Fermentation", tag: "Phase 03", text:"The critical 'Double Fermentation'. First, yeast converts sugars to alcohol. Second, bacteria convert alcohol to acetic acid (5-20%), forming the 'Mother'.", img:"https://images.unsplash.com/photo-1597481499750-3e6b22637e12?auto=format&fit=crop&w=600&q=80", specs: [ {label: "Process", val: "Double Ferment"}, {label: "Vessel", val: "French Oak"}, {label: "Acidity", val: "5-20%"}, {label: "Result", val: "The Mother"} ] },
-            { title:"Raw Architectural Bottling", tag: "Phase 04", text:"Bottled raw and unfiltered. No pasteurization ensures enzymes and probiotics remain biologically active and structurally potent.", img:"https://images.unsplash.com/photo-1606757349633-8c4f79923e3e?auto=format&fit=crop&w=600&q=80", specs: [ {label: "State", val: "Raw/Unfiltered"}, {label: "Pasteurized", val: "No"}, {label: "Enzymes", val: "Active"}, {label: "Shelf Life", val: "5+ Years"} ] }
+            { title:"Selective Harvesting", tag: "Phase 01", text:"We manually select only the ripest, organic apples from the Ayensu orchards. Every apple is tree-picked.", img:"", specs: [ {label: "Standard", val: "Organic Grade A"}, {label: "Region", val: "Ayensu Valley"}, {label: "Method", val: "Hand-picked"}, {label: "Quality", val: "High Brix Lvl"} ] },
+            { title:"Cold Press Extraction", tag: "Phase 02", text:"Apples are washed and cold-pressed within 24 hours of harvest to preserve delicate enzymes.", img:"", specs: [ {label: "Temp", val: "< 4°C"}, {label: "Timeframe", val: "24h post-harvest"}, {label: "Yield", val: "Pure Juice"}, {label: "Filtration", val: "None"} ] },
+            { title:"Oak Barrel Fermentation", tag: "Phase 03", text:"The critical 'Double Fermentation'. First, yeast converts sugars to alcohol. Second, bacteria convert alcohol to acetic acid (5-20%), forming the 'Mother'.", img:"", specs: [ {label: "Process", val: "Double Ferment"}, {label: "Vessel", val: "French Oak"}, {label: "Acidity", val: "5-20%"}, {label: "Result", val: "The Mother"} ] },
+            { title:"Raw Architectural Bottling", tag: "Phase 04", text:"Bottled raw and unfiltered. No pasteurization ensures enzymes and probiotics remain biologically active and structurally potent.", img:"", specs: [ {label: "State", val: "Raw/Unfiltered"}, {label: "Pasteurized", val: "No"}, {label: "Enzymes", val: "Active"}, {label: "Shelf Life", val: "5+ Years"} ] }
         ];
 
         document.addEventListener('DOMContentLoaded', async () => {
@@ -968,8 +955,6 @@
             renderProducts(); 
             renderBenefits(); 
             renderTimeline();
-            preloadProcessImages(); 
-            setProcess(1);
             initQuiz(); 
             
             // Navbar Scroll Effect
@@ -1016,14 +1001,6 @@
             });
         });
         
-        // Preload images function
-        function preloadProcessImages() {
-            processSteps.forEach(step => {
-                const img = new Image();
-                img.src = step.img;
-            });
-        }
-
         // --- DATABASE FETCH FUNCTIONS ---
         
         async function fetchSiteContent() {
@@ -1036,7 +1013,7 @@
                         siteContent[data.key] = data.value;
                     });
                     
-                    // MODIFIED: Handle Hero Image Loading Gracefully
+                    // Handle Hero Image
                     const heroImg = document.getElementById('img-hero');
                     if(siteContent['img_hero'] && heroImg) {
                         heroImg.onload = function() {
@@ -1045,7 +1022,7 @@
                         heroImg.src = siteContent['img_hero'];
                     }
 
-                    // MODIFIED: Handle CEO Image Loading
+                    // Handle CEO Image
                     const ceoImg = document.getElementById('img-ceo');
                     const ceoContainer = document.getElementById('ceo-image-container');
                     if(siteContent['img_ceo'] && ceoImg) {
@@ -1055,7 +1032,7 @@
                         };
                         ceoImg.src = siteContent['img_ceo'];
                     } else {
-                        // If no CEO image in database, use a fallback
+                        // Fallback
                         const placeholderCEO = 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=600&q=80';
                         if(ceoImg) {
                             ceoImg.onload = function() {
@@ -1066,47 +1043,31 @@
                         }
                     }
                     
+                    // Handle Factory Image
                     if(siteContent['img_factory']) document.getElementById('img-factory').src = siteContent['img_factory'];
                     
-                    // UPDATED: Handle Favicon and Logos (navbar and footer)
+                    // Handle Favicon
                     if(siteContent['img_favicon']) {
                         const faviconLink = document.getElementById('favicon-link');
                         faviconLink.href = siteContent['img_favicon'];
                     }
                     
-                    // Load navbar logo
-                    const navLogo = document.getElementById('nav-logo');
-                    const navLogoFallback = document.getElementById('nav-logo-fallback');
-                    if(siteContent['img_logo'] && navLogo) {
-                        navLogo.onload = function() {
-                            this.classList.remove('opacity-0');
-                            if(navLogoFallback) navLogoFallback.style.display = 'none';
-                        };
-                        navLogo.src = siteContent['img_logo'];
-                    } else if(navLogoFallback) {
-                        navLogoFallback.style.display = 'flex';
-                    }
-                    
-                    // Load footer logo (same logo as navbar)
-                    const footerLogo = document.getElementById('footer-logo');
-                    const footerLogoFallback = document.getElementById('footer-logo-fallback');
-                    if(siteContent['img_logo'] && footerLogo) {
-                        footerLogo.onload = function() {
-                            this.classList.remove('opacity-0');
-                            if(footerLogoFallback) footerLogoFallback.style.display = 'none';
-                        };
-                        footerLogo.src = siteContent['img_logo'];
-                    } else if(footerLogoFallback) {
-                        footerLogoFallback.style.display = 'flex';
+                    // Load navbar/footer logo
+                    const logoSrc = siteContent['img_logo'];
+                    if (logoSrc) {
+                        const navLogo = document.getElementById('nav-logo');
+                        const footerLogo = document.getElementById('footer-logo');
+                        if (navLogo) { navLogo.src = logoSrc; navLogo.onload = () => navLogo.classList.remove('opacity-0'); document.getElementById('nav-logo-fallback').style.display='none'; }
+                        if (footerLogo) { footerLogo.src = logoSrc; footerLogo.onload = () => footerLogo.classList.remove('opacity-0'); document.getElementById('footer-logo-fallback').style.display='none'; }
                     }
 
-                    // Update process steps
+                    // Update process steps data with real images from DB
                     if(siteContent['img_process_1']) processSteps[0].img = siteContent['img_process_1'];
                     if(siteContent['img_process_2']) processSteps[1].img = siteContent['img_process_2'];
                     if(siteContent['img_process_3']) processSteps[2].img = siteContent['img_process_3'];
                     if(siteContent['img_process_4']) processSteps[3].img = siteContent['img_process_4'];
                     
-                    // Refresh current process view
+                    // Refresh current process view to show image now that DB is loaded
                     setProcess(currentProcess);
                 }
             } catch (error) {
@@ -1117,6 +1078,7 @@
         async function fetchProducts() {
             if(!db) return;
             try {
+                // Sorting by 'id' as suggested in PDF
                 const snapshot = await db.collection('products').orderBy('id', 'asc').get();
                 if(!snapshot.empty) {
                     products = [];
@@ -1134,36 +1096,26 @@
                             available: p.available
                         });
                     });
+                    renderProducts();
                 }
             } catch (error) {
                 console.error("Error fetching products:", error);
             }
         }
 
-        // NEW: Function to fetch distributors from Firebase
         async function fetchDistributors() {
             if(!db) return;
-            
             try {
-                // Fetch distributors
-                const snapshot = await db.collection('distributors')
-                    .where('status', '==', 'Active')
-                    .get();
-                
+                const snapshot = await db.collection('distributors').where('status', '==', 'Active').get();
                 if(!snapshot.empty) {
                     distributorsData = [];
-                    
                     snapshot.forEach(doc => {
                         const dist = doc.data();
-                        // Get gallery from array field as per PDF spec
-                        // If 'gallery_urls' exists use it, otherwise fallback to main image
-                        const galleryImages = (dist.gallery_urls && dist.gallery_urls.length > 0) 
-                            ? dist.gallery_urls 
-                            : [dist.image_url];
+                        // Handle array field logic
+                        const galleryImages = (dist.gallery_urls && dist.gallery_urls.length > 0) ? dist.gallery_urls : [dist.image_url];
                         
-                        // Add to distributorsData
                         distributorsData.push({
-                            id: doc.id, // Firestore ID
+                            id: doc.id,
                             name: dist.name,
                             role: dist.role,
                             location: dist.location,
@@ -1176,26 +1128,17 @@
                             }
                         });
                     });
-                    
-                    // Render distributors if section exists
-                    if(document.getElementById('distributors-grid')) {
-                        renderDistributors();
-                    }
+                    renderDistributors();
                 }
             } catch (err) {
                 console.error("Error fetching distributors:", err);
             }
         }
 
-        // NEW: Function to fetch retail partners (shops) from Firebase
         async function fetchRetailPartners() {
             if(!db) return;
-            
             try {
-                const snapshot = await db.collection('retail_partners')
-                    .where('status', '==', 'Active')
-                    .get();
-                
+                const snapshot = await db.collection('retail_partners').where('status', '==', 'Active').get();
                 if(!snapshot.empty) {
                     shops = [];
                     snapshot.forEach(doc => {
@@ -1207,15 +1150,26 @@
                             type: shop.type
                         });
                     });
-                    // Sort locally
                     shops.sort((a, b) => a.name.localeCompare(b.name));
+                    updateRetailPartnersUI();
                 }
-                
-                // Also fetch distributors
+                // Also fetch distributors as part of initialization
                 await fetchDistributors();
             } catch (err) {
                 console.error("Error fetching retail partners:", err);
             }
+        }
+        
+        function updateRetailPartnersUI() {
+             const container = document.getElementById('retail-partners-grid');
+             if(container && shops.length > 0) {
+                 container.innerHTML = shops.slice(0, 4).map(s => `
+                    <div class="bg-gray-50 dark:bg-wood-800 p-6 rounded-2xl border border-gray-100 dark:border-brand-800 flex flex-col items-center text-center justify-center hover:bg-white dark:hover:bg-[#3e1a1a] hover:shadow-lg dark:hover:border-gold-500/30 transition-all duration-300 cursor-pointer group/partner relative overflow-hidden tilt-card">
+                        <div class="w-14 h-14 rounded-full bg-white dark:bg-wood-900 flex items-center justify-center mb-4 shadow-sm group-hover/partner:scale-110 transition-transform text-xl"><i class="fas fa-store text-brand-500"></i></div>
+                        <p class="text-sm font-bold text-brand-900 dark:text-white">${s.name}</p><p class="text-[10px] text-gray-500 dark:text-gray-400 mt-1">${s.loc}</p>
+                    </div>
+                 `).join('');
+             }
         }
 
         // --- BASH TERMINAL LOGIC ---
@@ -1233,87 +1187,40 @@
         function processBashCommand(cmd) {
             const output = document.getElementById('bash-output');
             const cleanCmd = cmd.trim().toLowerCase();
-            
-            // Echo command
             output.innerHTML += `<div class="text-green-500 font-bold">visitor@gbhpl:~$ ${cmd}</div>`;
-            
             let response = '';
             
             switch(cleanCmd.split(' ')[0]) {
-                case 'help':
-                    response = `Available commands:
-  help      - Show this message
-  ls        - List available site sections
-  cat [sec] - Go to section (e.g., 'cat shop')
-  date      - Show server time
-  clear     - Clear terminal screen
-  whoami    - Show current user info
-  shop      - Open products page
-  exit      - Close terminal`;
-                    break;
-                case 'ls':
-                    response = 'hero  history  quiz  shop  production  benefits  locations  partners  careers  contact  admin.html';
-                    break;
+                case 'help': response = `Available commands:\n  help - Show this message\n  ls - List sections\n  cat [sec] - Go to section\n  date - Server time\n  shop - Open products\n  exit - Close`; break;
+                case 'ls': response = 'hero history quiz shop production benefits locations partners careers contact'; break;
                 case 'cat':
                     const args = cleanCmd.split(' ');
-                    if (args.length < 2) response = 'Usage: cat [section_name]';
+                    if (args.length < 2) response = 'Usage: cat [section]';
                     else {
-                        const section = args[1];
-                        const el = document.getElementById(section) || (section === 'quiz' ? document.getElementById('quiz-section') : null);
-                        if (el) {
-                            response = `Navigating to /${section}...`;
-                            setTimeout(() => { toggleBash(); el.scrollIntoView({behavior:'smooth'}); }, 500);
-                        } else {
-                            response = `cat: ${section}: No such file or directory`;
-                        }
+                        const el = document.getElementById(args[1]) || (args[1] === 'quiz' ? document.getElementById('quiz-section') : null);
+                        if (el) { response = `Navigating to /${args[1]}...`; setTimeout(() => { toggleBash(); el.scrollIntoView({behavior:'smooth'}); }, 500); } 
+                        else { response = `cat: ${args[1]}: No such file`; }
                     }
                     break;
-                case 'date':
-                    response = new Date().toString();
-                    break;
-                case 'clear':
-                    output.innerHTML = '';
-                    return;
-                case 'whoami':
-                    response = 'visitor (guest privileges)';
-                    break;
-                case 'shop':
-                    response = 'Opening shop...';
-                    setTimeout(() => { toggleBash(); document.getElementById('shop').scrollIntoView({behavior:'smooth'}); }, 500);
-                    break;
-                case 'exit':
-                    toggleBash();
-                    return;
-                case '':
-                    return;
-                default:
-                    response = `bash: ${cleanCmd.split(' ')[0]}: command not found`;
+                case 'date': response = new Date().toString(); break;
+                case 'shop': response = 'Opening shop...'; setTimeout(() => { toggleBash(); document.getElementById('shop').scrollIntoView({behavior:'smooth'}); }, 500); break;
+                case 'exit': toggleBash(); return;
+                default: response = `bash: ${cleanCmd.split(' ')[0]}: command not found`;
             }
-            
             output.innerHTML += `<div class="mb-2 text-green-300 whitespace-pre-wrap">${response}</div>`;
             output.scrollTop = output.scrollHeight;
         }
 
         // Smooth Animation Variables
-        let targetRotateX = 0, targetRotateY = 0;
-        let currentRotateX = 0, currentRotateY = 0;
+        let targetRotateX = 0, targetRotateY = 0, currentRotateX = 0, currentRotateY = 0;
 
         function handleHero3D(e) {
             const container = document.querySelector('.hero-3d-container');
-            
             if(window.innerWidth > 1024 && container) {
                 const rect = container.getBoundingClientRect();
-                const x = e.clientX - rect.left; 
-                const y = e.clientY - rect.top;  
-                
-                const centerX = rect.width / 2;
-                const centerY = rect.height / 2;
-                
-                // Calculate target rotation
-                targetRotateX = ((centerY - y) / centerY) * 10; 
-                targetRotateY = ((x - centerX) / centerX) * 10;
-                
-                // Reflection logic (direct update for responsiveness)
+                const x = e.clientX - rect.left; const y = e.clientY - rect.top;  
+                const centerX = rect.width / 2; const centerY = rect.height / 2;
+                targetRotateX = ((centerY - y) / centerY) * 10; targetRotateY = ((x - centerX) / centerX) * 10;
                 const reflection = document.getElementById('hero-reflection');
                 if(reflection) {
                     reflection.style.opacity = (y / rect.height) * 0.6 + 0.1;
@@ -1322,49 +1229,19 @@
             }
         }
         
-        function resetHero3D() {
-            targetRotateX = 0;
-            targetRotateY = 0;
-            const reflection = document.getElementById('hero-reflection');
-            if(reflection) reflection.style.opacity = 0;
-        }
+        function resetHero3D() { targetRotateX = 0; targetRotateY = 0; const r = document.getElementById('hero-reflection'); if(r) r.style.opacity = 0; }
         
         function updateHeroAnimation() {
-            // Lerp (Linear Interpolation) for smoothness
-            // current = current + (target - current) * factor
-            const ease = 0.1;
-            currentRotateX += (targetRotateX - currentRotateX) * ease;
-            currentRotateY += (targetRotateY - currentRotateY) * ease;
-            
+            currentRotateX += (targetRotateX - currentRotateX) * 0.1;
+            currentRotateY += (targetRotateY - currentRotateY) * 0.1;
             const imgWrapper = document.getElementById('hero-3d-wrapper');
             const shadow = document.getElementById('hero-shadow');
-            
-            if (imgWrapper) {
-                imgWrapper.style.transform = `rotateX(${currentRotateX}deg) rotateY(${currentRotateY}deg)`;
-            }
-            
-            if (shadow) {
-                const shadowX = -currentRotateY * 1.5;
-                shadow.style.transform = `translate(-50%, 0) translateX(${shadowX}px) scale(${1 - Math.abs(currentRotateX)/100})`;
-            }
-            
+            if (imgWrapper) imgWrapper.style.transform = `rotateX(${currentRotateX}deg) rotateY(${currentRotateY}deg)`;
+            if (shadow) shadow.style.transform = `translate(-50%, 0) translateX(${-currentRotateY * 1.5}px) scale(${1 - Math.abs(currentRotateX)/100})`;
             requestAnimationFrame(updateHeroAnimation);
         }
 
-        function parallaxHero(e) {
-            // Keep existing logic for blobs
-            const blob1 = document.getElementById('blob-1');
-            const blob2 = document.getElementById('blob-2');
-            
-            if(window.innerWidth > 768) {
-                const x = (window.innerWidth - e.pageX*2)/100;
-                const y = (window.innerHeight - e.pageY*2)/100;
-                if(blob1) blob1.style.transform = `translateX(${x}px) translateY(${y}px)`;
-                if(blob2) blob2.style.transform = `translateX(${-x}px) translateY(${-y}px)`;
-            }
-        }
-
-        // --- RANDOMIZED QUIZ FUNCTIONS ---
+        // --- QUIZ FUNCTIONS ---
         function shuffleArray(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -1375,18 +1252,13 @@
 
         function initQuiz() {
             const wrapper = document.getElementById('quiz-question-wrapper');
-            wrapper.innerHTML = ''; // Clear existing
-            
-            // Shuffle questions order
+            wrapper.innerHTML = ''; 
             let shuffledQuestions = shuffleArray([...quizQuestions]);
-            
-            // Re-render questions with shuffled options
-            quizQuestions.forEach((q, index) => {
+            shuffledQuestions.forEach((q, index) => {
                 const shuffledOptions = shuffleArray([...q.options]);
-                
                 const stepDiv = document.createElement('div');
                 stepDiv.id = `q${q.id}`;
-                stepDiv.className = `quiz-step ${index === 0 ? '' : 'hidden'} flex-1 w-full flex flex-col justify-center items-center text-center`; // Add w-full
+                stepDiv.className = `quiz-step ${index === 0 ? '' : 'hidden'} flex-1 w-full flex flex-col justify-center items-center text-center`;
                 
                 let optionsHtml = shuffledOptions.map(opt => `
                     <button onclick="selectQuizOption(${q.id}, '${opt.value}')" class="quiz-option border-2 border-gray-100 dark:border-gray-700 rounded-2xl p-6 hover:border-brand-500 dark:hover:border-gold-400 group bg-gray-50/50 dark:bg-wood-900/50 transition-all w-full">
@@ -1397,19 +1269,9 @@
                 `).join('');
 
                 let gridCols = q.options.length === 2 ? 'md:grid-cols-2 max-w-2xl' : 'md:grid-cols-3';
-
-                stepDiv.innerHTML = `
-                    <h3 class="text-2xl font-bold text-brand-900 dark:text-white mb-10">${q.question}</h3>
-                    <div class="grid grid-cols-1 ${gridCols} gap-6 w-full">
-                        ${optionsHtml}
-                    </div>
-                    ${index > 0 ? `<button onclick="prevQuizStep(${quizQuestions[index-1].id})" class="mt-10 text-xs text-gray-400 hover:text-brand-600 underline">Back to previous question</button>` : ''}
-                `;
-                
+                stepDiv.innerHTML = `<h3 class="text-2xl font-bold text-brand-900 dark:text-white mb-10">${q.question}</h3><div class="grid grid-cols-1 ${gridCols} gap-6 w-full">${optionsHtml}</div>${index > 0 ? `<button onclick="prevQuizStep(${shuffledQuestions[index-1].id})" class="mt-10 text-xs text-gray-400 hover:text-brand-600 underline">Back</button>` : ''}`;
                 wrapper.appendChild(stepDiv);
             });
-            
-            // Reset progress
             document.getElementById('quiz-progress').style.width = '33%';
             document.getElementById('quiz-result').classList.add('hidden');
             document.getElementById('quiz-question-wrapper').classList.remove('hidden');
@@ -1417,217 +1279,98 @@
 
         function selectQuizOption(stepId, value) {
             quizAnswers[stepId] = value;
-            
-            // Visual feedback
             const currentStepDiv = document.getElementById(`q${stepId}`);
-            const buttons = currentStepDiv.querySelectorAll('.quiz-option');
-            buttons.forEach(btn => btn.classList.remove('selected', 'border-brand-500', 'dark:border-gold-400'));
-            
+            currentStepDiv.querySelectorAll('.quiz-option').forEach(btn => btn.classList.remove('selected', 'border-brand-500', 'dark:border-gold-400'));
             const currentQIndex = quizQuestions.findIndex(q => q.id === stepId);
-            
             setTimeout(() => {
-                if(currentQIndex < quizQuestions.length - 1) {
-                    nextQuizStep(quizQuestions[currentQIndex + 1].id, currentQIndex + 2);
-                } else {
-                    showCalculatingState();
-                }
+                if(currentQIndex < quizQuestions.length - 1) nextQuizStep(quizQuestions[currentQIndex + 1].id, currentQIndex + 2);
+                else showCalculatingState();
             }, 400);
         }
 
         function nextQuizStep(nextId, progressStep) {
             document.querySelectorAll('.quiz-step').forEach(el => el.classList.add('hidden'));
             const nextEl = document.getElementById(`q${nextId}`);
-            if(nextEl) {
-                nextEl.classList.remove('hidden');
-                nextEl.classList.add('animate-fade-in-up');
-                document.getElementById('quiz-progress').style.width = `${(progressStep/3) * 100}%`;
-            }
+            if(nextEl) { nextEl.classList.remove('hidden'); nextEl.classList.add('animate-fade-in-up'); document.getElementById('quiz-progress').style.width = `${(progressStep/3) * 100}%`; }
         }
 
         function prevQuizStep(prevId) {
             document.querySelectorAll('.quiz-step').forEach(el => el.classList.add('hidden'));
             const prevEl = document.getElementById(`q${prevId}`);
-            if(prevEl) {
-                prevEl.classList.remove('hidden');
-                const progressStep = quizQuestions.findIndex(q => q.id === prevId) + 1;
-                document.getElementById('quiz-progress').style.width = `${(progressStep/3) * 100}%`;
-            }
+            if(prevEl) { prevEl.classList.remove('hidden'); document.getElementById('quiz-progress').style.width = `${((quizQuestions.findIndex(q=>q.id===prevId)+1)/3) * 100}%`; }
         }
         
         function showCalculatingState() {
             document.querySelectorAll('.quiz-step').forEach(el => el.classList.add('hidden'));
-            document.getElementById('quiz-question-wrapper').classList.add('hidden'); // Hide wrapper
+            document.getElementById('quiz-question-wrapper').classList.add('hidden');
             document.getElementById('quiz-calculating').classList.remove('hidden');
-            
-            setTimeout(() => {
-                calculateQuizResult();
-            }, 1500); 
+            setTimeout(() => { calculateQuizResult(); }, 1500); 
         }
 
         function calculateQuizResult() {
             document.getElementById('quiz-calculating').classList.add('hidden');
-            
-            // Logic for recommendation
-            let recommendedId = 1; 
-            let recommendedQty = 1;
-            let reasonText = "Based on your goals, we recommend:";
-
-            if (quizAnswers[3] === 'retail') {
-                recommendedId = 3; 
-                recommendedQty = 1; 
-                reasonText = "For retail purposes, the Wholesale Box is your best value option.";
-            } else if (quizAnswers[3] === 'family') {
-                if (quizAnswers[2] === 'daily') {
-                    recommendedId = 2; 
-                    recommendedQty = 2; 
-                    reasonText = "For a family using it daily, we recommend stocking up on 2 of our 1-Liter bottles.";
-                } else {
-                    recommendedId = 2; 
-                    recommendedQty = 1;
-                    reasonText = "For occasional family use, the 1-Liter bottle offers great longevity.";
-                }
-            } else {
-                if (quizAnswers[2] === 'daily') {
-                     recommendedId = 2; 
-                     recommendedQty = 1;
-                     reasonText = "For daily personal use, the 1-Liter bottle ensures you won't run out quickly.";
-                } else {
-                     recommendedId = 1; 
-                     recommendedQty = 1;
-                     reasonText = "For occasional personal use, our signature 500ml bottle is the perfect start.";
-                }
-            }
+            let recommendedId = 1, recommendedQty = 1, reasonText = "Based on your goals, we recommend:";
+            if (quizAnswers[3] === 'retail') { recommendedId = 3; recommendedQty = 1; reasonText = "For retail purposes, the Wholesale Box is your best value option."; } 
+            else if (quizAnswers[3] === 'family') { recommendedId = 2; recommendedQty = (quizAnswers[2] === 'daily') ? 2 : 1; reasonText = "For family usage, the 1-Liter bottle offers best value."; } 
+            else { recommendedId = (quizAnswers[2] === 'daily') ? 2 : 1; reasonText = (recommendedId===2) ? "For daily use, 1L ensures you don't run out." : "Our signature 500ml bottle is the perfect start."; }
 
             const product = products.find(p => p.id === recommendedId) || products[0]; 
-            
             if(product) {
                 document.getElementById('quiz-result-text').innerText = reasonText;
                 document.getElementById('rec-product-name').innerText = product.name;
                 document.getElementById('rec-product-desc').innerText = product.desc;
                 document.getElementById('rec-product-price').innerText = `GH₵${product.price.toFixed(2)} x ${recommendedQty}`;
-                
-                const btn = document.getElementById('rec-add-btn');
-                btn.onclick = () => {
-                    addToCart(product.id, recommendedQty);
-                    showToast('Recommendation added to cart!');
-                };
+                document.getElementById('rec-add-btn').onclick = () => { addToCart(product.id, recommendedQty); showToast('Recommendation added to cart!'); };
             }
-
             const resDiv = document.getElementById('quiz-result');
-            resDiv.classList.remove('hidden');
-            resDiv.classList.add('animate-fade-in-up');
+            resDiv.classList.remove('hidden'); resDiv.classList.add('animate-fade-in-up');
             document.getElementById('quiz-progress').style.width = '100%';
-        }
-
-        function resetQuiz() {
-            quizAnswers = {};
-            initQuiz();
         }
 
         function renderProducts(){ 
             const g=document.getElementById('product-grid'); 
-            if(products.length === 0) {
-                 g.innerHTML = '<div class="col-span-3 text-center py-10 text-gray-500">No products available at the moment.</div>';
-                 return;
-            }
-            if(g) g.innerHTML=products.map((p, index)=>`
+            if(products.length === 0) { g.innerHTML = '<div class="col-span-3 text-center py-10 text-gray-500">Loading products from Database...</div>'; return; }
+            g.innerHTML=products.map((p, index)=>`
                 <div style="transition-delay: ${index * 100}ms" class="reveal bg-white dark:bg-wood-900 rounded-[2rem] shadow-xl overflow-hidden group product-card-hover relative h-[450px] transition-all hover:shadow-2xl border border-gray-100 dark:border-gray-700 tilt-card">
-                    ${!p.available ? '<div class="absolute top-4 left-4 z-20 bg-red-600 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow">SOLD OUT</div>' : 
-                                     '<div class="absolute top-4 left-4 z-20 bg-gbhpl-green text-white text-[10px] font-bold px-3 py-1 rounded-full shadow">BEST SELLER</div>'}
+                    ${!p.available ? '<div class="absolute top-4 left-4 z-20 bg-red-600 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow">SOLD OUT</div>' : '<div class="absolute top-4 left-4 z-20 bg-gbhpl-green text-white text-[10px] font-bold px-3 py-1 rounded-full shadow">'+p.tag+'</div>'}
                     <div class="h-3/5 w-full bg-brand-50 dark:bg-wood-800 flex items-center justify-center relative overflow-hidden group">
                         <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 pointer-events-none"></div>
                         <img src="${p.image}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
                         <div class="overlay-actions absolute inset-0 bg-black/40 backdrop-blur-[4px] flex flex-col items-center justify-center gap-4 p-6 transition-transform duration-400 translate-y-full">
-                            <button onclick="addToCart(${p.id})" class="bg-white text-brand-900 font-bold py-3.5 px-6 rounded-xl w-full shadow-lg hover:bg-brand-50 transition-colors transform hover:-translate-y-1 text-xs uppercase tracking-widest flex items-center justify-center gap-2">
-                                <i class="fas fa-shopping-cart"></i> Add to Cart
-                            </button>
-                            <button onclick="openProductModal(${p.id})" class="bg-brand-900 text-white font-bold py-3.5 px-6 rounded-xl w-full shadow-lg hover:bg-brand-800 transition-colors transform hover:-translate-y-1 text-xs uppercase tracking-widest flex items-center justify-center gap-2">
-                                <i class="fas fa-eye"></i> Quick View
-                            </button>
+                            <button onclick="addToCart(${p.id})" class="bg-white text-brand-900 font-bold py-3.5 px-6 rounded-xl w-full shadow-lg hover:bg-brand-50 transition-colors transform hover:-translate-y-1 text-xs uppercase tracking-widest flex items-center justify-center gap-2"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+                            <button onclick="openProductModal(${p.id})" class="bg-brand-900 text-white font-bold py-3.5 px-6 rounded-xl w-full shadow-lg hover:bg-brand-800 transition-colors transform hover:-translate-y-1 text-xs uppercase tracking-widest flex items-center justify-center gap-2"><i class="fas fa-eye"></i> Quick View</button>
                         </div>
                     </div>
                     <div class="h-2/5 p-6 flex flex-col justify-between bg-white dark:bg-wood-900 relative z-10">
                         <div>
-                            <div class="flex justify-between items-start mb-2">
-                                <h3 class="font-bold text-lg text-brand-900 dark:text-white leading-tight">${p.name}</h3>
-                                <div class="flex flex-col items-end"><span class="font-extrabold text-xl text-brand-600 dark:text-gold-400">GH₵${p.price.toFixed(2)}</span></div>
-                            </div>
+                            <div class="flex justify-between items-start mb-2"><h3 class="font-bold text-lg text-brand-900 dark:text-white leading-tight">${p.name}</h3><span class="font-extrabold text-xl text-brand-600 dark:text-gold-400">GH₵${p.price.toFixed(2)}</span></div>
                             <p class="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 leading-relaxed">${p.desc}</p>
                         </div>
-                        <div class="flex items-center justify-between mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
-                            <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">${p.tag}</span>
-                            <div class="flex text-gold-400 text-xs gap-0.5"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                        </div>
+                        <div class="flex items-center justify-between mt-3 pt-3 border-t border-gray-100 dark:border-gray-700"><span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">Organic</span><div class="flex text-gold-400 text-xs gap-0.5"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div></div>
                     </div>
                 </div>`).join(''); 
         }
 
         function renderBenefits(){ 
             const g=document.getElementById('benefits-grid'); 
-            if(g) g.innerHTML=benefits.map((b,i)=>`
-                <div style="transition-delay: ${i * 100}ms; touch-action: manipulation;" onclick="this.classList.toggle('flipped')" class="flip-card h-64 w-full group perspective-1000 reveal">
-                    <div class="flip-card-inner relative w-full h-full transition-transform duration-700 transform-style-3d shadow-xl rounded-2xl">
-                        <div class="flip-card-front bg-white dark:bg-wood-800 border border-gray-100 dark:border-gray-700 rounded-2xl flex flex-col items-center justify-center p-6 z-10 relative">
-                            <div class="absolute top-4 right-4 text-gray-300 dark:text-gray-600 text-[10px] flex items-center gap-1 animate-pulse"><i class="fas fa-hand-pointer"></i> Tap</div>
-                            <div class="w-16 h-16 bg-brand-50 dark:bg-wood-700 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-inner"><i class="fas fa-${b.icon} text-3xl text-brand-600 dark:text-gold-400"></i></div>
-                            <h4 class="font-bold text-lg text-brand-900 dark:text-white mb-2 text-center">${b.title}</h4>
-                            <p class="text-xs text-gray-500 dark:text-gray-300 leading-tight text-center max-w-[80%]">${b.text}</p>
-                        </div>
-                        <div class="flip-card-back bg-gradient-to-br from-brand-900 to-wood-900 text-white rounded-2xl flex flex-col items-center justify-center p-6 absolute inset-0 border border-brand-700 dark:border-gold-600 shadow-inner">
-                            <h5 class="font-bold text-sm text-gold-400 mb-3 uppercase tracking-wide border-b border-gold-500/30 pb-1">Brief Benefit</h5>
-                            <p class="text-sm font-medium text-white leading-relaxed mb-4 text-center">"${b.detail}"</p>
-                            <div class="bg-white/10 p-2 rounded-lg w-full text-center mt-auto backdrop-blur-sm"><p class="text-[10px] text-gray-200 italic"><i class="fas fa-microscope mr-1"></i> ${b.clinical}</p></div>
-                        </div>
-                    </div>
-                </div>`).join(''); 
+            if(g) g.innerHTML=benefits.map((b,i)=>`<div style="transition-delay: ${i * 100}ms; touch-action: manipulation;" onclick="this.classList.toggle('flipped')" class="flip-card h-64 w-full group perspective-1000 reveal"><div class="flip-card-inner relative w-full h-full transition-transform duration-700 transform-style-3d shadow-xl rounded-2xl"><div class="flip-card-front bg-white dark:bg-wood-800 border border-gray-100 dark:border-gray-700 rounded-2xl flex flex-col items-center justify-center p-6 z-10 relative"><div class="absolute top-4 right-4 text-gray-300 dark:text-gray-600 text-[10px] flex items-center gap-1 animate-pulse"><i class="fas fa-hand-pointer"></i> Tap</div><div class="w-16 h-16 bg-brand-50 dark:bg-wood-700 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-inner"><i class="fas fa-${b.icon} text-3xl text-brand-600 dark:text-gold-400"></i></div><h4 class="font-bold text-lg text-brand-900 dark:text-white mb-2 text-center">${b.title}</h4><p class="text-xs text-gray-500 dark:text-gray-300 leading-tight text-center max-w-[80%]">${b.text}</p></div><div class="flip-card-back bg-gradient-to-br from-brand-900 to-wood-900 text-white rounded-2xl flex flex-col items-center justify-center p-6 absolute inset-0 border border-brand-700 dark:border-gold-600 shadow-inner"><h5 class="font-bold text-sm text-gold-400 mb-3 uppercase tracking-wide border-b border-gold-500/30 pb-1">Brief Benefit</h5><p class="text-sm font-medium text-white leading-relaxed mb-4 text-center">"${b.detail}"</p><div class="bg-white/10 p-2 rounded-lg w-full text-center mt-auto backdrop-blur-sm"><p class="text-[10px] text-gray-200 italic"><i class="fas fa-microscope mr-1"></i> ${b.clinical}</p></div></div></div></div>`).join(''); 
         }
 
-        // --- NEW: RENDER DISTRIBUTORS ---
         function renderDistributors() {
             const container = document.getElementById('distributors-grid');
             if(!container) return;
-
-            if (distributorsData.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center w-full py-10">
-                        <i class="fas fa-store-slash text-3xl text-gray-300 mb-4"></i>
-                        <p class="text-sm text-gray-500">No distributors available at the moment.</p>
-                    </div>
-                `;
-                return;
-            }
-
+            if (distributorsData.length === 0) { container.innerHTML = `<div class="text-center w-full py-10"><i class="fas fa-store-slash text-3xl text-gray-300 mb-4"></i><p class="text-sm text-gray-500">No distributors available at the moment.</p></div>`; return; }
             container.innerHTML = distributorsData.map((d, index) => `
                 <div class="group relative w-full sm:w-[calc(50%-1rem)] lg:w-[calc(33.33%-1rem)] h-96 rounded-[2rem] overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 cursor-pointer tilt-card reveal" style="transition-delay: ${index * 100}ms" onclick="openDistributorModal('${d.id}')">
-                    <!-- Image Background with Zoom -->
-                    <div class="absolute inset-0 bg-gray-900">
-                        <img src="${d.image}" alt="${d.name}" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700 ease-in-out">
-                    </div>
-                    
-                    <!-- Gradient Overlay -->
+                    <div class="absolute inset-0 bg-gray-900"><img src="${d.image}" alt="${d.name}" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700 ease-in-out"></div>
                     <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-90 transition-opacity duration-300"></div>
-
-                    <!-- Verified Badge -->
-                    <div class="absolute top-4 right-4 bg-white/20 backdrop-blur-md border border-white/30 rounded-full px-3 py-1 flex items-center gap-2 transform translate-y-[-10px] opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-                        <i class="fas fa-check-circle text-gold-400 text-xs"></i>
-                        <span class="text-[10px] font-bold text-white uppercase tracking-wider">Verified</span>
-                    </div>
-
-                    <!-- Content -->
+                    <div class="absolute top-4 right-4 bg-white/20 backdrop-blur-md border border-white/30 rounded-full px-3 py-1 flex items-center gap-2 transform translate-y-[-10px] opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300"><i class="fas fa-check-circle text-gold-400 text-xs"></i><span class="text-[10px] font-bold text-white uppercase tracking-wider">Verified</span></div>
                     <div class="absolute bottom-0 left-0 w-full p-8 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
                         <span class="text-gold-400 font-bold text-[10px] uppercase tracking-widest mb-2 block border-l-2 border-gold-400 pl-2">${d.role}</span>
                         <h3 class="text-2xl font-bold text-white mb-1 group-hover:text-gold-100 transition-colors">${d.name}</h3>
                         <p class="text-gray-300 text-xs mb-6 flex items-center gap-2"><i class="fas fa-map-marker-alt text-brand-500"></i> ${d.location}</p>
-                        
-                        <!-- Recommendation Snippet -->
-                        <div class="bg-white/10 backdrop-blur-sm p-4 rounded-xl border-l-4 border-brand-500 mb-6 transform opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 delay-100">
-                            <p class="text-[10px] text-gray-200 italic line-clamp-2">"${d.recommendation.text}"</p>
-                        </div>
-
-                        <!-- Action Button -->
-                        <button class="w-full bg-brand-600 hover:bg-brand-500 text-white font-bold py-3 rounded-xl shadow-lg transform translate-y-10 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 delay-200 flex items-center justify-center gap-2">
-                            View Profile <i class="fas fa-arrow-right text-xs"></i>
-                        </button>
+                        <div class="bg-white/10 backdrop-blur-sm p-4 rounded-xl border-l-4 border-brand-500 mb-6 transform opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 delay-100"><p class="text-[10px] text-gray-200 italic line-clamp-2">"${d.recommendation.text}"</p></div>
+                        <button class="w-full bg-brand-600 hover:bg-brand-500 text-white font-bold py-3 rounded-xl shadow-lg transform translate-y-10 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 delay-200 flex items-center justify-center gap-2">View Profile <i class="fas fa-arrow-right text-xs"></i></button>
                     </div>
                 </div>
             `).join('');
@@ -1644,165 +1387,78 @@
                         <p class="text-sm text-gray-600 dark:text-gray-300 mt-2">${item.desc}</p>
                         <div id="timeline-extra-${index}" class="hidden mt-4 pt-4 border-t border-brand-100 dark:border-gray-700"><p class="text-xs font-serif italic text-brand-600 dark:text-gold-400 bg-brand-50 dark:bg-wood-800 p-3 rounded-lg">${item.extra}</p></div>
                     </div>
-                    <div class="absolute left-6 md:left-1/2 transform -translate-x-1/2 w-6 h-6 rounded-full bg-white dark:bg-wood-900 border-4 border-brand-500 dark:border-gold-400 z-10 shadow-lg group-hover:scale-125 group-hover:bg-brand-500 group-hover:border-white transition-all duration-300 flex items-center justify-center">
-                        <div class="w-2 h-2 bg-transparent group-hover:bg-white rounded-full transition-colors"></div>
-                    </div>
+                    <div class="absolute left-6 md:left-1/2 transform -translate-x-1/2 w-6 h-6 rounded-full bg-white dark:bg-wood-900 border-4 border-brand-500 dark:border-gold-400 z-10 shadow-lg group-hover:scale-125 group-hover:bg-brand-500 group-hover:border-white transition-all duration-300 flex items-center justify-center"><div class="w-2 h-2 bg-transparent group-hover:bg-white rounded-full transition-colors"></div></div>
                     <div class="hidden md:block md:w-5/12 pl-12"><button class="text-[10px] font-bold text-brand-400 dark:text-gray-500 uppercase tracking-widest hover:text-brand-600 dark:hover:text-gold-400 transition-colors group-hover:translate-x-2 transform duration-300 flex items-center gap-2">Explore Era <i class="fas fa-chevron-right text-[8px]"></i></button></div>
                 </div>`).join('');
             container.innerHTML = html;
         }
 
-        function toggleTimeline(idx) {
-            const el = document.getElementById(`timeline-extra-${idx}`);
-            if(el.classList.contains('hidden')) { el.classList.remove('hidden'); el.classList.add('animate-fade-in-up'); } else { el.classList.add('hidden'); }
-        }
-        
-        function toggleBio(){
-            const more = document.getElementById('bio-more'); const btn = document.getElementById('bio-btn');
-            if(more.classList.contains('hidden')){ more.classList.remove('hidden'); btn.innerHTML = 'Read Less <i class="fas fa-chevron-up"></i>'; } else { more.classList.add('hidden'); btn.innerHTML = 'Read Full Biography <i class="fas fa-chevron-down"></i>'; }
-        }
+        function toggleTimeline(idx) { const el = document.getElementById(`timeline-extra-${idx}`); if(el.classList.contains('hidden')) { el.classList.remove('hidden'); el.classList.add('animate-fade-in-up'); } else { el.classList.add('hidden'); } }
+        function toggleBio(){ const more = document.getElementById('bio-more'); const btn = document.getElementById('bio-btn'); if(more.classList.contains('hidden')){ more.classList.remove('hidden'); btn.innerHTML = 'Read Less <i class="fas fa-chevron-up"></i>'; } else { more.classList.add('hidden'); btn.innerHTML = 'Read Full Biography <i class="fas fa-chevron-down"></i>'; } }
         
         function setProcess(idx){
             const img = document.getElementById('process-img');
             if (!img) return; 
-            
-            if (currentProcess === idx && img.src.includes('http')) return; 
             currentProcess = idx; 
             const s = processSteps[idx-1];
             const contentWrapper = document.getElementById('process-content-wrapper');
-            
             if(contentWrapper) contentWrapper.classList.add('opacity-0', 'scale-95');
-            
             setTimeout(() => {
-                const titleEl = document.getElementById('process-title');
-                if(titleEl) titleEl.innerText = s.title;
+                document.getElementById('process-title').innerText = s.title;
+                document.getElementById('process-desc').innerText = s.text;
+                document.getElementById('process-tag').innerText = s.tag;
+                document.getElementById('process-idx-img').innerText = idx;
                 
-                const descEl = document.getElementById('process-desc');
-                if(descEl) descEl.innerText = s.text;
-                
-                const tagEl = document.getElementById('process-tag');
-                if(tagEl) tagEl.innerText = s.tag;
-                
-                img.src = s.img;
-                
-                const idxEl = document.getElementById('process-idx-img');
-                if(idxEl) idxEl.innerText = idx;
-                
-                const specsEl = document.getElementById('process-specs');
-                if(specsEl) specsEl.innerHTML = s.specs.map(sp => `<div class="flex flex-col"><span class="text-[9px] text-gray-400 dark:text-gray-500 uppercase tracking-widest font-bold">${sp.label}</span><span class="font-mono text-sm font-bold text-brand-800 dark:text-gray-200 mt-1">${sp.val}</span></div>`).join('');
-                
+                // Only set src if we have a valid URL to avoid broken images or placeholders
+                if (s.img && s.img.length > 0) {
+                    img.src = s.img;
+                    img.classList.remove('opacity-0');
+                } else {
+                    img.classList.add('opacity-0'); // Hide if no image ready
+                }
+
+                document.getElementById('process-specs').innerHTML = s.specs.map(sp => `<div class="flex flex-col"><span class="text-[9px] text-gray-400 dark:text-gray-500 uppercase tracking-widest font-bold">${sp.label}</span><span class="font-mono text-sm font-bold text-brand-800 dark:text-gray-200 mt-1">${sp.val}</span></div>`).join('');
                 if(contentWrapper) contentWrapper.classList.remove('opacity-0', 'scale-95');
             }, 400); 
             
             document.querySelectorAll('.process-step').forEach((el,i)=>{
-                const num = el.querySelector('div'); 
-                const title = el.querySelector('h4'); // Target the title directly
-                const subtitle = el.querySelector('span'); // Target subtitle if exists
-
+                const num = el.querySelector('div'); const title = el.querySelector('h4'); 
                 if(i+1===idx) { 
                     el.classList.add('active'); 
-                    
-                    // Number Circle Active
                     num.classList.remove('border-gray-300', 'text-gray-400', 'bg-white', 'dark:bg-wood-900/50'); 
                     num.classList.add('border-brand-900', 'dark:border-white', 'text-brand-900', 'dark:text-white', 'bg-brand-50', 'dark:bg-wood-800');
-                    
-                    // Title Active
-                    if(title) {
-                        title.classList.remove('text-gray-500', 'dark:text-gray-400');
-                        title.classList.add('text-brand-900', 'dark:text-white');
-                    }
-                    
-                    // Subtitle Active (if exists)
-                    if(subtitle) {
-                        subtitle.classList.remove('text-brand-600', 'dark:text-gold-400'); // Optional: adjust if needed, mostly handled by CSS
-                    }
-
+                    if(title) { title.classList.remove('text-gray-500', 'dark:text-gray-400'); title.classList.add('text-brand-900', 'dark:text-white'); }
                 } else { 
                     el.classList.remove('active'); 
-                    
-                    // Number Circle Inactive
                     num.classList.remove('border-brand-900', 'dark:border-white', 'text-brand-900', 'dark:text-white', 'bg-brand-50', 'dark:bg-wood-800');
                     num.classList.add('border-gray-300', 'text-gray-400', 'bg-white', 'dark:bg-wood-900/50');
-                    
-                    // Title Inactive
-                    if(title) {
-                        title.classList.remove('text-brand-900', 'dark:text-white');
-                        title.classList.add('text-gray-500', 'dark:text-gray-400');
-                    }
+                    if(title) { title.classList.remove('text-brand-900', 'dark:text-white'); title.classList.add('text-gray-500', 'dark:text-gray-400'); }
                 }
             });
         }
 
-        // --- NEW: OPEN DISTRIBUTOR MODAL ---
+        // --- DISTRIBUTOR MODAL ---
         function openDistributorModal(id) {
             const d = distributorsData.find(item => item.id === id);
             if(!d) return;
-
             const html = `
                 <div class="bg-white dark:bg-wood-900 rounded-[2.5rem] shadow-2xl overflow-hidden max-w-4xl w-full mx-auto border dark:border-gray-600 flex flex-col md:flex-row max-h-[90vh]">
-                    <!-- Close Button -->
                     <button onclick="closeAllDrawers()" class="absolute top-4 right-4 z-50 bg-white/80 dark:bg-black/50 p-2 rounded-full text-gray-600 dark:text-white hover:scale-110 transition shadow-sm hover:bg-red-500 hover:text-white"><i class="fas fa-times text-lg"></i></button>
-
-                    <!-- Left: Gallery -->
                     <div class="w-full md:w-5/12 bg-gray-900 relative flex flex-col h-64 md:h-auto">
                         <div class="flex-1 relative overflow-hidden group">
                             <img id="dist-main-img" src="${d.image}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-0 transition-opacity" onload="this.classList.remove('opacity-0')">
                             <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
-                            <div class="absolute bottom-6 left-6 text-white">
-                                <h2 class="text-2xl font-bold">${d.name}</h2>
-                                <p class="text-gold-400 text-xs font-bold uppercase tracking-widest">${d.role}</p>
-                            </div>
+                            <div class="absolute bottom-6 left-6 text-white"><h2 class="text-2xl font-bold">${d.name}</h2><p class="text-gold-400 text-xs font-bold uppercase tracking-widest">${d.role}</p></div>
                         </div>
-                        <!-- Thumbnails -->
-                        <div class="h-20 bg-black flex gap-1 p-1 overflow-x-auto">
-                            ${d.gallery.map((img, idx) => `
-                                <img src="${img}" onclick="document.getElementById('dist-main-img').src='${img}'" class="h-full w-20 object-cover cursor-pointer hover:opacity-100 opacity-60 transition-opacity border-2 border-transparent hover:border-gold-400 rounded-md">
-                            `).join('')}
-                        </div>
+                        <div class="h-20 bg-black flex gap-1 p-1 overflow-x-auto">${d.gallery.map((img, idx) => `<img src="${img}" onclick="document.getElementById('dist-main-img').src='${img}'" class="h-full w-20 object-cover cursor-pointer hover:opacity-100 opacity-60 transition-opacity border-2 border-transparent hover:border-gold-400 rounded-md">`).join('')}</div>
                     </div>
-
-                    <!-- Right: Content -->
                     <div class="w-full md:w-7/12 p-8 md:p-10 overflow-y-auto bg-brand-50/50 dark:bg-wood-800/50">
-                        
-                        <div class="flex items-center gap-2 mb-6 text-xs font-bold text-gray-500 dark:text-gray-400">
-                            <span class="bg-white dark:bg-wood-900 px-3 py-1 rounded-full shadow-sm border border-gray-200 dark:border-gray-700 flex items-center gap-2">
-                                <i class="fas fa-map-pin text-brand-600"></i> ${d.location}
-                            </span>
-                            <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full shadow-sm flex items-center gap-1">
-                                <i class="fas fa-check-circle"></i> Authorized
-                            </span>
-                        </div>
-
-                        <h3 class="text-lg font-bold text-brand-900 dark:text-white mb-3">About Partner</h3>
-                        <p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed mb-8">${d.bio}</p>
-
-                        <div class="bg-white dark:bg-wood-900 p-6 rounded-2xl border border-brand-100 dark:border-gray-700 relative mb-8">
-                            <i class="fas fa-quote-left text-4xl text-brand-100 dark:text-wood-700 absolute top-4 left-4 -z-0"></i>
-                            <div class="relative z-10">
-                                <p class="text-sm italic text-gray-700 dark:text-gray-200 mb-4 font-serif">"${d.recommendation.text}"</p>
-                                <div class="flex items-center gap-3">
-                                    <div class="w-8 h-8 rounded-full bg-brand-600 text-white flex items-center justify-center font-bold text-xs">
-                                        ${d.recommendation.author.charAt(0)}
-                                    </div>
-                                    <div>
-                                        <p class="text-xs font-bold text-brand-900 dark:text-white">${d.recommendation.author}</p>
-                                        <p class="text-[10px] text-gray-400 uppercase tracking-wide">GBHPL Team</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-4">
-                             <a href="tel:0240908531" class="bg-brand-600 hover:bg-brand-700 text-white py-3 rounded-xl font-bold text-sm text-center shadow-lg transition-transform hover:-translate-y-1">
-                                <i class="fas fa-phone mr-2"></i> Contact Us
-                            </a>
-                            <button onclick="closeAllDrawers(); navigateTo('locations')" class="bg-white dark:bg-wood-900 hover:bg-gray-100 dark:hover:bg-wood-700 text-brand-900 dark:text-white border border-gray-200 dark:border-gray-600 py-3 rounded-xl font-bold text-sm text-center shadow transition-transform hover:-translate-y-1">
-                                <i class="fas fa-map mr-2"></i> Find on Map
-                            </button>
-                        </div>
+                        <div class="flex items-center gap-2 mb-6 text-xs font-bold text-gray-500 dark:text-gray-400"><span class="bg-white dark:bg-wood-900 px-3 py-1 rounded-full shadow-sm border border-gray-200 dark:border-gray-700 flex items-center gap-2"><i class="fas fa-map-pin text-brand-600"></i> ${d.location}</span><span class="bg-green-100 text-green-700 px-3 py-1 rounded-full shadow-sm flex items-center gap-1"><i class="fas fa-check-circle"></i> Authorized</span></div>
+                        <h3 class="text-lg font-bold text-brand-900 dark:text-white mb-3">About Partner</h3><p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed mb-8">${d.bio}</p>
+                        <div class="bg-white dark:bg-wood-900 p-6 rounded-2xl border border-brand-100 dark:border-gray-700 relative mb-8"><i class="fas fa-quote-left text-4xl text-brand-100 dark:text-wood-700 absolute top-4 left-4 -z-0"></i><div class="relative z-10"><p class="text-sm italic text-gray-700 dark:text-gray-200 mb-4 font-serif">"${d.recommendation.text}"</p><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-brand-600 text-white flex items-center justify-center font-bold text-xs">${d.recommendation.author.charAt(0)}</div><div><p class="text-xs font-bold text-brand-900 dark:text-white">${d.recommendation.author}</p><p class="text-[10px] text-gray-400 uppercase tracking-wide">GBHPL Team</p></div></div></div></div>
+                        <div class="grid grid-cols-2 gap-4"><a href="tel:0240908531" class="bg-brand-600 hover:bg-brand-700 text-white py-3 rounded-xl font-bold text-sm text-center shadow-lg transition-transform hover:-translate-y-1"><i class="fas fa-phone mr-2"></i> Contact Us</a><button onclick="closeAllDrawers(); navigateTo('locations')" class="bg-white dark:bg-wood-900 hover:bg-gray-100 dark:hover:bg-wood-700 text-brand-900 dark:text-white border border-gray-200 dark:border-gray-600 py-3 rounded-xl font-bold text-sm text-center shadow transition-transform hover:-translate-y-1"><i class="fas fa-map mr-2"></i> Find on Map</button></div>
                     </div>
-                </div>
-            `;
+                </div>`;
             openModal(html);
         }
 
@@ -1814,70 +1470,29 @@
         function openContentModal(t,c){ openModal(`<div class="bg-white dark:bg-wood-900 rounded-3xl p-8 shadow-2xl max-w-lg mx-auto border dark:border-gray-600"><div class="flex justify-between items-center mb-6 border-b border-gray-100 dark:border-gray-700 pb-4"><h3 class="text-2xl font-bold text-brand-900 dark:text-white">${t}</h3><button onclick="closeAllDrawers()" class="text-gray-400 hover:text-red-500 transition-colors bg-gray-100 dark:bg-wood-800 p-2 rounded-full"><i class="fas fa-times text-lg"></i></button></div><div class="text-base text-gray-600 dark:text-gray-200 leading-relaxed">${c}</div></div>`); }
         
         function openProductModal(id){ 
-            const p=products.find(x=>x.id===id); 
-            modalQuantity = 1;
-            currentModalPrice = p.price;
-            
+            const p=products.find(x=>x.id===id); modalQuantity = 1; currentModalPrice = p.price;
             openModal(`
             <div class="bg-white dark:bg-wood-900 rounded-[2rem] shadow-2xl overflow-hidden flex flex-col md:flex-row max-h-[85vh] w-full border dark:border-gray-600 relative">
                 <button onclick="closeAllDrawers()" class="absolute top-4 right-4 z-50 bg-white/80 dark:bg-black/50 p-2 rounded-full text-gray-600 dark:text-white hover:scale-110 transition shadow-sm"><i class="fas fa-times text-lg"></i></button>
-                
-                <div class="w-full md:w-1/2 h-64 md:h-auto bg-brand-50 dark:bg-wood-800 flex items-center justify-center p-8 relative overflow-hidden group">
-                    <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
-                    <img src="${p.image}" class="w-auto h-full max-h-[350px] object-contain drop-shadow-xl transform group-hover:scale-110 transition duration-700">
-                    <div class="absolute top-4 left-4 bg-white/90 dark:bg-wood-900/90 backdrop-blur text-xs font-bold px-3 py-1 rounded-full shadow-sm text-brand-700 dark:text-gold-400 border border-brand-100 dark:border-gray-600">
-                        <i class="fas fa-check-circle mr-1"></i> In Stock
-                    </div>
-                </div>
-                
+                <div class="w-full md:w-1/2 h-64 md:h-auto bg-brand-50 dark:bg-wood-800 flex items-center justify-center p-8 relative overflow-hidden group"><div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div><img src="${p.image}" class="w-auto h-full max-h-[350px] object-contain drop-shadow-xl transform group-hover:scale-110 transition duration-700"><div class="absolute top-4 left-4 bg-white/90 dark:bg-wood-900/90 backdrop-blur text-xs font-bold px-3 py-1 rounded-full shadow-sm text-brand-700 dark:text-gold-400 border border-brand-100 dark:border-gray-600"><i class="fas fa-check-circle mr-1"></i> In Stock</div></div>
                 <div class="w-full md:w-1/2 p-8 flex flex-col overflow-y-auto">
-                    <div class="flex justify-between items-start mb-2">
-                        <h2 class="text-3xl font-extrabold text-brand-900 dark:text-white leading-tight">${p.name}</h2>
-                        <button class="text-gray-400 hover:text-red-500 transition hover:scale-110" onclick="this.classList.toggle('text-red-500'); showToast('Added to Wishlist')"><i class="fas fa-heart text-2xl"></i></button>
-                    </div>
-                    
-                    <div class="flex items-center gap-2 mb-6">
-                        <div class="flex text-gold-400 text-sm"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                        <span class="text-xs text-gray-400 font-bold uppercase tracking-wider">(45 Verified Reviews)</span>
-                    </div>
-                    
+                    <div class="flex justify-between items-start mb-2"><h2 class="text-3xl font-extrabold text-brand-900 dark:text-white leading-tight">${p.name}</h2><button class="text-gray-400 hover:text-red-500 transition hover:scale-110" onclick="this.classList.toggle('text-red-500'); showToast('Added to Wishlist')"><i class="fas fa-heart text-2xl"></i></button></div>
+                    <div class="flex items-center gap-2 mb-6"><div class="flex text-gold-400 text-sm"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><span class="text-xs text-gray-400 font-bold uppercase tracking-wider">(Verified)</span></div>
                     <p class="text-4xl font-black text-brand-600 dark:text-gold-400 mb-6" id="modal-price-display">GH₵${p.price.toFixed(2)}</p>
-                    
-                    <div class="prose prose-sm dark:prose-invert mb-8 bg-gray-50 dark:bg-wood-800/50 p-4 rounded-xl">
-                        <p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">${p.longDesc}</p>
-                    </div>
-                    
+                    <div class="prose prose-sm dark:prose-invert mb-8 bg-gray-50 dark:bg-wood-800/50 p-4 rounded-xl"><p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">${p.longDesc}</p></div>
                     <div class="mt-auto space-y-6">
-                        <div class="flex items-center justify-between bg-gray-50 dark:bg-wood-800 p-4 rounded-2xl border border-gray-100 dark:border-gray-700">
-                            <span class="text-sm font-bold text-gray-500 uppercase tracking-wide">Quantity</span>
-                            <div class="flex items-center gap-4 bg-white dark:bg-wood-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-600 px-4 py-2">
-                                <button onclick="adjustModalQty(-1, ${p.price})" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-brand-600 hover:bg-gray-100 dark:hover:bg-wood-800 rounded-full transition"><i class="fas fa-minus text-xs"></i></button>
-                                <span id="modal-qty" class="font-mono font-bold text-lg w-6 text-center">1</span>
-                                <button onclick="adjustModalQty(1, ${p.price})" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-brand-600 hover:bg-gray-100 dark:hover:bg-wood-800 rounded-full transition"><i class="fas fa-plus text-xs"></i></button>
-                            </div>
-                        </div>
-                        
-                        <div class="flex items-center justify-between text-[10px] text-gray-400 dark:text-gray-500 font-mono uppercase tracking-widest mb-2">
-                            <span>Shelf Life: ${p.shelfLife}</span>
-                            <span>SKU: GB-${p.id}00${p.id}</span>
-                        </div>
-
-                        <button onclick="addToCart(${p.id}, modalQuantity); closeAllDrawers()" class="w-full bg-gradient-to-r from-brand-600 to-brand-700 hover:from-brand-500 hover:to-brand-600 dark:from-gold-500 dark:to-gold-600 text-white dark:text-brand-900 py-4 rounded-xl font-bold text-base shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all flex items-center justify-center gap-3 group">
-                            <span>Add to Basket</span>
-                            <i class="fas fa-shopping-bag group-hover:scale-110 transition-transform"></i>
-                        </button>
+                        <div class="flex items-center justify-between bg-gray-50 dark:bg-wood-800 p-4 rounded-2xl border border-gray-100 dark:border-gray-700"><span class="text-sm font-bold text-gray-500 uppercase tracking-wide">Quantity</span><div class="flex items-center gap-4 bg-white dark:bg-wood-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-600 px-4 py-2"><button onclick="adjustModalQty(-1, ${p.price})" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-brand-600 hover:bg-gray-100 dark:hover:bg-wood-800 rounded-full transition"><i class="fas fa-minus text-xs"></i></button><span id="modal-qty" class="font-mono font-bold text-lg w-6 text-center">1</span><button onclick="adjustModalQty(1, ${p.price})" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-brand-600 hover:bg-gray-100 dark:hover:bg-wood-800 rounded-full transition"><i class="fas fa-plus text-xs"></i></button></div></div>
+                        <div class="flex items-center justify-between text-[10px] text-gray-400 dark:text-gray-500 font-mono uppercase tracking-widest mb-2"><span>Shelf Life: ${p.shelfLife}</span><span>SKU: GB-${p.id}00${p.id}</span></div>
+                        <button onclick="addToCart(${p.id}, modalQuantity); closeAllDrawers()" class="w-full bg-gradient-to-r from-brand-600 to-brand-700 hover:from-brand-500 hover:to-brand-600 dark:from-gold-500 dark:to-gold-600 text-white dark:text-brand-900 py-4 rounded-xl font-bold text-base shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all flex items-center justify-center gap-3 group"><span>Add to Basket</span><i class="fas fa-shopping-bag group-hover:scale-110 transition-transform"></i></button>
                     </div>
                 </div>
             </div>`); 
         }
 
         function adjustModalQty(change, basePrice) {
-            let newQty = modalQuantity + change;
-            if(newQty < 1) newQty = 1;
-            modalQuantity = newQty;
-            document.getElementById('modal-qty').innerText = modalQuantity;
-            currentModalPrice = basePrice * modalQuantity;
-            document.getElementById('modal-price-display').innerText = `GH₵${currentModalPrice.toFixed(2)}`;
+            let newQty = modalQuantity + change; if(newQty < 1) newQty = 1;
+            modalQuantity = newQty; document.getElementById('modal-qty').innerText = modalQuantity;
+            currentModalPrice = basePrice * modalQuantity; document.getElementById('modal-price-display').innerText = `GH₵${currentModalPrice.toFixed(2)}`;
         }
 
         function openRetailersModal(){
@@ -1887,67 +1502,29 @@
 
         async function submitJobApp(e, role) {
             e.preventDefault();
-            
-            // UI Feedback
             const btn = document.getElementById('submit-app-btn');
             const originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
-            btn.disabled = true;
-
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...'; btn.disabled = true;
             const fname = document.getElementById('job-fname').value;
             const lname = document.getElementById('job-lname').value;
             const email = document.getElementById('job-email').value;
             const resumeInput = document.getElementById('job-resume');
             const file = resumeInput.files[0];
-            
-            let resumeUrl = null;
-            let resumeName = 'No file uploaded';
-
+            let resumeUrl = null; let resumeName = 'No file uploaded';
             if(db && storage) {
                 try {
-                    // 1. Upload File (if exists)
                     if (file) {
                         resumeName = file.name;
-                        // Create unique file name: timestamp_cleanfilename
                         const fileName = `${Date.now()}_${file.name.replace(/[^a-zA-Z0-9.]/g, '_')}`;
-                        
-                        console.log("Attempting upload to 'resumes' folder..."); // Debug
                         const storageRef = storage.ref().child('resumes/' + fileName);
                         const snapshot = await storageRef.put(file);
-                        
-                        // Get Public URL
                         resumeUrl = await snapshot.ref.getDownloadURL();
-                        console.log("File uploaded. URL:", resumeUrl); // Debug
                     }
-
-                    // 2. Save Data
                     await db.collection('applications').add({
-                        name: `${fname} ${lname}`,
-                        contact: email,
-                        type: `Job: ${role}`,
-                        detail: `Resume: ${resumeName}`,
-                        status: 'Pending',
-                        resume_url: resumeUrl,
-                        created_at: firebase.firestore.FieldValue.serverTimestamp()
+                        name: `${fname} ${lname}`, contact: email, type: `Job: ${role}`, detail: `Resume: ${resumeName}`, status: 'Pending', resume_url: resumeUrl, created_at: firebase.firestore.FieldValue.serverTimestamp()
                     });
-
-                    showToast('Application Sent Successfully!'); 
-                    closeAllDrawers();
-
-                } catch (error) {
-                    console.error("Submission Error:", error);
-                    let msg = error.message;
-                    showToast(`Error: ${msg}`, 'error');
-                } finally {
-                    btn.innerHTML = originalText;
-                    btn.disabled = false;
-                }
-            } else {
-                // Demo Mode
-                setTimeout(() => {
-                    showToast('Application Sent! (Demo Mode)', 'success'); 
-                    closeAllDrawers();
-                }, 1000);
+                    showToast('Application Sent Successfully!'); closeAllDrawers();
+                } catch (error) { console.error("Submission Error:", error); showToast(`Error: ${error.message}`, 'error'); } finally { btn.innerHTML = originalText; btn.disabled = false; }
             }
         }
 
@@ -1955,34 +1532,11 @@
         function openWholesaleModal() {
             openModal(`
                 <div class="bg-white dark:bg-wood-900 rounded-3xl p-8 shadow-2xl max-w-lg mx-auto border dark:border-gray-600">
-                    <div class="flex justify-between items-center mb-6 border-b border-gray-100 dark:border-gray-700 pb-4">
-                        <h3 class="text-2xl font-bold text-brand-900 dark:text-white">Wholesale Application</h3>
-                        <button onclick="closeAllDrawers()" class="text-gray-400 hover:text-red-500 bg-gray-50 dark:bg-wood-800 p-2 rounded-full"><i class="fas fa-times text-lg"></i></button>
-                    </div>
+                    <div class="flex justify-between items-center mb-6 border-b border-gray-100 dark:border-gray-700 pb-4"><h3 class="text-2xl font-bold text-brand-900 dark:text-white">Wholesale Application</h3><button onclick="closeAllDrawers()" class="text-gray-400 hover:text-red-500 bg-gray-50 dark:bg-wood-800 p-2 rounded-full"><i class="fas fa-times text-lg"></i></button></div>
                     <p class="text-sm text-gray-500 dark:text-gray-300 mb-6 bg-brand-50 dark:bg-wood-800 p-4 rounded-xl border border-brand-100 dark:border-gray-700">Join our network of authorized distributors. Minimum order quantity applies.</p>
                     <form onsubmit="submitWholesaleApp(event)" class="space-y-4">
-                        <div class="space-y-4">
-                            <input id="ws-biz-name" required class="w-full bg-gray-50 dark:bg-wood-800 p-3 rounded-xl text-sm dark:text-white border border-transparent focus:border-brand-500 outline-none" placeholder="Business Name">
-                            <div class="grid grid-cols-2 gap-4">
-                                <input id="ws-contact" required class="w-full bg-gray-50 dark:bg-wood-800 p-3 rounded-xl text-sm dark:text-white border border-transparent focus:border-brand-500 outline-none" placeholder="Contact Person">
-                                <input id="ws-phone" required class="w-full bg-gray-50 dark:bg-wood-800 p-3 rounded-xl text-sm dark:text-white border border-transparent focus:border-brand-500 outline-none" placeholder="Phone Number">
-                            </div>
-                            <input id="ws-email" type="email" required class="w-full bg-gray-50 dark:bg-wood-800 p-3 rounded-xl text-sm dark:text-white border border-transparent focus:border-brand-500 outline-none" placeholder="Email Address">
-                            <div class="relative">
-                                <select id="ws-type" class="w-full bg-gray-50 dark:bg-wood-800 p-3 rounded-xl text-sm dark:text-white border border-transparent focus:border-brand-500 outline-none appearance-none cursor-pointer">
-                                    <option value="" disabled selected>Select Business Type</option>
-                                    <option value="Pharmacy">Pharmacy</option>
-                                    <option value="Supermarket">Supermarket</option>
-                                    <option value="Health Shop">Health Shop</option>
-                                    <option value="Individual">Individual Distributor</option>
-                                </select>
-                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500"><i class="fas fa-chevron-down text-xs"></i></div>
-                            </div>
-                            <textarea id="ws-location" required class="w-full bg-gray-50 dark:bg-wood-800 p-3 rounded-xl text-sm dark:text-white border border-transparent focus:border-brand-500 outline-none h-24 resize-none" placeholder="Business Location / Address"></textarea>
-                        </div>
-                        <button type="submit" id="ws-submit-btn" class="w-full bg-brand-900 hover:bg-brand-800 text-white font-bold py-3.5 rounded-xl shadow-lg transform active:scale-95 transition-all flex justify-center items-center gap-2">
-                            Submit Application <i class="fas fa-paper-plane"></i>
-                        </button>
+                        <div class="space-y-4"><input id="ws-biz-name" required class="w-full bg-gray-50 dark:bg-wood-800 p-3 rounded-xl text-sm dark:text-white border border-transparent focus:border-brand-500 outline-none" placeholder="Business Name"><div class="grid grid-cols-2 gap-4"><input id="ws-contact" required class="w-full bg-gray-50 dark:bg-wood-800 p-3 rounded-xl text-sm dark:text-white border border-transparent focus:border-brand-500 outline-none" placeholder="Contact Person"><input id="ws-phone" required class="w-full bg-gray-50 dark:bg-wood-800 p-3 rounded-xl text-sm dark:text-white border border-transparent focus:border-brand-500 outline-none" placeholder="Phone Number"></div><input id="ws-email" type="email" required class="w-full bg-gray-50 dark:bg-wood-800 p-3 rounded-xl text-sm dark:text-white border border-transparent focus:border-brand-500 outline-none" placeholder="Email Address"><div class="relative"><select id="ws-type" class="w-full bg-gray-50 dark:bg-wood-800 p-3 rounded-xl text-sm dark:text-white border border-transparent focus:border-brand-500 outline-none appearance-none cursor-pointer"><option value="" disabled selected>Select Business Type</option><option value="Pharmacy">Pharmacy</option><option value="Supermarket">Supermarket</option><option value="Health Shop">Health Shop</option><option value="Individual">Individual Distributor</option></select><div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500"><i class="fas fa-chevron-down text-xs"></i></div></div><textarea id="ws-location" required class="w-full bg-gray-50 dark:bg-wood-800 p-3 rounded-xl text-sm dark:text-white border border-transparent focus:border-brand-500 outline-none h-24 resize-none" placeholder="Business Location / Address"></textarea></div>
+                        <button type="submit" id="ws-submit-btn" class="w-full bg-brand-900 hover:bg-brand-800 text-white font-bold py-3.5 rounded-xl shadow-lg transform active:scale-95 transition-all flex justify-center items-center gap-2">Submit Application <i class="fas fa-paper-plane"></i></button>
                     </form>
                 </div>
             `);
@@ -1990,49 +1544,19 @@
 
         async function submitWholesaleApp(e) {
             e.preventDefault();
-            const btn = document.getElementById('ws-submit-btn');
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-            btn.disabled = true;
-
+            const btn = document.getElementById('ws-submit-btn'); const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...'; btn.disabled = true;
             const bizName = document.getElementById('ws-biz-name').value;
             const contact = document.getElementById('ws-contact').value;
             const phone = document.getElementById('ws-phone').value;
             const email = document.getElementById('ws-email').value;
             const type = document.getElementById('ws-type').value;
             const location = document.getElementById('ws-location').value;
-
             if (db) {
                 try {
-                    // Insert into 'applications' table
-                    await db.collection('applications').add({
-                        name: bizName,
-                        contact: email,
-                        phone: phone,
-                        type: `Wholesale: ${type}`, // Prefix ensures Admin panel colors it correctly
-                        detail: `Contact Person: ${contact}. Location: ${location}`, // Combine details for Admin view
-                        status: 'Pending',
-                        created_at: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-                    
-                    showToast('Application Received! We will contact you soon.', 'success');
-                    closeAllDrawers();
-                } catch (err) {
-                    console.error('Wholesale App Error:', err);
-                    let msg = err.message || "Submission failed";
-                    showToast(`Error: ${msg}`, 'error');
-                } finally {
-                    btn.innerHTML = originalText;
-                    btn.disabled = false;
-                }
-            } else {
-                // Demo Mode
-                setTimeout(() => {
-                    showToast('Application Received! (Demo Mode)', 'success');
-                    closeAllDrawers();
-                    btn.innerHTML = originalText;
-                    btn.disabled = false;
-                }, 1500);
+                    await db.collection('applications').add({ name: bizName, contact: email, phone: phone, type: `Wholesale: ${type}`, detail: `Contact Person: ${contact}. Location: ${location}`, status: 'Pending', created_at: firebase.firestore.FieldValue.serverTimestamp() });
+                    showToast('Application Received! We will contact you soon.', 'success'); closeAllDrawers();
+                } catch (err) { console.error('Wholesale App Error:', err); showToast(`Error: ${err.message}`, 'error'); } finally { btn.innerHTML = originalText; btn.disabled = false; }
             }
         }
 
@@ -2055,11 +1579,7 @@
             if(!id) return;
             const resDiv = document.getElementById('track-result');
             resDiv.classList.remove('hidden');
-            
-            if (!db) {
-                resDiv.innerHTML = '<p class="text-center text-red-500 text-sm font-bold">Database Error</p>';
-                return;
-            }
+            if (!db) { resDiv.innerHTML = '<p class="text-center text-red-500 text-sm font-bold">Database Error</p>'; return; }
 
             // Real-time listener for order status
             db.collection('orders').where('order_id', '==', id)
@@ -2079,74 +1599,28 @@
 
         function renderTrackingUI(status, customerName, total) {
             const resDiv = document.getElementById('track-result');
-            
-            // Define Steps
             const steps = ['Paid', 'Processing', 'Shipped', 'Delivered'];
-            
             if (status === 'Cancelled') {
-                 resDiv.innerHTML = `
-                    <div class="text-center animate-fade-in-up">
-                        <div class="w-16 h-16 bg-red-100 text-red-500 rounded-full flex items-center justify-center mx-auto mb-3"><i class="fas fa-times text-2xl"></i></div>
-                        <h3 class="text-xl font-bold text-red-600 mb-1">Order Cancelled</h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Please contact support.</p>
-                    </div>`;
+                 resDiv.innerHTML = `<div class="text-center animate-fade-in-up"><div class="w-16 h-16 bg-red-100 text-red-500 rounded-full flex items-center justify-center mx-auto mb-3"><i class="fas fa-times text-2xl"></i></div><h3 class="text-xl font-bold text-red-600 mb-1">Order Cancelled</h3><p class="text-sm text-gray-500 dark:text-gray-400">Please contact support.</p></div>`;
                  return;
             }
-
             let currentStepIndex = steps.indexOf(status);
-            if (currentStepIndex === -1 && (status === 'Pending' || status === 'New')) currentStepIndex = 0; // Default to start
-            
-            // Calculate progress bar width
+            if (currentStepIndex === -1 && (status === 'Pending' || status === 'New')) currentStepIndex = 0; 
             const progressWidth = (currentStepIndex / (steps.length - 1)) * 100;
-
             let stepsHtml = steps.map((step, index) => {
                 const isActive = index <= currentStepIndex;
                 const icon = index === 0 ? 'check' : index === 1 ? 'cog' : index === 2 ? 'truck' : 'home';
-                
-                return `
-                    <div class="relative flex flex-col items-center z-10 w-1/4">
-                        <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-500 border-2 ${isActive ? 'bg-brand-600 border-brand-600 text-white scale-110' : 'bg-white dark:bg-wood-800 border-gray-300 text-gray-400'}">
-                            <i class="fas fa-${icon}"></i>
-                        </div>
-                        <div class="text-[10px] font-bold mt-2 uppercase tracking-wider ${isActive ? 'text-brand-900 dark:text-white' : 'text-gray-400'}">${step}</div>
-                    </div>
-                `;
+                return `<div class="relative flex flex-col items-center z-10 w-1/4"><div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-500 border-2 ${isActive ? 'bg-brand-600 border-brand-600 text-white scale-110' : 'bg-white dark:bg-wood-800 border-gray-300 text-gray-400'}"><i class="fas fa-${icon}"></i></div><div class="text-[10px] font-bold mt-2 uppercase tracking-wider ${isActive ? 'text-brand-900 dark:text-white' : 'text-gray-400'}">${step}</div></div>`;
             }).join('');
-
-            resDiv.innerHTML = `
-                <div class="animate-fade-in-up pt-2">
-                    <div class="flex justify-between items-center mb-8 relative">
-                        <!-- Progress Bar Background -->
-                        <div class="absolute top-4 left-0 w-full h-1 bg-gray-200 dark:bg-gray-700 -z-0"></div>
-                        <!-- Active Progress Bar -->
-                        <div class="absolute top-4 left-0 h-1 bg-brand-600 transition-all duration-1000 ease-out -z-0 animate-progress" style="width: ${progressWidth}%"></div>
-                        
-                        ${stepsHtml}
-                    </div>
-                    
-                    <div class="bg-gray-50 dark:bg-wood-800 p-4 rounded-xl border border-gray-100 dark:border-gray-700 flex justify-between items-center">
-                        <div class="text-left">
-                            <p class="text-[10px] uppercase text-gray-400 font-bold tracking-widest">Customer</p>
-                            <p class="font-bold text-brand-900 dark:text-white text-sm">${customerName}</p>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-[10px] uppercase text-gray-400 font-bold tracking-widest">Total</p>
-                            <p class="font-bold text-brand-600 dark:text-gold-400 text-lg">GH₵${total.toFixed(2)}</p>
-                        </div>
-                    </div>
-                </div>
-            `;
+            resDiv.innerHTML = `<div class="animate-fade-in-up pt-2"><div class="flex justify-between items-center mb-8 relative"><div class="absolute top-4 left-0 w-full h-1 bg-gray-200 dark:bg-gray-700 -z-0"></div><div class="absolute top-4 left-0 h-1 bg-brand-600 transition-all duration-1000 ease-out -z-0 animate-progress" style="width: ${progressWidth}%"></div>${stepsHtml}</div><div class="bg-gray-50 dark:bg-wood-800 p-4 rounded-xl border border-gray-100 dark:border-gray-700 flex justify-between items-center"><div class="text-left"><p class="text-[10px] uppercase text-gray-400 font-bold tracking-widest">Customer</p><p class="font-bold text-brand-900 dark:text-white text-sm">${customerName}</p></div><div class="text-right"><p class="text-[10px] uppercase text-gray-400 font-bold tracking-widest">Total</p><p class="font-bold text-brand-600 dark:text-gold-400 text-lg">GH₵${total.toFixed(2)}</p></div></div></div>`;
         }
 
         // --- CHECKOUT LOGIC ---
         function addToCart(id, qty = 1){ 
             const prod = products.find(x=>x.id===id); 
             if(prod) { 
-                for(let i = 0; i < qty; i++) {
-                    cart.push(prod); 
-                }
-                updateCartUI(); 
-                showToast(`Added ${qty} item(s) to cart`); 
+                for(let i = 0; i < qty; i++) { cart.push(prod); }
+                updateCartUI(); showToast(`Added ${qty} item(s) to cart`); 
             } 
         }
         function updateCartUI(){
