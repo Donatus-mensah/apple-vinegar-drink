@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GBHPL Admin | Management Console</title>
+    
+    <!-- 1. IMMEDIATE SECURITY BLOCK (Preloading protection) -->
+    <script>
+        // Runs immediately before body loads
+        (function() {
+            const block = (e) => {
+                // Block Ctrl+U, Ctrl+Shift+I, F12, Ctrl+S, Ctrl+H
+                if (
+                    (e.ctrlKey && (e.key === 'u' || e.key === 'U')) || 
+                    (e.ctrlKey && e.shiftKey && (e.key === 'i' || e.key === 'I')) ||
+                    (e.ctrlKey && e.shiftKey && (e.key === 'j' || e.key === 'J')) ||
+                    (e.ctrlKey && (e.key === 's' || e.key === 'S')) ||
+                    (e.keyCode === 123) // F12
+                ) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                }
+            };
+            
+            // Attach to document and window
+            document.addEventListener('keydown', block, true);
+            document.addEventListener('contextmenu', e => e.preventDefault(), true);
+        })();
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Firebase JS SDKs (Compat versions for simple HTML usage) -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    
+    <!-- Chart.js for Analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { 50: '#fff1f2', 100: '#ffe4e6', 500: '#9b2c2c', 600: '#881337', 900: '#2b0a0b' },
+                        wood: { 700: '#5d4037', 800: '#3e2723', 900: '#1a120b' },
+                        gold: { 400: '#facc15', 500: '#eab308' },
+                        terminal: { bg: '#0c0c0c', text: '#00ff00', dim: '#003300' }
+                    },
+                    fontFamily: { 
+                        sans: ['Montserrat', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { transition: background-color 0.3s, color 0.3s; }
+        .glass-panel { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+        .dark .glass-panel { background: rgba(26, 18, 11, 0.95); }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .dark ::-webkit-scrollbar-thumb { background: #475569; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        /* Terminal Styles */
+        .terminal-cursor {
+            display: inline-block;
+            width: 8px;
+            height: 1.2em;
+            background-color: #00ff00;
+            animation: blink 1s step-end infinite;
+            vertical-align: middle;
+        }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+        
+        /* Mobile adjustments */
+        @media (max-width: 640px) {
+            .hide-scrollbar::-webkit-scrollbar { display: none; }
+            .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 dark:bg-wood-900 text-gray-800 dark:text-gray-100 font-sans h-[100dvh] flex flex-col overflow-hidden transition-colors duration-300" oncontextmenu="return false">
+
+    <!-- LOGIN SCREEN -->
+    <div id="login-screen" class="fixed inset-0 z-[60] bg-wood-900 flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white dark:bg-wood-800 rounded-2xl p-8 max-w-sm w-full shadow-2xl text-center border border-transparent dark:border-gray-700 my-auto">
+            <div class="w-16 h-16 bg-brand-100 dark:bg-wood-700 text-brand-600 dark:text-gold-400 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl"><i class="fas fa-lock"></i></div>
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-1">Staff Access</h2>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">Enter your credentials to continue.</p>
+            <form onsubmit="handleLogin(event)" class="space-y-4">
+                <input type="password" id="admin-pass" class="w-full p-3 bg-gray-50 dark:bg-wood-900 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-500 outline-none transition dark:text-white" placeholder="Password" required>
+                <button type="submit" class="w-full bg-brand-600 hover:bg-brand-500 text-white font-bold py-3 rounded-lg shadow-lg transition transform active:scale-95 touch-manipulation">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MAIN DASHBOARD -->
+    <div id="dashboard" class="hidden flex-1 flex flex-col h-full relative">
+        <!-- Header -->
+        <header class="bg-white dark:bg-wood-800 border-b border-gray-200 dark:border-gray-700 h-16 flex items-center justify-between px-4 md:px-6 shadow-sm z-30 shrink-0 relative">
+            <div class="flex items-center gap-3">
+                <button onclick="toggleSidebar()" class="md:hidden w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-wood-700 text-gray-500 dark:text-gray-300 text-xl transition active:scale-95"><i class="fas fa-bars"></i></button>
+                <div class="font-black text-xl italic tracking-tighter text-brand-600 dark:text-gold-400 hidden sm:block">GBHPL</div>
+                <div class="h-6 w-px bg-gray-300 dark:bg-gray-600 hidden sm:block"></div>
+                <h1 class="font-bold text-gray-700 dark:text-gray-200 text-sm md:text-base uppercase tracking-wide truncate">Admin Console</h1>
+            </div>
+            <div class="flex items-center gap-2 md:gap-4">
+                <button onclick="toggleTheme()" class="w-9 h-9 rounded-full bg-gray-100 dark:bg-wood-700 flex items-center justify-center text-gray-600 dark:text-gold-400 hover:bg-gray-200 transition active:scale-95"><i class="fas fa-moon dark:hidden"></i><i class="fas fa-sun hidden dark:block"></i></button>
+                <div class="hidden md:flex items-center gap-2 bg-green-50 dark:bg-wood-700/50 text-green-700 dark:text-green-400 px-3 py-1 rounded-full text-xs font-bold border border-green-100 dark:border-transparent">
+                    <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span> DB Connected
+                </div>
+                <button onclick="logout()" class="w-9 h-9 flex items-center justify-center text-gray-400 hover:text-brand-600 dark:hover:text-gold-400 transition ml-1 active:scale-95"><i class="fas fa-sign-out-alt text-lg"></i></button>
+            </div>
+        </header>
+
+        <div class="flex flex-1 overflow-hidden relative">
+            <!-- Sidebar -->
+            <aside id="sidebar" class="absolute md:static inset-y-0 left-0 w-72 md:w-64 bg-wood-900 text-gray-400 flex flex-col transform -translate-x-full md:translate-x-0 transition-transform duration-300 z-50 shadow-2xl md:shadow-none h-full">
+                <div class="p-6">
+                    <div class="flex justify-between items-center md:hidden mb-8">
+                         <span class="font-bold text-white uppercase tracking-widest text-lg">Menu</span>
+                         <button onclick="toggleSidebar()" class="text-white w-8 h-8 flex items-center justify-center rounded-full hover:bg-wood-800"><i class="fas fa-times text-xl"></i></button>
+                    </div>
+                    <p class="hidden md:block text-xs font-bold uppercase tracking-widest text-gray-500 mb-4">Menu</p>
+                    <nav class="space-y-2">
+                        <button onclick="switchView('orders')" id="nav-orders" class="w-full flex items-center gap-4 md:gap-3 bg-brand-600 text-white px-4 py-4 md:py-3 rounded-xl md:rounded-lg font-bold text-base md:text-sm shadow-lg transition-colors touch-manipulation"><i class="fas fa-box-open w-6 text-center"></i> Orders</button>
+                        <button onclick="switchView('applications')" id="nav-applications" class="w-full flex items-center gap-4 md:gap-3 hover:bg-wood-800 hover:text-white px-4 py-4 md:py-3 rounded-xl md:rounded-lg font-medium text-base md:text-sm transition-colors touch-manipulation"><i class="fas fa-clipboard-list w-6 text-center"></i> Applications</button>
+                        <button onclick="switchView('inventory')" id="nav-inventory" class="w-full flex items-center gap-4 md:gap-3 hover:bg-wood-800 hover:text-white px-4 py-4 md:py-3 rounded-xl md:rounded-lg font-medium text-base md:text-sm transition-colors touch-manipulation"><i class="fas fa-cubes w-6 text-center"></i> Inventory</button>
+                        <button onclick="switchView('content')" id="nav-content" class="w-full flex items-center gap-4 md:gap-3 hover:bg-wood-800 hover:text-white px-4 py-4 md:py-3 rounded-xl md:rounded-lg font-medium text-base md:text-sm transition-colors touch-manipulation"><i class="fas fa-images w-6 text-center"></i> Site Content</button>
+                        <button onclick="switchView('analytics')" id="nav-analytics" class="w-full flex items-center gap-4 md:gap-3 hover:bg-wood-800 hover:text-white px-4 py-4 md:py-3 rounded-xl md:rounded-lg font-medium text-base md:text-sm transition-colors touch-manipulation"><i class="fas fa-chart-pie w-6 text-center"></i> Analytics</button>
+                        <button onclick="switchView('terminal')" id="nav-terminal" class="w-full flex items-center gap-4 md:gap-3 hover:bg-wood-800 hover:text-white px-4 py-4 md:py-3 rounded-xl md:rounded-lg font-medium text-base md:text-sm transition-colors touch-manipulation border border-gray-700/50 mt-4"><i class="fas fa-terminal w-6 text-center text-green-500"></i> Terminal</button>
+                    </nav>
+                </div>
+                <div class="mt-auto p-6 border-t border-gray-800 pb-8 md:pb-6 safe-area-bottom">
+                    <p class="text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Quick Stats</p>
+                    <div class="mb-4">
+                        <p class="text-xs text-gray-400">Total Revenue</p>
+                        <p class="text-xl font-bold text-white" id="total-revenue">GH₵0.00</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-400">Total Orders</p>
+                        <p class="text-xl font-bold text-white" id="total-orders">0</p>
+                    </div>
+                </div>
+            </aside>
+            
+            <!-- Overlay for mobile sidebar -->
+            <div id="sidebar-overlay" onclick="toggleSidebar()" class="absolute inset-0 bg-black/60 z-40 hidden md:hidden glass-panel opacity-0 transition-opacity duration-300" style="opacity: 0;"></div>
+
+            <!-- Content Area -->
+            <main class="flex-1 overflow-y-auto overflow-x-hidden bg-gray-50 dark:bg-wood-900/50 p-4 md:p-8 relative scroll-smooth w-full">
+                <div class="max-w-6xl mx-auto pb-20 md:pb-0 h-full">
+                    
+                    <!-- ORDERS VIEW -->
+                    <div id="view-orders" class="animate-fade-in w-full">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-6 gap-4">
+                            <div>
+                                <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Order Management</h2>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Live feed of local deliveries.</p>
+                            </div>
+                            <button onclick="loadOrders()" class="w-full sm:w-auto bg-white dark:bg-wood-800 border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-wood-700 px-4 py-3 sm:py-2 rounded-lg text-sm font-bold shadow-sm transition active:scale-95"><i class="fas fa-sync-alt mr-2"></i> Refresh</button>
+                        </div>
+
+                        <div id="orders-container" class="space-y-3">
+                            <div class="text-center py-20">
+                                <i class="fas fa-circle-notch fa-spin text-4xl text-brand-200 mb-4"></i>
+                                <p class="text-gray-400">Connecting to Firebase Database...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- APPLICATIONS VIEW -->
+                    <div id="view-applications" class="hidden animate-fade-in w-full">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-6 gap-4">
+                            <div>
+                                <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Applications</h2>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Manage bulk orders & applicants.</p>
+                            </div>
+                            <div class="flex gap-2 w-full sm:w-auto">
+                                <button onclick="toggleDebugMode()" class="flex-1 sm:flex-none bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 px-3 py-3 sm:py-2 rounded-lg text-xs font-bold shadow-sm transition active:scale-95" title="Show Raw Database Data"><i class="fas fa-bug"></i> Debug</button>
+                                <button onclick="loadApplications()" class="flex-1 sm:flex-none bg-white dark:bg-wood-800 border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-wood-700 px-4 py-3 sm:py-2 rounded-lg text-sm font-bold shadow-sm transition active:scale-95"><i class="fas fa-sync-alt mr-2"></i> Refresh</button>
+                            </div>
+                        </div>
+
+                        <div id="applications-container" class="space-y-3">
+                            <div class="text-center py-20">
+                                <i class="fas fa-circle-notch fa-spin text-4xl text-brand-200 mb-4"></i>
+                                <p class="text-gray-400">Loading Applications...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- INVENTORY VIEW -->
+                    <div id="view-inventory" class="hidden animate-fade-in w-full">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-6 gap-4">
+                            <div>
+                                <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Inventory</h2>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Manage products and pricing.</p>
+                            </div>
+                            <div class="flex gap-2 w-full md:w-auto">
+                                <button onclick="addNewProductRow()" id="add-item-btn" class="flex-1 md:flex-none bg-white dark:bg-wood-800 border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 px-4 py-3 md:py-2 rounded-lg text-sm font-bold shadow-sm hover:bg-gray-50 dark:hover:bg-wood-700 transition active:scale-95"><i class="fas fa-plus mr-2"></i> Add Item</button>
+                                <button onclick="saveInventory()" id="save-inv-btn" class="flex-1 md:flex-none bg-brand-600 hover:bg-brand-500 text-white px-5 py-3 md:py-2 rounded-lg text-sm font-bold shadow-lg transition active:scale-95"><i class="fas fa-save mr-2"></i> Save</button>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white dark:bg-wood-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left text-sm text-gray-600 dark:text-gray-300 min-w-[600px]">
+                                    <thead class="bg-gray-50 dark:bg-wood-900 border-b border-gray-200 dark:border-gray-700 text-xs uppercase font-bold text-gray-500 dark:text-gray-400">
+                                        <tr>
+                                            <th class="p-4 w-20">Preview</th>
+                                            <th class="p-4 w-48">Product Name</th>
+                                            <th class="p-4">Image Link</th>
+                                            <th class="p-4 w-28">Price (GH₵)</th>
+                                            <th class="p-4 w-24 text-center">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="inventory-list" class="divide-y divide-gray-100 dark:divide-gray-700">
+                                        <tr><td colspan="5" class="p-8 text-center text-gray-400">Loading products...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-400 mt-2 md:hidden text-center"><i class="fas fa-arrows-left-right mr-1"></i> Swipe table to view more</p>
+                    </div>
+
+                    <!-- SITE CONTENT VIEW -->
+                    <div id="view-content" class="hidden animate-fade-in w-full">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-6 gap-4">
+                            <div>
+                                <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Site Content</h2>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Manage static images.</p>
+                            </div>
+                            <button onclick="saveSiteContent()" id="save-content-btn" class="w-full sm:w-auto bg-brand-600 hover:bg-brand-500 text-white px-5 py-3 sm:py-2 rounded-lg text-sm font-bold shadow-lg transition active:scale-95"><i class="fas fa-save mr-2"></i> Save Images</button>
+                        </div>
+                        
+                        <div class="bg-white dark:bg-wood-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden p-4 md:p-6">
+                            <div id="content-list" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="col-span-2 text-center py-10 text-gray-400">Loading site assets...</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ANALYTICS VIEW -->
+                    <div id="view-analytics" class="hidden animate-fade-in w-full">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-6 gap-4">
+                            <div>
+                                <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Analytics</h2>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Key metrics and sales data.</p>
+                            </div>
+                             <button onclick="loadAnalytics()" class="w-full sm:w-auto bg-white dark:bg-wood-800 border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-wood-700 px-4 py-3 sm:py-2 rounded-lg text-sm font-bold shadow-sm transition active:scale-95"><i class="fas fa-sync-alt mr-2"></i> Refresh</button>
+                        </div>
+                        
+                        <!-- Top Stats Cards -->
+                        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-8">
+                             <div class="bg-white dark:bg-wood-800 p-4 md:p-6 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
+                                <p class="text-[10px] md:text-xs font-bold uppercase tracking-wider text-gray-500 mb-1">Total Revenue</p>
+                                <h3 class="text-lg md:text-2xl font-bold text-brand-600 dark:text-gold-400 truncate" id="stat-revenue">GH₵0.00</h3>
+                             </div>
+                             <div class="bg-white dark:bg-wood-800 p-4 md:p-6 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
+                                <p class="text-[10px] md:text-xs font-bold uppercase tracking-wider text-gray-500 mb-1">Total Orders</p>
+                                <h3 class="text-lg md:text-2xl font-bold text-gray-800 dark:text-white" id="stat-orders">0</h3>
+                             </div>
+                             <div class="bg-white dark:bg-wood-800 p-4 md:p-6 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
+                                <p class="text-[10px] md:text-xs font-bold uppercase tracking-wider text-gray-500 mb-1">Avg. Order</p>
+                                <h3 class="text-lg md:text-2xl font-bold text-gray-800 dark:text-white truncate" id="stat-avg">GH₵0.00</h3>
+                             </div>
+                             <div class="bg-white dark:bg-wood-800 p-4 md:p-6 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
+                                <p class="text-[10px] md:text-xs font-bold uppercase tracking-wider text-gray-500 mb-1">Pending</p>
+                                <h3 class="text-lg md:text-2xl font-bold text-orange-500" id="stat-pending">0</h3>
+                             </div>
+                        </div>
+
+                        <!-- Charts Area -->
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                            <div class="bg-white dark:bg-wood-800 p-4 md:p-6 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
+                                <h4 class="font-bold text-gray-800 dark:text-white mb-4">Top Selling Products</h4>
+                                <div class="relative h-64 w-full">
+                                    <canvas id="topProductsChart"></canvas>
+                                </div>
+                            </div>
+                            <div class="bg-white dark:bg-wood-800 p-4 md:p-6 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
+                                <h4 class="font-bold text-gray-800 dark:text-white mb-4">Order Status</h4>
+                                <div class="relative h-64 w-full flex justify-center">
+                                    <canvas id="statusChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Recent Activity -->
+                        <div class="bg-white dark:bg-wood-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden">
+                            <div class="p-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-wood-900">
+                                <h4 class="font-bold text-gray-800 dark:text-white text-sm">Recent Transactions</h4>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left text-sm text-gray-600 dark:text-gray-300 min-w-[500px]">
+                                    <thead class="text-xs uppercase font-bold text-gray-400">
+                                        <tr>
+                                            <th class="p-4">Date</th>
+                                            <th class="p-4">Customer</th>
+                                            <th class="p-4">Status</th>
+                                            <th class="p-4 text-right">Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="analytics-recent-table" class="divide-y divide-gray-100 dark:divide-gray-700">
+                                        <!-- Populated via JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TERMINAL VIEW (NEW) -->
+                    <div id="view-terminal" class="hidden animate-fade-in w-full h-full flex flex-col">
+                         <div class="flex-1 bg-terminal-bg rounded-xl border border-gray-800 shadow-2xl p-4 font-mono text-sm overflow-hidden flex flex-col relative">
+                            <!-- Header -->
+                            <div class="flex justify-between items-center mb-2 pb-2 border-b border-terminal-dim">
+                                <span class="text-gray-500 text-xs uppercase tracking-widest">GBHPL-SHELL v1.0.5 (Firestore)</span>
+                                <div class="flex gap-1.5">
+                                    <div class="w-3 h-3 rounded-full bg-red-500/50"></div>
+                                    <div class="w-3 h-3 rounded-full bg-yellow-500/50"></div>
+                                    <div class="w-3 h-3 rounded-full bg-green-500/50"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- Output Area -->
+                            <div id="term-output" class="flex-1 overflow-y-auto space-y-1 text-terminal-text scrollbar-thin scrollbar-thumb-gray-800 pr-2">
+                                <div class="mb-4">
+                                    <p>Welcome to GBHPL Admin Shell.</p>
+                                    <p>Type <span class="text-white">'help'</span> to see available commands.</p>
+                                    <p class="text-gray-500">Connected to: google-firestore</p>
+                                </div>
+                            </div>
+
+                            <!-- Input Area -->
+                            <div class="mt-2 flex items-center border-t border-terminal-dim pt-2">
+                                <span class="text-green-500 font-bold mr-2">admin@gbhpl:~$</span>
+                                <input type="text" id="term-input" class="bg-transparent border-none outline-none text-white w-full font-mono placeholder-gray-700" placeholder="Enter command..." autocomplete="off">
+                            </div>
+                         </div>
+                         <p class="text-xs text-gray-500 mt-2 font-mono text-center">Use 'clear' to reset view.</p>
+                    </div>
+
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Response Modal -->
+    <div id="response-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity" onclick="closeResponseModal()"></div>
+        <div class="relative w-full max-w-lg bg-white dark:bg-wood-900 rounded-2xl shadow-2xl overflow-hidden transform scale-100 transition-all border dark:border-gray-600 p-6 flex flex-col max-h-[90vh]">
+            <div class="flex justify-between items-center mb-6 shrink-0">
+                <h3 class="text-xl font-bold text-brand-900 dark:text-white"><i class="fas fa-envelope-open-text mr-2"></i>Send Response</h3>
+                <button onclick="closeResponseModal()" class="text-gray-400 hover:text-red-500 transition-colors w-8 h-8 flex items-center justify-center rounded-full"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            <form id="responseForm" onsubmit="sendResponse(event)" class="space-y-4 overflow-y-auto pr-1">
+                <input type="hidden" id="resp-id">
+                <input type="hidden" id="resp-email">
+                <input type="hidden" id="resp-name">
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1 uppercase">To</label>
+                    <input type="text" id="resp-to-display" disabled class="w-full p-3 rounded-lg bg-gray-100 dark:bg-wood-800 border border-transparent text-sm text-gray-500">
+                </div>
+                
+                <div id="resp-resume-container" class="hidden">
+                     <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1 uppercase">Attachment</label>
+                     <a id="resp-resume-link" href="#" target="_blank" class="flex items-center gap-2 p-3 rounded-lg bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border border-blue-100 dark:border-blue-800 hover:bg-blue-100 dark:hover:bg-blue-900/40 transition">
+                         <i class="fas fa-file-pdf text-xl"></i>
+                         <div class="flex-1 min-w-0">
+                             <p class="text-sm font-bold truncate">Applicant Resume / Document</p>
+                             <p class="text-xs opacity-75">Click to view/download</p>
+                         </div>
+                         <i class="fas fa-external-link-alt text-sm"></i>
+                     </a>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1 uppercase">Message</label>
+                    <textarea id="resp-message" required rows="5" class="w-full p-3 rounded-lg bg-gray-50 dark:bg-wood-800 border border-gray-200 dark:border-gray-600 text-sm focus:ring-2 focus:ring-brand-500 outline-none dark:text-white transition-colors resize-none" placeholder="Type your reply here..."></textarea>
+                </div>
+                <button type="submit" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 rounded-lg shadow-lg flex justify-center items-center gap-2 active:scale-95 transition-transform">
+                    Send & Open Email Client <i class="fas fa-paper-plane text-xs"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-5 right-5 left-5 md:left-auto bg-wood-900 dark:bg-white text-white dark:text-wood-900 px-6 py-4 md:py-3 rounded-lg shadow-xl transform translate-y-32 transition-transform duration-300 z-[200] flex items-center gap-3 border dark:border-gray-200">
+        <i class="fas fa-info-circle text-gold-400 dark:text-brand-600 text-xl"></i> <span id="toast-msg" class="font-medium text-sm">Notification</span>
+    </div>
+
+    <script>
+        // --- FIREBASE CONFIG ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyBcaDhHrTKER4EePU1Lr4_DAq1zr46z7ko",
+            authDomain: "apple-vinegar.firebaseapp.com",
+            projectId: "apple-vinegar",
+            storageBucket: "apple-vinegar.firebasestorage.app",
+            messagingSenderId: "176381249452",
+            appId: "1:176381249452:web:9b3db68d07c4682d081c09",
+            measurementId: "G-B65KJE42Z5"
+        };
+        
+        let db = null;
+        try {
+            firebase.initializeApp(firebaseConfig);
+            db = firebase.firestore();
+            console.log("Firebase Initialized");
+        } catch (e) {
+            console.error("Firebase Init Error:", e);
+        }
+
+        let currentInventory = [];
+        let siteContentData = [];
+        let isLoggedIn = false;
+        let productsChart = null;
+        let statusChart = null;
+        let debugMode = false;
+
+        // --- AUTH & INIT ---
+        window.onload = () => {
+             if(localStorage.getItem('theme')==='dark') document.documentElement.classList.add('dark');
+             if(sessionStorage.getItem('adminLoggedIn') === 'true') {
+                 isLoggedIn = true;
+                 document.getElementById('login-screen').classList.add('hidden');
+                 document.getElementById('dashboard').classList.remove('hidden');
+                 initDashboard();
+             }
+             
+             // Init Terminal listener
+             document.getElementById('term-input').addEventListener('keydown', handleTerminalInput);
+        };
+
+        function initDashboard() {
+            if(!isLoggedIn) return;
+            loadOrders();
+            loadInventory();
+            loadApplications();
+            loadSiteContent();
+            loadAnalytics();
+        }
+
+        // --- UI FUNCTIONS ---
+        window.toggleSidebar = () => {
+            const sb = document.getElementById('sidebar');
+            const ov = document.getElementById('sidebar-overlay');
+            if(sb.classList.contains('-translate-x-full')) {
+                sb.classList.remove('-translate-x-full');
+                ov.classList.remove('hidden');
+                setTimeout(() => ov.style.opacity = '1', 10);
+            } else {
+                sb.classList.add('-translate-x-full');
+                ov.style.opacity = '0';
+                setTimeout(() => ov.classList.add('hidden'), 300);
+            }
+        };
+
+        window.toggleTheme = () => {
+            document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+        };
+
+        window.switchView = (viewName) => {
+            ['orders', 'inventory', 'analytics', 'applications', 'content', 'terminal'].forEach(v => {
+                const el = document.getElementById(`view-${v}`);
+                if(el) el.classList.add('hidden');
+                
+                const btn = document.getElementById(`nav-${v}`);
+                if(btn) {
+                    btn.classList.remove('bg-brand-600', 'text-white');
+                    btn.classList.add('hover:bg-wood-800', 'hover:text-white');
+                }
+            });
+            
+            const target = document.getElementById(`view-${viewName}`);
+            if(target) target.classList.remove('hidden');
+            
+            const btn = document.getElementById(`nav-${viewName}`);
+            if(btn) {
+                btn.classList.remove('hover:bg-wood-800', 'hover:text-white');
+                btn.classList.add('bg-brand-600', 'text-white');
+            }
+            
+            if (viewName === 'analytics') loadAnalytics();
+            if (viewName === 'terminal') {
+                setTimeout(() => document.getElementById('term-input').focus(), 100);
+            }
+            
+            if(window.innerWidth < 768) {
+                const sb = document.getElementById('sidebar');
+                if(!sb.classList.contains('-translate-x-full')) {
+                    window.toggleSidebar();
+                }
+            }
+        };
+
+        window.toggleDebugMode = () => {
+            debugMode = !debugMode;
+            loadApplications();
+            showToast(debugMode ? 'Debug Mode Enabled' : 'Debug Mode Disabled');
+        }
+
+        function escapeHtml(text) {
+            if (!text) return "";
+            return String(text).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
+
+        // --- LOGIN LOGIC ---
+        window.handleLogin = (e) => {
+            e.preventDefault();
+            const p = document.getElementById('admin-pass').value;
+            if(p === 'admin') {
+                isLoggedIn = true;
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('dashboard').classList.remove('hidden');
+                sessionStorage.setItem('adminLoggedIn', 'true');
+                initDashboard();
+            } else {
+                showToast('Invalid Password');
+            }
+        }
+        
+        window.logout = () => {
+            sessionStorage.removeItem('adminLoggedIn');
+            location.reload();
+        }
+
+        // --- TERMINAL LOGIC ---
+        function termPrint(html, isCommand = false) {
+            const out = document.getElementById('term-output');
+            const line = document.createElement('div');
+            line.innerHTML = isCommand ? `<span class="text-green-500 font-bold mr-2">admin@gbhpl:~$</span> <span class="text-white">${html}</span>` : html;
+            out.appendChild(line);
+            out.scrollTop = out.scrollHeight;
+        }
+
+        async function handleTerminalInput(e) {
+            if(e.key === 'Enter') {
+                const input = e.target.value.trim();
+                e.target.value = '';
+                
+                termPrint(input, true);
+                
+                if(!input) return;
+
+                const args = input.split(' ');
+                const cmd = args[0].toLowerCase();
+
+                switch(cmd) {
+                    case 'help':
+                        termPrint(`<div class="text-yellow-400">
+                            Available Commands:<br>
+                            - <b class="text-white">help</b>: Show this message<br>
+                            - <b class="text-white">clear</b>: Clear screen<br>
+                            - <b class="text-white">date</b>: Show server date<br>
+                            - <b class="text-white">whoami</b>: Show current user<br>
+                            - <b class="text-white">orders</b>: Fetch latest orders<br>
+                            - <b class="text-white">products</b>: List inventory<br>
+                            - <b class="text-white">reboot</b>: Reload dashboard
+                        </div>`);
+                        break;
+                    case 'clear':
+                    case 'cls':
+                        document.getElementById('term-output').innerHTML = '';
+                        break;
+                    case 'date':
+                        termPrint(new Date().toString());
+                        break;
+                    case 'whoami':
+                        termPrint('admin (root privileges)');
+                        break;
+                    case 'reboot':
+                        termPrint('Rebooting system...');
+                        setTimeout(() => location.reload(), 1000);
+                        break;
+                    case 'orders':
+                        termPrint('Fetching orders from Firestore...');
+                        if(db) {
+                            try {
+                                const snap = await db.collection('orders').orderBy('created_at', 'desc').limit(5).get();
+                                if(snap.empty) termPrint('No orders found.');
+                                else {
+                                    snap.forEach(doc => {
+                                        const o = doc.data();
+                                        termPrint(`[${o.order_id}] ${o.customer_name} - GH₵${o.total} (${o.status})`);
+                                    });
+                                }
+                            } catch(err) {
+                                termPrint(`<span class="text-red-500">Error: ${err.message}</span>`);
+                            }
+                        } else termPrint('<span class="text-red-500">DB Not Connected</span>');
+                        break;
+                    case 'products':
+                        termPrint(`Listing cached inventory (${currentInventory.length} items):`);
+                        currentInventory.forEach(p => {
+                            termPrint(`${p.id}: ${p.name} - ${p.price}`);
+                        });
+                        break;
+                    default:
+                        termPrint(`<span class="text-red-500">bash: ${cmd}: command not found</span>`);
+                }
+            }
+        }
+
+        // --- HELPER: Timestamp conversion ---
+        function parseTimestamp(ts) {
+            if (!ts) return new Date();
+            if (ts.toDate) return ts.toDate(); // Firestore Timestamp
+            return new Date(ts); // String or number
+        }
+
+        // --- ORDERS LOGIC ---
+        window.loadOrders = async () => {
+            if(!isLoggedIn) return;
+            const container = document.getElementById('orders-container');
+            if(!db) {
+                container.innerHTML = `<div class="bg-white dark:bg-wood-800 rounded-xl p-10 text-center border border-gray-200 dark:border-gray-700"><p class="text-red-500 font-bold">Database not connected</p></div>`;
+                return;
+            }
+            
+            // Realtime listener
+            db.collection('orders').orderBy('created_at', 'desc')
+            .onSnapshot((snapshot) => {
+                const orders = [];
+                snapshot.forEach((doc) => {
+                    const data = doc.data();
+                    // Attach Firestore Doc ID for updates, but keep data structure expected by UI
+                    orders.push({ 
+                        ...data, 
+                        _firestore_id: doc.id,
+                        created_at: parseTimestamp(data.created_at) 
+                    });
+                });
+                renderOrders(orders);
+                showToast("Orders Updated");
+            }, (error) => {
+                console.error("Orders Error:", error);
+                container.innerHTML = `<div class="bg-white dark:bg-wood-800 rounded-xl p-10 text-center border border-gray-200 dark:border-gray-700"><i class="fas fa-exclamation-triangle text-4xl text-red-400 mb-2"></i><p class="text-gray-500 dark:text-gray-400">Error fetching orders.</p></div>`;
+            });
+        }
+
+        function renderOrders(orders) {
+            const container = document.getElementById('orders-container');
+            let revenue = 0;
+            orders.forEach(o => revenue += (parseFloat(o.total) || 0));
+            document.getElementById('total-revenue').innerText = `GH₵${revenue.toFixed(2)}`;
+            document.getElementById('total-orders').innerText = orders.length;
+
+            if(orders.length === 0) {
+                container.innerHTML = `<div class="bg-white dark:bg-wood-800 rounded-xl p-10 text-center border border-gray-200 dark:border-gray-700"><i class="fas fa-box-open text-4xl text-gray-300 dark:text-gray-600 mb-2"></i><p class="text-gray-500 dark:text-gray-400">No active orders found.</p></div>`;
+                return;
+            }
+
+            container.innerHTML = orders.map(order => {
+                const statusStyles = {
+                    'Pending': 'bg-yellow-100 text-yellow-800 border-yellow-200',
+                    'Processing': 'bg-blue-100 text-blue-800 border-blue-200',
+                    'Shipped': 'bg-orange-100 text-orange-800 border-orange-200',
+                    'Delivered': 'bg-green-100 text-green-800 border-green-200',
+                    'Paid': 'bg-green-100 text-green-800 border-green-200',
+                    'Cancelled': 'bg-red-100 text-red-800 border-red-200'
+                };
+                const badgeClass = statusStyles[order.status] || 'bg-gray-100 text-gray-800';
+                
+                let itemsDisplay = "No items";
+                try {
+                    if(Array.isArray(order.items)) {
+                        itemsDisplay = order.items.map(i => typeof i === 'object' ? `${i.name || i.product} (x${i.qty || i.quantity})` : i).join(', ');
+                    } else if(typeof order.items === 'string') {
+                        try {
+                            const parsed = JSON.parse(order.items);
+                             if(Array.isArray(parsed)) itemsDisplay = parsed.map(i => typeof i === 'object' ? `${i.name || i.product} (x${i.qty || i.quantity})` : i).join(', ');
+                             else itemsDisplay = order.items;
+                        } catch(e) { itemsDisplay = order.items; }
+                    }
+                } catch(e) { console.log("Item parse error", e); }
+                
+                // Use _firestore_id for updates if available, else fall back to order_id query
+                const updateId = order._firestore_id || order.order_id;
+
+                return `
+                <div class="bg-white dark:bg-wood-800 rounded-xl p-5 shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md transition-shadow flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between group">
+                    <div class="flex-1 w-full">
+                        <div class="flex flex-wrap items-center gap-2 mb-2">
+                            <span class="font-mono text-xs font-bold bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-2 py-1 rounded select-all cursor-pointer" title="Order ID">${order.order_id}</span>
+                            <span class="text-xs font-bold px-2.5 py-0.5 rounded-full border ${badgeClass} flex items-center gap-1">
+                                <span class="w-1.5 h-1.5 rounded-full bg-current opacity-50"></span> ${order.status}
+                            </span>
+                            <span class="text-xs text-gray-400"><i class="far fa-clock mr-1"></i> ${new Date(order.created_at).toLocaleDateString()}</span>
+                        </div>
+                        <h3 class="font-bold text-gray-800 dark:text-white text-lg">${order.customer_name || 'Guest'}</h3>
+                        <div class="text-sm text-gray-500 dark:text-gray-400 mt-1 flex gap-2 items-center">
+                            <i class="fas fa-shopping-basket text-gray-300 dark:text-gray-600 shrink-0"></i> 
+                            <span class="truncate max-w-[250px] sm:max-w-md">${itemsDisplay}</span>
+                        </div>
+                    </div>
+                    <div class="w-full lg:w-auto flex items-center justify-between lg:justify-end gap-4 lg:gap-6 border-t lg:border-t-0 border-gray-100 dark:border-gray-700 pt-4 lg:pt-0">
+                        <div class="text-right">
+                            <p class="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Total</p>
+                            <p class="text-xl font-bold text-brand-600 dark:text-gold-400">GH₵${parseFloat(order.total).toFixed(2)}</p>
+                        </div>
+                        <div class="relative">
+                            <select onchange="window.updateStatus('${updateId}', this.value)" class="appearance-none bg-gray-50 dark:bg-wood-900 border border-gray-200 dark:border-gray-600 hover:border-brand-500 dark:hover:border-gold-400 text-gray-700 dark:text-white font-bold text-xs py-3 pl-3 pr-8 rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-brand-500 transition-colors">
+                                <option value="Paid" ${order.status==='Paid'?'selected':''}>Paid</option>
+                                <option value="Pending" ${order.status==='Pending'?'selected':''}>Pending</option>
+                                <option value="Processing" ${order.status==='Processing'?'selected':''}>Processing</option>
+                                <option value="Shipped" ${order.status==='Shipped'?'selected':''}>Shipped</option>
+                                <option value="Delivered" ${order.status==='Delivered'?'selected':''}>Delivered</option>
+                                <option value="Cancelled" ${order.status==='Cancelled'?'selected':''}>Cancelled</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500"><i class="fas fa-chevron-down text-xs"></i></div>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        window.updateStatus = async (idOrDocId, status) => {
+            if(!db) return;
+            try {
+                // Try to update as a Doc ID first
+                const docRef = db.collection('orders').doc(idOrDocId);
+                const docSnap = await docRef.get();
+                
+                if (docSnap.exists) {
+                     await docRef.update({ status: status });
+                } else {
+                    // Fallback: Query by order_id field (legacy/manual IDs)
+                    const q = await db.collection('orders').where('order_id', '==', idOrDocId).get();
+                    if (q.empty) {
+                        // Try parsing as int if string failed
+                        const intId = parseInt(idOrDocId);
+                        if (!isNaN(intId)) {
+                             const qInt = await db.collection('orders').where('order_id', '==', intId).get();
+                             if (!qInt.empty) {
+                                 const batch = db.batch();
+                                 qInt.forEach(doc => batch.update(doc.ref, { status: status }));
+                                 await batch.commit();
+                                 showToast(`Order updated to ${status}`);
+                                 loadAnalytics();
+                                 return;
+                             }
+                        }
+                        showToast('Order ID not found');
+                        return;
+                    }
+                    const batch = db.batch();
+                    q.forEach(doc => batch.update(doc.ref, { status: status }));
+                    await batch.commit();
+                }
+                showToast(`Order updated to ${status}`);
+                loadAnalytics(); 
+            } catch(e) { console.error(e); showToast('Update failed'); }
+        }
+
+        // --- APPLICATIONS LOGIC ---
+        window.loadApplications = async () => {
+            if(!isLoggedIn) return;
+            const container = document.getElementById('applications-container');
+            if(!db) { container.innerHTML = '<p class="text-center text-gray-400">Database not connected.</p>'; return; }
+
+            try {
+                const snapshot = await db.collection('applications').orderBy('created_at', 'desc').get();
+                
+                if(snapshot.empty) { 
+                    container.innerHTML = '<div class="text-center py-10 text-gray-400">No applications received yet.</div>'; 
+                    return; 
+                }
+
+                const apps = snapshot.docs.map(doc => ({ ...doc.data(), _firestore_id: doc.id, created_at: parseTimestamp(doc.data().created_at) }));
+
+                container.innerHTML = apps.map(app => {
+                    let typeColor = 'bg-gray-100 text-gray-800';
+                    let typeIcon = 'fa-file-alt';
+                    if(app.type && app.type.includes('Wholesale')) { typeColor = 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300'; typeIcon = 'fa-truck-loading'; }
+                    if(app.type && app.type.includes('Job')) { typeColor = 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'; typeIcon = 'fa-user-tie'; }
+                    if(app.type && app.type.includes('Partnership')) { typeColor = 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'; typeIcon = 'fa-handshake'; }
+
+                    const statusBadge = app.status === 'Responded' ? '<span class="bg-green-100 text-green-700 px-2 py-0.5 rounded text-[10px] uppercase font-bold">Responded</span>' : '';
+                    const resumeUrl = app.resume_url || app.file_url || app.resume || app.cv || app.file || app.attachment || app.document;
+                    let hasResume = !!resumeUrl;
+                    
+                    let extractedFilename = '';
+                    if (!hasResume && app.detail && app.detail.includes('Resume:')) {
+                        const parts = app.detail.split('Resume:');
+                        if (parts.length > 1) {
+                            const potentialFile = parts[1].trim();
+                            if (potentialFile.toLowerCase().endsWith('.pdf') || potentialFile.toLowerCase().endsWith('.doc') || potentialFile.toLowerCase().endsWith('.docx')) extractedFilename = potentialFile;
+                        }
+                    }
+
+                    let resumeBtn = '';
+                    if (hasResume) resumeBtn = `<a href="${resumeUrl}" target="_blank" class="flex-1 md:flex-none bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-800 hover:bg-indigo-100 px-4 py-3 md:py-2 rounded-lg text-xs font-bold transition shadow-sm flex items-center gap-2 justify-center decoration-0 active:scale-95"><i class="fas fa-file-pdf"></i> View Resume</a>`;
+                    else if (extractedFilename) resumeBtn = `<button onclick="alert('MISSING UPLOAD:\\n\\nThe applicant submitted a file named: \\'${extractedFilename}\\'\\n\\nHowever, your website application form did NOT upload this file to Storage. It only sent the filename as text.')" class="flex-1 md:flex-none bg-yellow-50 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 border border-yellow-100 dark:border-yellow-800 hover:bg-yellow-100 px-4 py-3 md:py-2 rounded-lg text-xs font-bold transition shadow-sm flex items-center gap-2 justify-center decoration-0 active:scale-95"><i class="fas fa-exclamation-triangle"></i> ⚠️ File Not Uploaded</button>`;
+
+                    let debugBlock = '';
+                    if (debugMode) {
+                        debugBlock = `
+                        <div class="mt-4 p-3 bg-black text-green-400 rounded-lg text-[10px] font-mono overflow-x-auto border border-green-900">
+                            <p class="font-bold mb-1 border-b border-green-800 pb-1 flex justify-between">
+                                <span>RAW DATA (Debug):</span>
+                                ${!hasResume && extractedFilename ? '<span class="text-yellow-400">⚠️ Upload Missing</span>' : ''}
+                            </p>
+                            <pre>${JSON.stringify(app, null, 2)}</pre>
+                            <p class="mt-2 text-white">Detected URL: ${resumeUrl ? resumeUrl : 'NONE'}</p>
+                        </div>`;
+                    }
+
+                    // For the response modal, pass the Firestore Doc ID
+                    const safeId = escapeHtml(String(app._firestore_id));
+                    const safeEmail = escapeHtml(app.contact || '');
+                    const safeName = escapeHtml(app.name || '');
+                    const safeResume = escapeHtml(resumeUrl || '');
+
+                    return `
+                    <div class="bg-white dark:bg-wood-800 rounded-xl p-5 shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col md:flex-row gap-4 items-start justify-between relative overflow-hidden group">
+                        ${app.status === 'Responded' ? '<div class="absolute top-0 right-0 bg-green-500 w-12 h-12 transform translate-x-6 -translate-y-6 rotate-45"></div>' : ''}
+                        <div class="flex-1 w-full">
+                            <div class="flex flex-wrap items-center gap-3 mb-2">
+                                <span class="px-2 py-1 rounded text-xs font-bold flex items-center gap-2 ${typeColor}">
+                                    <i class="fas ${typeIcon}"></i> ${app.type || 'General'}
+                                </span>
+                                ${hasResume ? '<span class="text-xs text-indigo-500 font-bold" title="Attachment Available"><i class="fas fa-paperclip"></i></span>' : ''}
+                                <span class="text-xs text-gray-400">${app.created_at.toLocaleDateString()}</span>
+                                ${statusBadge}
+                            </div>
+                            <h3 class="font-bold text-gray-800 dark:text-white text-lg">${app.name || 'Anonymous'}</h3>
+                            <p class="text-xs font-mono text-gray-500 dark:text-gray-400 mb-2 truncate">${app.contact} ${app.phone ? ' • ' + app.phone : ''}</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-wood-900 p-3 rounded-lg border border-gray-100 dark:border-gray-700 italic">"${app.detail || ''}"</p>
+                            ${debugBlock}
+                        </div>
+                        <div class="flex flex-col sm:flex-row items-center gap-2 w-full md:w-auto mt-2 md:mt-0">
+                            ${resumeBtn}
+                            <button onclick="openResponseModal('${safeId}', '${safeEmail}', '${safeName}', '${safeResume}')" class="w-full sm:w-auto md:w-auto bg-brand-600 text-white px-4 py-3 md:py-2 rounded-lg text-xs font-bold hover:bg-brand-500 transition shadow flex items-center gap-2 justify-center active:scale-95"><i class="fas fa-reply"></i> Respond</button>
+                        </div>
+                    </div>`;
+                }).join('');
+            } catch(e) {
+                console.error(e);
+                container.innerHTML = '<div class="text-center py-10 text-gray-400">Error loading applications. Check console.</div>';
+            }
+        }
+
+        window.openResponseModal = (id, email, name, resumeUrl) => {
+            document.getElementById('resp-id').value = id; // This is now the Firestore Doc ID
+            document.getElementById('resp-email').value = email;
+            document.getElementById('resp-name').value = name;
+            document.getElementById('resp-to-display').value = `${name} (${email})`;
+            document.getElementById('resp-message').value = '';
+            
+            const resumeContainer = document.getElementById('resp-resume-container');
+            const resumeLink = document.getElementById('resp-resume-link');
+            
+            if (resumeUrl && resumeUrl !== 'null' && resumeUrl !== 'undefined' && resumeUrl.startsWith('http')) {
+                resumeContainer.classList.remove('hidden');
+                resumeLink.href = resumeUrl;
+            } else {
+                resumeContainer.classList.add('hidden');
+                resumeLink.href = '#';
+            }
+            document.getElementById('response-modal').classList.remove('hidden');
+        }
+
+        window.closeResponseModal = () => document.getElementById('response-modal').classList.add('hidden');
+
+        window.sendResponse = async (e) => {
+            e.preventDefault();
+            if(!db) return;
+            const docId = document.getElementById('resp-id').value;
+            const email = document.getElementById('resp-email').value;
+            const name = document.getElementById('resp-name').value;
+            const msg = document.getElementById('resp-message').value;
+
+            try {
+                // Update Firestore status
+                await db.collection('applications').doc(docId).update({ status: 'Responded' });
+                
+                const subject = `Re: Your GBHPL Application (${name})`;
+                const body = `Dear ${name},\n\n${msg}\n\nBest Regards,\nGBHPL Team`;
+                window.open(`mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`);
+                showToast('Status Updated & Email Client Opened');
+                loadApplications(); 
+                closeResponseModal();
+            } catch (err) { console.error(err); showToast('Error updating database'); }
+        }
+
+        // --- INVENTORY LOGIC ---
+        window.loadInventory = async () => {
+            if(!isLoggedIn) return;
+            const list = document.getElementById('inventory-list');
+            if(!db) { list.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-gray-400">Database Disconnected.</td></tr>'; return; }
+
+            try {
+                const snapshot = await db.collection('products').orderBy('id', 'asc').get();
+                if(snapshot.empty) {
+                     // Initial seed if empty? No, just show empty.
+                     list.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-gray-400">No products found.</td></tr>';
+                }
+                
+                // Map docs and include firestore Doc ID
+                currentInventory = snapshot.docs.map(doc => ({ ...doc.data(), _firestore_id: doc.id }));
+                
+                // Sort by numeric id if possible
+                currentInventory.sort((a, b) => (a.id || 0) - (b.id || 0));
+
+                list.innerHTML = currentInventory.map(p => {
+                    const imgUrl = p.image_url ? p.image_url : 'https://placehold.co/100?text=No+Image';
+                    // We use p.id (numeric field) for DOM IDs to keep compatibility with CSS/JS selectors in loops,
+                    // but we pass numeric ID to deleteProduct, which will handle finding the doc.
+                    return `
+                    <tr class="hover:bg-gray-50 dark:hover:bg-wood-700/50 transition">
+                        <td class="p-4">
+                            <div class="w-12 h-12 rounded-lg bg-gray-200 dark:bg-gray-700 overflow-hidden shadow-sm group relative">
+                                <img src="${imgUrl}" alt="${p.name}" class="w-full h-full object-cover">
+                                <div class="absolute inset-0 bg-black/50 hidden group-hover:flex items-center justify-center text-white text-xs cursor-pointer" onclick="window.open('${imgUrl}', '_blank')"><i class="fas fa-external-link-alt"></i></div>
+                            </div>
+                        </td>
+                        <td class="p-4">
+                            <input type="text" id="name-${p.id}" value="${p.name}" class="w-full bg-transparent border-b border-transparent hover:border-gray-300 focus:border-brand-500 focus:outline-none text-gray-800 dark:text-white font-medium transition-colors" placeholder="Product Name">
+                        </td>
+                        <td class="p-4">
+                            <input type="text" id="img-${p.id}" value="${p.image_url || ''}" placeholder="https://..." class="w-full p-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-wood-900 text-xs text-gray-600 dark:text-gray-300 focus:ring-2 focus:ring-brand-500 outline-none truncate">
+                        </td>
+                        <td class="p-4">
+                            <input type="number" step="0.01" id="price-${p.id}" value="${p.price}" class="w-20 p-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-wood-900 text-sm font-bold text-gray-700 dark:text-white focus:ring-2 focus:ring-brand-500 outline-none">
+                        </td>
+                        <td class="p-4 text-center flex items-center justify-center gap-4">
+                            <label class="inline-flex items-center cursor-pointer" title="Toggle Availability">
+                                <input type="checkbox" id="stock-${p.id}" ${p.available ? 'checked' : ''} class="sr-only peer">
+                                <div class="relative w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand-600"></div>
+                            </label>
+                            <button onclick="deleteProduct(${p.id})" class="text-gray-400 hover:text-red-500 transition-colors p-2" title="Delete Item">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `}).join('');
+            } catch(e) {
+                console.error(e);
+                list.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-red-400">Error loading products.</td></tr>';
+            }
+        }
+
+        window.addNewProductRow = async () => {
+            if(!db) return;
+            const btn = document.getElementById('add-item-btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Adding...';
+            btn.disabled = true;
+            try {
+                // Generate a random numeric ID for compatibility with the existing UI logic
+                const newId = Math.floor(Math.random() * 1000000);
+                await db.collection('products').add({ 
+                    id: newId,
+                    name: "New Product", 
+                    price: 0.00, 
+                    available: false,
+                    image_url: ""
+                });
+                showToast("New row added. Edit and Save.");
+                loadInventory();
+            } catch(e) {
+                console.error(e);
+                showToast(`Error: ${e.message || "Failed to add row"}`);
+            } finally { btn.innerHTML = originalText; btn.disabled = false; }
+        };
+
+        window.deleteProduct = async (numericId) => {
+            if(!confirm('Are you sure?')) return;
+            if(!db) return;
+            try {
+                // Find doc with this numeric id field
+                const q = await db.collection('products').where('id', '==', numericId).get();
+                if (q.empty) {
+                    showToast('Product not found in DB');
+                    return;
+                }
+                const batch = db.batch();
+                q.forEach(doc => batch.delete(doc.ref));
+                await batch.commit();
+                
+                showToast('Product Deleted');
+                loadInventory(); 
+            } catch(e) { showToast(`Error: ${e.message || 'Failed to delete'}`); }
+        }
+
+        window.saveInventory = async () => {
+            const btn = document.getElementById('save-inv-btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Saving...';
+            btn.disabled = true;
+            try {
+                const batch = db.batch();
+                let hasUpdates = false;
+
+                currentInventory.forEach(p => {
+                    // Get inputs by numeric ID
+                    const elName = document.getElementById(`name-${p.id}`);
+                    const elPrice = document.getElementById(`price-${p.id}`);
+                    const elAvail = document.getElementById(`stock-${p.id}`);
+                    const elImg = document.getElementById(`img-${p.id}`);
+                    
+                    if(elName && elPrice && p._firestore_id) {
+                        const ref = db.collection('products').doc(p._firestore_id);
+                        batch.update(ref, {
+                            name: elName.value,
+                            price: parseFloat(elPrice.value) || 0,
+                            available: elAvail.checked,
+                            image_url: elImg.value
+                        });
+                        hasUpdates = true;
+                    }
+                });
+
+                if (hasUpdates) {
+                    await batch.commit();
+                    showToast('Inventory & Images Updated!');
+                    loadInventory(); 
+                } else {
+                    showToast('No changes detected.');
+                }
+            } catch(e) {
+                console.error(e);
+                showToast(`Error: ${e.message || 'Failed to save inventory.'}`);
+            } finally { btn.innerHTML = originalText; btn.disabled = false; }
+        }
+
+        // --- SITE CONTENT LOGIC ---
+        window.loadSiteContent = async () => {
+            if(!isLoggedIn) return;
+            const container = document.getElementById('content-list');
+            if(!db) { container.innerHTML = '<div class="col-span-2 text-center text-gray-400">Database not connected.</div>'; return; }
+
+            try {
+                const snapshot = await db.collection('site_content').orderBy('key').get();
+                if(snapshot.empty) {
+                    container.innerHTML = '<div class="col-span-2 text-center text-gray-400">No site assets found. Add items in Firestore manually or check config.</div>';
+                    return;
+                }
+
+                siteContentData = snapshot.docs.map(doc => ({ ...doc.data(), _firestore_id: doc.id }));
+
+                container.innerHTML = siteContentData.map(item => `
+                    <div class="bg-gray-50 dark:bg-wood-900 border border-gray-200 dark:border-gray-700 rounded-lg p-4 flex gap-4">
+                        <div class="w-24 h-24 bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden shrink-0 flex items-center justify-center relative group">
+                            <img src="${item.value}" onerror="this.src='https://placehold.co/100x100?text=No+Image'" class="w-full h-full object-cover">
+                            <a href="${item.value}" target="_blank" class="absolute inset-0 bg-black/50 hidden group-hover:flex items-center justify-center text-white text-xs"><i class="fas fa-external-link-alt"></i></a>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex justify-between items-start mb-1">
+                                <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide truncate pr-2">${item.label || item.key}</label>
+                                <span class="text-[10px] px-2 py-0.5 bg-gray-200 dark:bg-gray-700 rounded text-gray-600 dark:text-gray-300 font-mono shrink-0">${item.section || 'General'}</span>
+                            </div>
+                            <input type="text" id="content-${item.key}" value="${item.value}" class="w-full p-2 mt-1 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-wood-800 text-xs text-gray-700 dark:text-gray-200 focus:ring-2 focus:ring-brand-500 outline-none truncate" placeholder="https://...">
+                            <p class="text-[10px] text-gray-400 mt-1 truncate">Key: ${item.key}</p>
+                        </div>
+                    </div>
+                `).join('');
+            } catch(e) {
+                console.error(e);
+                container.innerHTML = '<div class="col-span-2 text-center text-red-400">Error loading content.</div>';
+            }
+        }
+
+        window.saveSiteContent = async () => {
+            const btn = document.getElementById('save-content-btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Saving...';
+            btn.disabled = true;
+            try {
+                const batch = db.batch();
+                let hasUpdates = false;
+
+                siteContentData.forEach(item => {
+                    const input = document.getElementById(`content-${item.key}`);
+                    if(input && item._firestore_id) {
+                         const ref = db.collection('site_content').doc(item._firestore_id);
+                         batch.update(ref, { value: input.value });
+                         hasUpdates = true;
+                    }
+                });
+
+                if(hasUpdates) {
+                    await batch.commit();
+                    showToast('Site Images Updated!');
+                    loadSiteContent();
+                } else {
+                    showToast('No updates found.');
+                }
+            } catch(e) {
+                console.error(e);
+                showToast(`Error: ${e.message || 'Failed to update content.'}`);
+            } finally { btn.innerHTML = originalText; btn.disabled = false; }
+        }
+
+        // --- ANALYTICS LOGIC ---
+        window.loadAnalytics = async () => {
+            if(!db || !isLoggedIn) return;
+            
+            try {
+                const snapshot = await db.collection('orders').get();
+                const orders = snapshot.docs.map(doc => doc.data());
+
+                const totalOrders = orders.length;
+                const validOrders = orders.filter(o => o.status !== 'Cancelled');
+                const revenue = validOrders.reduce((sum, o) => sum + (parseFloat(o.total) || 0), 0);
+                const avgOrder = totalOrders > 0 ? revenue / validOrders.length : 0;
+                const pending = orders.filter(o => o.status === 'Pending').length;
+
+                document.getElementById('stat-revenue').innerText = `GH₵${revenue.toFixed(2)}`;
+                document.getElementById('stat-orders').innerText = totalOrders;
+                document.getElementById('stat-avg').innerText = `GH₵${avgOrder.toFixed(2)}`;
+                document.getElementById('stat-pending').innerText = pending;
+
+                const productCounts = {};
+                orders.forEach(o => {
+                    if(o.status === 'Cancelled') return;
+                    let items = [];
+                    try { if(Array.isArray(o.items)) items = o.items; else if (typeof o.items === 'string') items = JSON.parse(o.items); } catch(e) {}
+                    if(Array.isArray(items)) {
+                        items.forEach(item => {
+                            let name = typeof item === 'string' ? item : (item.name || item.product || 'Unknown');
+                            let qty = typeof item === 'object' && item.qty ? parseInt(item.qty) : 1;
+                            productCounts[name] = (productCounts[name] || 0) + qty;
+                        });
+                    }
+                });
+
+                const sortedProducts = Object.entries(productCounts).sort((a, b) => b[1] - a[1]).slice(0, 5);
+                const statusCounts = {};
+                orders.forEach(o => { statusCounts[o.status] = (statusCounts[o.status] || 0) + 1; });
+
+                renderCharts(sortedProducts, statusCounts);
+
+                // Recent Activity - Sort by date locally since we fetched all
+                orders.sort((a, b) => parseTimestamp(b.created_at) - parseTimestamp(a.created_at));
+                const recent = orders.slice(0, 5); 
+                document.getElementById('analytics-recent-table').innerHTML = recent.map(o => `
+                    <tr class="border-b border-gray-100 dark:border-gray-800 last:border-0">
+                        <td class="p-4 text-xs text-gray-500 whitespace-nowrap">${parseTimestamp(o.created_at).toLocaleDateString()}</td>
+                        <td class="p-4 font-bold text-gray-700 dark:text-gray-300 truncate max-w-[120px]">${o.customer_name || 'Guest'}</td>
+                        <td class="p-4"><span class="text-[10px] px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700">${o.status}</span></td>
+                        <td class="p-4 text-right font-mono text-brand-600 dark:text-gold-400 whitespace-nowrap">GH₵${parseFloat(o.total).toFixed(2)}</td>
+                    </tr>
+                `).join('');
+            } catch(e) {
+                console.error("Analytics Error", e);
+            }
+        }
+
+        function renderCharts(topProducts, statusCounts) {
+            const ctx1 = document.getElementById('topProductsChart');
+            const ctx2 = document.getElementById('statusChart');
+            if(productsChart) productsChart.destroy();
+            if(statusChart) statusChart.destroy();
+
+            productsChart = new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: topProducts.map(p => p[0]),
+                    datasets: [{ label: 'Units Sold', data: topProducts.map(p => p[1]), backgroundColor: 'rgba(136, 19, 55, 0.6)', borderColor: 'rgba(136, 19, 55, 1)', borderWidth: 1 }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } }, plugins: { legend: { display: false } } }
+            });
+
+            statusChart = new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(statusCounts),
+                    datasets: [{
+                        data: Object.values(statusCounts),
+                        backgroundColor: ['#eab308', '#3b82f6', '#f97316', '#22c55e', '#ef4444'],
+                        borderWidth: 0
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+            });
+        }
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            document.getElementById('toast-msg').innerText = msg;
+            t.classList.remove('translate-y-32');
+            setTimeout(() => t.classList.add('translate-y-32'), 2500);
+        }
+    </script>
+</body>
+</html>

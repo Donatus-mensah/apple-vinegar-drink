@@ -1,0 +1,2258 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <!-- CRITICAL SECURITY SCRIPT (PRELOADING) -->
+    <script>
+        (function() {
+            document.addEventListener('keydown', function(e) {
+                if (e.ctrlKey && (e.key === 'u' || e.key === 'U')) { e.preventDefault(); e.stopPropagation(); alert("System: Access Denied. Source code is protected."); return false; }
+                if (e.key === 'F12') { e.preventDefault(); e.stopPropagation(); return false; }
+                if (e.ctrlKey && e.shiftKey && (e.key === 'i' || e.key === 'I')) { e.preventDefault(); e.stopPropagation(); return false; }
+                if (e.ctrlKey && e.shiftKey && (e.key === 'j' || e.key === 'J')) { e.preventDefault(); e.stopPropagation(); return false; }
+                if (e.ctrlKey && (e.key === 's' || e.key === 'S')) { e.preventDefault(); e.stopPropagation(); return false; }
+            }, true);
+        })();
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GBHPL | Gid's Beverages & Health Product Ltd.</title>
+    
+    <!-- FAVICON - Will be dynamically updated by JS -->
+    <link id="favicon-link" rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍏</text></svg>">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Fonts -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&family=Montserrat:wght@300;400;500;600;700;800;900&family=Pacifico&family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Paystack Inline Script -->
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+
+    <!-- Firebase SDKs (Compat version for easier standalone usage) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { 50: '#fff1f2', 100: '#ffe4e6', 500: '#9b2c2c', 600: '#881337', 700: '#800000', 800: '#4a0404', 900: '#2b0a0b' },
+                        gbhpl: { green: '#2E5902', gold: '#FFD700', amber: '#D4AF37', cream: '#F4E4BC' },
+                        gold: { 100: '#fefce8', 400: '#facc15', 500: '#eab308', 600: '#ca8a04' },
+                        wood: { 700: '#5d4037', 800: '#3e2723', 900: '#1a120b', 950: '#120a06' },
+                        tech: { blue: '#e0f2fe', dark: '#0c4a6e' }
+                    },
+                    fontFamily: { 
+                        sans: ['Montserrat', 'sans-serif'], 
+                        serif: ['Merriweather', 'serif'], 
+                        script: ['Pacifico', 'cursive'],
+                        mono: ['Fira Code', 'monospace']
+                    },
+                    animation: { 'float': 'float 6s ease-in-out infinite', 'fade-in-up': 'fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards', 'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite', 'spin-slow': 'spin 12s linear infinite' },
+                    keyframes: { 
+                        float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-20px)' } }, 
+                        fadeInUp: { '0%': { opacity: '0', transform: 'translateY(30px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+                        rotate: { '0%': { transform: 'rotate(0deg)' }, '100%': { transform: 'rotate(360deg)' } }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #fdf2f2; }
+        ::-webkit-scrollbar-thumb { background: #9b2c2c; border-radius: 4px; }
+        .dark ::-webkit-scrollbar-track { background: #1a120b; }
+        .dark ::-webkit-scrollbar-thumb { background: #facc15; }
+
+        /* Navbar Transition */
+        .glass-nav { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(155, 44, 44, 0.1); transition: all 0.4s ease; }
+        .dark .glass-nav { background: rgba(20, 5, 5, 0.8); border-bottom: 1px solid rgba(250, 204, 21, 0.2); }
+        .nav-transparent { background: transparent; border-bottom: 1px solid transparent; box-shadow: none; }
+
+        .logo-flag { background: linear-gradient(135deg, #006400 0%, #004d00 100%); border-top: 3px solid #FFD700; border-bottom: 3px solid #FFD700; border-radius: 8px 20px 8px 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        
+        /* Bash Terminal Styles */
+        #bash-terminal {
+            font-family: 'Fira Code', monospace;
+            text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+        }
+        .bash-caret {
+            display: inline-block;
+            width: 10px;
+            height: 18px;
+            background-color: #00ff00;
+            animation: blink 1s step-end infinite;
+            vertical-align: middle;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
+        
+        /* 3D Tilt Card Effect */
+        .tilt-card { transition: transform 0.1s ease-out, box-shadow 0.3s ease; transform-style: preserve-3d; }
+        .tilt-card:hover { z-index: 10; }
+
+        /* Process Steps Styles - ENHANCED VISIBILITY */
+        .process-step { 
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); 
+            position: relative; 
+            overflow: hidden; 
+            z-index: 10; 
+            opacity: 0.7; 
+            transform: scale(0.96); 
+            border: 2px solid transparent;
+            border-radius: 1rem;
+        }
+        .process-step:hover { 
+            opacity: 1; 
+            transform: scale(1); 
+            cursor: pointer; 
+            background-color: rgba(0,0,0,0.02);
+        }
+        .dark .process-step:hover { background-color: rgba(255,255,255,0.03); }
+
+        /* Highlighted/Active State */
+        .process-step.active { 
+            background-color: #fff; 
+            border-color: #9b2c2c; 
+            opacity: 1; 
+            transform: scale(1.05) translateX(12px); /* Pop out effect */
+            box-shadow: 0 20px 30px -5px rgba(155, 44, 44, 0.25); 
+            z-index: 20; 
+        }
+        .dark .process-step.active { 
+            background-color: #2b0a0b; 
+            border-color: #facc15; 
+            box-shadow: 0 20px 30px -5px rgba(250, 204, 21, 0.2); 
+        }
+        
+        .process-connector { position: absolute; top: 50%; left: 0; width: 100%; height: 2px; background: linear-gradient(90deg, transparent, #e5e7eb 20%, #e5e7eb 80%, transparent); z-index: 0; pointer-events: none; }
+        .dark .process-connector { background: linear-gradient(90deg, transparent, #4a0404 20%, #4a0404 80%, transparent); }
+
+        /* Flip Cards */
+        .flip-card { perspective: 1000px; background-color: transparent; cursor: pointer; }
+        .flip-card-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; }
+        .flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
+        .flip-card-front, .flip-card-back { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; border-radius: 1rem; top: 0; left: 0; overflow: hidden; }
+        .flip-card-front { background-color: white; z-index: 2; transform: rotateY(0deg); }
+        .dark .flip-card-front { background-color: #1a120b; }
+        .flip-card-back { transform: rotateY(180deg); z-index: 1; background: linear-gradient(135deg, #800000 0%, #2b0a0b 100%); color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1.5rem; }
+        .flip-card.flipped .flip-card-back { z-index: 10; }
+        .dark .flip-card-back { background: linear-gradient(135deg, #2b0a0b 0%, #1a120b 100%); border: 1px solid #ca8a04; }
+        
+        .timeline-line { position: absolute; left: 24px; top: 0; bottom: 0; width: 2px; background: #e5e7eb; z-index: 0; }
+        .dark .timeline-line { background: #4a0404; }
+        @media (min-width: 768px) { .timeline-line { left: 50%; transform: translateX(-50%); } }
+        
+        /* Map Filter */
+        .dark .map-filter { filter: invert(90%) hue-rotate(180deg) contrast(90%); }
+        #process-content-wrapper { transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out; }
+        
+        /* Hover Overlay */
+        .product-card-hover .overlay-actions { transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .product-card-hover:hover .overlay-actions { transform: translateY(0); }
+        
+        /* Hero Glow */
+        .hero-glow { background: radial-gradient(circle, rgba(234, 179, 8, 0.4) 0%, rgba(155, 44, 44, 0) 70%); }
+        .dark .hero-glow { background: radial-gradient(circle, rgba(250, 204, 21, 0.25) 0%, rgba(0, 0, 0, 0) 70%); }
+        
+        /* Smooth Scale */
+        .hover-scale-sm:hover { transform: scale(1.02); }
+
+        /* 3D Hero Image Container */
+        .hero-3d-container {
+            perspective: 1200px; /* Deeper perspective */
+            transform-style: preserve-3d;
+        }
+        .hero-3d-wrapper {
+            position: relative;
+            transform-style: preserve-3d;
+            will-change: transform;
+        }
+        
+        /* The Light Reflection on Bottle */
+        .hero-sheen {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%);
+            background-size: 200% 200%;
+            z-index: 30;
+            opacity: 0;
+            transition: opacity 0.2s;
+            mix-blend-mode: overlay;
+            pointer-events: none;
+            border-radius: 20px; 
+        }
+        .hero-shadow {
+             transition: transform 0.1s;
+        }
+        
+        /* Quiz Styles */
+        .quiz-option { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; transform: translateY(0); }
+        .quiz-option:hover { transform: translateY(-4px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        .quiz-option.selected { border-color: #9b2c2c; background-color: #fff1f2; transform: scale(1.02); }
+        .dark .quiz-option.selected { border-color: #facc15; background-color: #3e2723; }
+        
+        .fade-enter { opacity: 0; transform: translateY(20px); }
+        .fade-enter-active { opacity: 1; transform: translateY(0); transition: opacity 0.4s, transform 0.4s; }
+        .fade-exit { opacity: 1; transform: translateY(0); }
+        .fade-exit-active { opacity: 0; transform: translateY(-20px); transition: opacity 0.4s, transform 0.4s; }
+
+        /* Tracker Animations */
+        @keyframes progress-fill { from { width: 0; } to { width: 100%; } }
+        .animate-progress { animation: progress-fill 0.5s ease-out forwards; }
+        
+        /* Image Loading Styles */
+        .image-loading {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        .dark .image-loading {
+            background: linear-gradient(90deg, #2d3748 25%, #4a5568 50%, #2d3748 75%);
+            background-size: 200% 100%;
+        }
+        
+        /* Logo Container Styles */
+        .logo-container {
+            background: linear-gradient(135deg, #006400 0%, #004d00 100%);
+            border-top: 3px solid #FFD700;
+            border-bottom: 3px solid #FFD700;
+            border-radius: 8px 20px 8px 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem 1rem;
+        }
+
+        /* NEW: Interactive Logo Border */
+        .logo-interactive-wrap {
+            position: relative;
+            padding: 2px;
+            z-index: 50;
+        }
+        .logo-interactive-wrap::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            z-index: -1;
+            background: linear-gradient(90deg, #FFD700, #2E5902, #FFD700);
+            background-size: 200% 100%;
+            border-radius: 12px 24px 12px 24px;
+            animation: shimmerBorder 2.5s linear infinite;
+            filter: blur(2px);
+        }
+        @keyframes shimmerBorder {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+
+        /* NEW: Hero Picture Border Frame - UPDATED TO SQUARE */
+        .hero-frame-border {
+            position: absolute;
+            inset: -15px;
+            border: 2px solid rgba(255, 215, 0, 0.4);
+            border-radius: 24px; /* Square/Rectangle with rounded corners */
+            animation: borderPulse 4s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 5;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); /* Smooth transition */
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.1);
+        }
+        .hero-frame-border::after {
+            content: '';
+            position: absolute;
+            inset: -10px;
+            border: 1px dashed rgba(46, 89, 2, 0.5);
+            border-radius: 30px; /* Outer curve matching square form */
+        }
+        .hero-frame-border::before {
+            content: '';
+            position: absolute;
+            inset: 5px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 18px; /* Inner curve matching square form */
+        }
+        @keyframes borderPulse {
+            0%, 100% { box-shadow: 0 0 15px rgba(255, 215, 0, 0.1); border-color: rgba(255, 215, 0, 0.3); transform: scale(1); }
+            50% { box-shadow: 0 0 30px rgba(255, 215, 0, 0.4); border-color: rgba(255, 215, 0, 0.8); transform: scale(1.02); }
+        }
+        
+        .footer-logo-container {
+            background: linear-gradient(135deg, #006400 0%, #004d00 100%);
+            border-top: 2px solid #FFD700;
+            border-bottom: 2px solid #FFD700;
+            border-radius: 6px 15px 6px 15px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.25rem 0.75rem;
+        }
+    </style>
+</head>
+<body oncontextmenu="return false" class="bg-brand-50 text-wood-900 dark:bg-wood-900 dark:text-gray-100 transition-colors duration-500 font-sans selection:bg-brand-500 selection:text-white leading-snug">
+
+    <div id="toast-container" class="fixed top-24 right-5 z-[60] flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- BASH TERMINAL MODAL -->
+    <div id="bash-terminal-container" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="toggleBash()"></div>
+        <div class="relative w-full max-w-3xl h-[60vh] bg-black/95 border-2 border-green-500 rounded-lg shadow-2xl overflow-hidden flex flex-col font-mono text-sm sm:text-base">
+            <!-- Terminal Header -->
+            <div class="bg-green-900/20 border-b border-green-500/50 p-2 flex justify-between items-center select-none">
+                <div class="flex gap-2">
+                    <div class="w-3 h-3 rounded-full bg-red-500 hover:bg-red-400 cursor-pointer" onclick="toggleBash()"></div>
+                    <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                    <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                </div>
+                <div class="text-green-500 text-xs tracking-widest uppercase">root@gbhpl-server:~</div>
+                <div class="w-10"></div>
+            </div>
+            
+            <!-- Terminal Body -->
+            <div id="bash-output" class="flex-1 p-4 overflow-y-auto text-green-400 space-y-2" onclick="document.getElementById('bash-input').focus()">
+                <div class="mb-4 text-green-300">
+                    <pre class="text-[10px] sm:text-xs leading-none">
+  ____ ____  _   _ ____  _     
+ / ___| __ )| | | |  _ \| |    
+| |  _|  _ \| |_| | |_) | |    
+| |_| | |_) |  _  |  __/| |___ 
+ \____|____/|_| |_|_|   |_____|
+                    </pre>
+                    <p class="mt-2">Welcome to GBHPL System v2.0. Type 'help' to view commands.</p>
+                </div>
+            </div>
+            
+            <!-- Terminal Input -->
+            <div class="p-4 pt-0 flex items-center bg-black">
+                <span class="text-green-500 mr-2 shrink-0">visitor@gbhpl:~$</span>
+                <input type="text" id="bash-input" class="w-full bg-transparent border-none text-green-400 outline-none caret-transparent" autocomplete="off" spellcheck="false">
+                <span class="bash-caret"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-40 transition-all duration-300 nav-transparent h-20 flex items-center" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 w-full flex justify-between items-center">
+            <div class="flex-shrink-0 flex items-center cursor-pointer select-none group" onclick="navigateTo('hero')">
+                <!-- UPDATED: Added interactive logo wrapper -->
+                <div class="logo-interactive-wrap transform -skew-x-6 group-hover:skew-x-0 transition-transform duration-300">
+                    <div class="logo-container shadow-lg">
+                        <!-- Logo will be loaded from database -->
+                        <img id="nav-logo" src="" alt="GBHPL Logo" class="h-10 w-auto object-contain transform skew-x-6 transition-opacity duration-500 opacity-0">
+                        <!-- Fallback if no logo is loaded -->
+                        <div id="nav-logo-fallback" class="h-10 w-16 flex items-center justify-center text-white font-bold text-lg">
+                            GBHPL
+                        </div>
+                    </div>
+                </div>
+                <div class="ml-3 flex flex-col justify-center">
+                    <span class="font-bold text-[10px] text-brand-900 dark:text-white tracking-wider uppercase leading-none">Gid's Beverages &</span>
+                    <span class="font-bold text-[10px] text-brand-600 dark:text-brand-400 tracking-wider uppercase leading-none">Health Product Ltd.</span>
+                </div>
+            </div>
+
+            <div class="hidden lg:flex space-x-8 items-center font-bold text-xs tracking-wide uppercase text-brand-900 dark:text-white">
+                <a href="#history" class="hover:text-brand-600 dark:hover:text-gold-400 transition-all py-1 relative group">History <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-current transition-all group-hover:w-full"></span></a>
+                <a href="#quiz-section" class="hover:text-brand-600 dark:hover:text-gold-400 transition-all py-1 relative group text-gbhpl-green dark:text-gold-400">Find Your Dose <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-current transition-all group-hover:w-full"></span></a>
+                <a href="#shop" class="hover:text-brand-600 dark:hover:text-gold-400 transition-all py-1 relative group">Shop <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-current transition-all group-hover:w-full"></span></a>
+                <a href="#production" class="hover:text-brand-600 dark:hover:text-gold-400 transition-all py-1 relative group">Process <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-current transition-all group-hover:w-full"></span></a>
+                <a href="#locations" class="hover:text-brand-600 dark:hover:text-gold-400 transition-all py-1 relative group">Locations <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-current transition-all group-hover:w-full"></span></a>
+                
+                <button id="theme-toggle" class="w-9 h-9 rounded-full bg-white/50 dark:bg-black/20 backdrop-blur flex items-center justify-center hover:bg-brand-100 dark:hover:bg-wood-700 transition shadow-sm text-brand-600 dark:text-gold-400 border border-brand-100 dark:border-gray-700"><i class="fas fa-moon dark:hidden"></i><i class="fas fa-sun hidden dark:block"></i></button>
+                
+                <button class="relative w-9 h-9 flex items-center justify-center group" onclick="toggleCart()">
+                    <div class="absolute inset-0 bg-white/50 dark:bg-black/20 backdrop-blur rounded-full transform group-hover:scale-110 transition-transform border border-brand-100 dark:border-gray-700"></div>
+                    <i class="fas fa-bag-shopping text-lg text-brand-600 dark:text-gold-400 relative z-10"></i>
+                    <span id="cart-count" class="absolute -top-1 -right-1 bg-gbhpl-green text-white text-[8px] font-bold rounded-full h-3.5 w-3.5 flex items-center justify-center border border-white dark:border-brand-900 shadow-sm transform scale-0 transition-transform duration-200">0</span>
+                </button>
+            </div>
+             <div class="lg:hidden flex items-center gap-3">
+                <button id="mobile-theme-toggle" class="w-8 h-8 rounded-full bg-gray-100 dark:bg-wood-800 flex items-center justify-center text-brand-900 dark:text-gold-400"><i class="fas fa-moon dark:hidden"></i><i class="fas fa-sun hidden dark:block"></i></button>
+                 <button class="relative p-2 text-brand-900 dark:text-white" onclick="toggleCart()"><i class="fas fa-bag-shopping text-xl dark:text-gold-400"></i><span id="cart-count-mobile" class="absolute top-0 right-0 bg-gbhpl-green text-white text-[9px] rounded-full h-3.5 w-3.5 flex items-center justify-center transform scale-0 transition-transform">0</span></button>
+                <button id="mobile-menu-btn" class="text-xl focus:outline-none p-1 text-brand-900 dark:text-white"><i class="fas fa-bars"></i></button>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu (Glassmorphism) -->
+        <div id="mobile-menu" class="hidden lg:hidden absolute w-full left-0 top-20 px-4 pb-4">
+            <div class="bg-white/95 dark:bg-wood-900/95 border border-brand-100 dark:border-gray-700 shadow-2xl backdrop-blur-xl rounded-2xl p-4 space-y-2">
+                <a href="#history" class="block p-3 hover:bg-brand-50 dark:hover:bg-wood-800 rounded-xl transition-colors font-bold text-brand-900 dark:text-white"><i class="fas fa-history mr-3 text-brand-500 w-5"></i> History</a>
+                <a href="#quiz-section" class="block p-3 hover:bg-brand-50 dark:hover:bg-wood-800 rounded-xl transition-colors font-bold text-brand-900 dark:text-white"><i class="fas fa-question-circle mr-3 text-brand-500 w-5"></i> Quiz</a>
+                <a href="#shop" class="block p-3 hover:bg-brand-50 dark:hover:bg-wood-800 rounded-xl transition-colors font-bold text-brand-900 dark:text-white"><i class="fas fa-shopping-bag mr-3 text-brand-500 w-5"></i> Shop</a>
+                <a href="#production" class="block p-3 hover:bg-brand-50 dark:hover:bg-wood-800 rounded-xl transition-colors font-bold text-brand-900 dark:text-white"><i class="fas fa-cogs mr-3 text-brand-500 w-5"></i> Process</a>
+                <a href="#benefits" class="block p-3 hover:bg-brand-50 dark:hover:bg-wood-800 rounded-xl transition-colors font-bold text-brand-900 dark:text-white"><i class="fas fa-heartbeat mr-3 text-brand-500 w-5"></i> Benefits</a>
+                <a href="#locations" class="block p-3 hover:bg-brand-50 dark:hover:bg-wood-800 rounded-xl transition-colors font-bold text-brand-900 dark:text-white"><i class="fas fa-map-marker-alt mr-3 text-brand-500 w-5"></i> Locations</a>
+                <button onclick="openTrackingModal()" class="block w-full text-left p-3 text-gbhpl-green dark:text-gold-400 bg-brand-50/50 dark:bg-wood-800/50 rounded-xl mt-2 font-bold"><i class="fas fa-search-location mr-3 w-5"></i> Track Order</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Cart & Modals -->
+    <div id="cart-drawer" class="fixed inset-y-0 right-0 w-full sm:w-96 bg-white dark:bg-wood-900 shadow-2xl transform translate-x-full transition-transform duration-500 z-50 flex flex-col border-l border-brand-100 dark:border-gray-600">
+        <div class="p-5 border-b dark:border-gray-600 flex justify-between items-center bg-gray-50 dark:bg-wood-800"><h2 class="text-lg font-bold font-sans flex items-center gap-2 text-brand-900 dark:text-white"><i class="fas fa-shopping-basket text-brand-600 dark:text-gold-400"></i> Your Basket</h2><button onclick="toggleCart()" class="w-8 h-8 rounded-full hover:bg-gray-200 dark:hover:bg-wood-700 flex items-center justify-center text-gray-500 dark:text-gray-400 transition"><i class="fas fa-times"></i></button></div>
+        <div id="cart-items" class="flex-1 overflow-y-auto p-5 space-y-4 text-brand-900 dark:text-white text-sm"><div class="flex flex-col items-center justify-center h-full text-gray-400 dark:text-gray-500 opacity-50"><i class="fas fa-basket-shopping text-4xl mb-2"></i><p class="text-sm">Your basket is empty</p></div></div>
+        <div class="p-5 border-t dark:border-gray-600 bg-gray-50 dark:bg-wood-800 space-y-4">
+            <div class="flex justify-between font-bold text-brand-900 dark:text-white text-base"><span>Subtotal</span><span id="cart-total" class="text-brand-600 dark:text-gold-400">GH₵0.00</span></div>
+            <button onclick="openCheckoutModal()" class="w-full bg-gradient-to-r from-brand-600 to-brand-700 hover:from-brand-500 hover:to-brand-600 dark:from-gold-500 dark:to-gold-600 text-white dark:text-brand-900 font-bold py-3.5 rounded-xl shadow-lg active:scale-95 transition-all text-sm flex justify-center items-center gap-2">Secure Checkout <i class="fas fa-arrow-right"></i></button>
+        </div>
+    </div>
+    
+    <div id="overlay" class="fixed inset-0 bg-black/60 z-40 hidden backdrop-blur-sm transition-opacity duration-300" onclick="closeAllDrawers()"></div>
+    
+    <div id="modal-container" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300" onclick="closeAllDrawers()"></div>
+        <div id="modal-content" class="relative w-full max-w-2xl transform transition-all scale-100"></div>
+    </div>
+
+    <!-- Scroll to Top Button -->
+    <button id="back-to-top" onclick="window.scrollTo(0,0)" class="fixed bottom-6 left-6 z-40 w-12 h-12 bg-white dark:bg-wood-800 text-brand-600 dark:text-gold-400 rounded-full shadow-lg border border-gray-200 dark:border-gray-700 flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"><i class="fas fa-arrow-up"></i></button>
+
+    <!-- Hero -->
+    <header id="hero" class="relative min-h-screen flex items-center pt-24 pb-12 overflow-hidden transition-colors duration-500">
+        <!-- Dynamic Organic Background -->
+        <div class="absolute inset-0 -z-10 bg-brand-50 dark:bg-wood-900 overflow-hidden">
+            <div id="blob-1" class="absolute top-[-10%] right-[-5%] w-[800px] h-[800px] bg-gradient-to-b from-brand-100/40 to-transparent dark:from-wood-800/50 rounded-full blur-[100px] transition-transform duration-[2000ms] ease-out"></div>
+            <div id="blob-2" class="absolute bottom-[-10%] left-[-10%] w-[700px] h-[700px] bg-gradient-to-t from-gold-100/40 to-transparent dark:bg-[#1a120b] rounded-full blur-[120px] transition-transform duration-[2000ms] ease-out"></div>
+            <!-- Rotating ring -->
+            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90vw] h-[90vw] max-w-[800px] max-h-[800px] border border-brand-100 dark:border-gray-800 rounded-full opacity-30 animate-spin-slow"></div>
+        </div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full" onmousemove="handleHero3D(event)" onmouseleave="resetHero3D()">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+                
+                <div class="order-2 lg:order-1 text-center lg:text-left mt-8 lg:mt-0 animate-fade-in-up">
+                    <div class="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white/80 dark:bg-wood-800/80 border border-brand-100 dark:border-gray-700 mb-8 shadow-sm backdrop-blur-sm hover:scale-105 transition-transform cursor-default">
+                        <span class="relative flex h-2.5 w-2.5">
+                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-gbhpl-green opacity-75"></span>
+                          <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-gbhpl-green"></span>
+                        </span>
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-brand-900 dark:text-gray-300">FDA Approved: FDA/DK 18-273</span>
+                    </div>
+                    
+                    <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold leading-tight text-brand-900 dark:text-white mb-6 tracking-tight drop-shadow-sm">
+                        <span class="block text-brand-600 dark:text-gold-400 text-3xl sm:text-4xl font-serif italic mb-2">Gid's Organic</span>
+                        Apple Cider <br> Vinegar
+                    </h1>
+                    
+                    <p class="text-base sm:text-lg text-gray-600 dark:text-gray-300 mb-10 leading-relaxed max-w-lg mx-auto lg:mx-0 font-medium">
+                        Experience the authentic power of the "Mother". Our premium bottle contains a rich, amber-gold organic elixir fermented to structural perfection in the heart of Ghana.
+                    </p>
+                    
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                        <a href="#quiz-section" class="bg-brand-900 hover:bg-brand-800 dark:bg-gold-500 dark:hover:bg-gold-400 text-white dark:text-brand-900 text-sm font-bold py-4 px-12 rounded-full shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-3">
+                            Take the Health Quiz <i class="fas fa-magic"></i>
+                        </a>
+                        <button onclick="openNutritionModal()" class="group bg-white/80 dark:bg-wood-800/80 backdrop-blur-md text-brand-900 dark:text-white text-sm font-bold py-4 px-8 rounded-full shadow-md hover:shadow-lg transition-all border border-gray-200 dark:border-gray-700 flex items-center justify-center gap-2 hover:bg-white dark:hover:bg-wood-700">
+                            <i class="fas fa-leaf text-gbhpl-green group-hover:scale-110 transition-transform"></i> Nutrition Facts
+                        </button>
+                    </div>
+                </div>
+
+                <div class="relative order-1 lg:order-2 flex justify-center items-center h-[500px] lg:h-[700px] hero-3d-container">
+                    <!-- Soft Glow behind bottle -->
+                    <div class="absolute inset-0 flex justify-center items-center transform translate-z-[-50px]">
+                        <div class="w-[300px] h-[300px] lg:w-[500px] lg:h-[500px] bg-gradient-to-tr from-brand-200 to-gold-200 dark:from-wood-800 dark:to-gold-900/30 rounded-full blur-[80px] opacity-70 animate-pulse-slow"></div>
+                    </div>
+                    
+                    <!-- 3D Interactive Image Wrapper with Border Frame -->
+                    <div id="hero-3d-wrapper" class="relative z-10 hero-3d-wrapper">
+                        <!-- UPDATED: Added interactive hero border -->
+                        <div class="relative">
+                            <div class="hero-frame-border"></div>
+                            <img id="img-hero" src="https://images.unsplash.com/photo-1597481499750-3e6b22637e12?auto=format&fit=crop&w=600&q=80" alt="Gid's ACV Bottle" class="max-h-[400px] lg:max-h-[600px] w-auto drop-shadow-2xl filter contrast-110 object-contain relative z-20 opacity-0 transition-opacity duration-700">
+                            <!-- Light Reflection Overlay -->
+                             <div class="hero-sheen" id="hero-reflection"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Floating Particles (Parallax) -->
+                    <div id="float-1" class="absolute top-20 right-10 w-20 h-20 bg-gradient-to-br from-white/60 to-white/10 dark:from-white/10 dark:to-transparent rounded-full blur-xl animate-float transition-transform duration-1000 backdrop-blur-md border border-white/20" style="animation-delay: 1s; transform: translateZ(30px);"></div>
+                    <div id="float-2" class="absolute bottom-32 left-0 w-12 h-12 bg-gold-400/40 rounded-full blur-lg animate-float transition-transform duration-1000" style="animation-delay: 2.5s; transform: translateZ(40px);"></div>
+                    <div id="float-3" class="absolute top-1/3 left-10 w-8 h-8 bg-brand-500/30 rounded-full blur-md animate-float transition-transform duration-1000" style="animation-delay: 0.5s; transform: translateZ(20px);"></div>
+                     <!-- Shadow -->
+                    <div id="hero-shadow" class="absolute bottom-10 left-1/2 transform -translate-x-1/2 w-32 h-4 bg-black/30 dark:bg-black/60 blur-lg rounded-[100%] hero-shadow"></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- History -->
+    <section id="history" class="py-20 bg-white dark:bg-wood-900 transition-colors duration-300">
+        <div class="max-w-5xl mx-auto px-4">
+            <div class="text-center mb-16 reveal">
+                <span class="text-brand-500 dark:text-gold-400 font-bold tracking-widest uppercase text-[10px] transition-colors border-b border-brand-200 dark:border-gold-500 pb-1">Architectural Wellness</span>
+                <h2 class="text-4xl font-extrabold text-brand-900 dark:text-white mt-3 transition-colors">A Legacy of Health</h2>
+                <p class="text-gray-500 dark:text-gray-400 text-sm mt-3 max-w-2xl mx-auto">Connecting 5,000 years of ancient wisdom with modern structural precision.</p>
+            </div>
+            <div class="relative pl-4 md:pl-0" id="timeline-container"><div class="timeline-line"></div></div>
+        </div>
+    </section>
+
+    <!-- QUIZ SECTION (LIVE INTERACTIVE - RANDOMIZED) -->
+    <section id="quiz-section" class="py-24 bg-gradient-to-br from-brand-50 to-white dark:from-wood-900 dark:to-black relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-96 h-96 bg-brand-100/50 dark:bg-brand-900/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+        <div class="absolute bottom-0 left-0 w-96 h-96 bg-gold-100/50 dark:bg-gold-900/20 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"></div>
+
+        <div class="max-w-4xl mx-auto px-4 relative z-10">
+            <div class="text-center mb-12 reveal">
+                <span class="text-gbhpl-green dark:text-gold-400 font-bold tracking-widest uppercase text-[10px] bg-white dark:bg-wood-800 px-3 py-1 rounded-full shadow-sm">Live Recommendation Engine</span>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-brand-900 dark:text-white mt-4 mb-3">Find Your Perfect Dosage</h2>
+                <p class="text-gray-500 dark:text-gray-400 text-sm">Answer 3 simple questions to calculate your personalized plan.</p>
+            </div>
+
+            <div id="quiz-container" class="bg-white dark:bg-wood-800 rounded-[2rem] shadow-2xl border border-gray-100 dark:border-gray-700 overflow-hidden min-h-[450px] flex flex-col relative transition-all duration-500">
+                <!-- Progress Bar -->
+                <div class="w-full h-2 bg-gray-100 dark:bg-gray-700">
+                    <div id="quiz-progress" class="h-full bg-gradient-to-r from-brand-500 to-gold-500 w-[33%] transition-all duration-500 rounded-r-full"></div>
+                </div>
+
+                <!-- Question Container (Dynamic) -->
+                <div id="quiz-question-wrapper" class="flex-1 p-8 md:p-16 flex flex-col justify-center items-center text-center transition-opacity duration-500">
+                    <!-- Questions will be injected here by JS -->
+                </div>
+                
+                <!-- Calculating State -->
+                <div id="quiz-calculating" class="hidden flex-1 p-8 flex-col justify-center items-center text-center">
+                    <div class="w-16 h-16 border-4 border-brand-100 dark:border-wood-700 border-t-brand-600 dark:border-t-gold-400 rounded-full animate-spin mb-6"></div>
+                    <h3 class="text-xl font-bold text-brand-900 dark:text-white">Analyzing your needs...</h3>
+                    <p class="text-sm text-gray-500 mt-2">Calculating optimal dosage and volume.</p>
+                </div>
+
+                <!-- Result -->
+                <div id="quiz-result" class="hidden flex-1 p-8 flex-col justify-center items-center text-center bg-gradient-to-b from-white to-brand-50 dark:from-wood-900 dark:to-[#1a120b]">
+                    <div class="w-20 h-20 bg-green-100 text-gbhpl-green rounded-full flex items-center justify-center text-4xl mb-6 shadow-lg animate-bounce"><i class="fas fa-check"></i></div>
+                    <h3 class="text-3xl font-extrabold text-brand-900 dark:text-white mb-2">Perfect Match Found!</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-300 mb-8" id="quiz-result-text">Based on your goals, we recommend:</p>
+                    
+                    <div class="bg-white dark:bg-wood-800 p-8 rounded-3xl shadow-xl border border-gray-200 dark:border-gray-600 max-w-sm w-full mb-8 transform transition-all hover:scale-105 hover:shadow-2xl relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-brand-500 to-gold-500"></div>
+                        <h4 class="text-2xl font-extrabold text-brand-800 dark:text-gold-400 mb-3" id="rec-product-name">...</h4>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mb-6 leading-relaxed" id="rec-product-desc">...</p>
+                        <div class="text-3xl font-black text-brand-900 dark:text-white mb-6" id="rec-product-price">...</div>
+                        <button id="rec-add-btn" class="w-full bg-gradient-to-r from-brand-600 to-brand-700 text-white font-bold py-4 rounded-xl shadow-lg transition-all hover:shadow-xl flex justify-center items-center gap-2">Add to Cart <i class="fas fa-cart-plus ml-1"></i></button>
+                    </div>
+                    
+                    <button onclick="initQuiz()" class="text-xs text-gray-400 hover:text-brand-600 underline flex items-center gap-1"><i class="fas fa-redo"></i> Retake Quiz</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Shop (Enhanced Interactive Cards) -->
+    <section id="shop" class="py-20 bg-brand-50 dark:bg-wood-800 transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-3xl md:text-4xl font-extrabold text-brand-900 dark:text-white transition-colors">Gid's Collection</h2>
+                <p class="text-gray-600 dark:text-gray-300 text-sm mt-3 transition-colors">Premium Organic Apple Cider Vinegar products.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10" id="product-grid">
+                <div class="col-span-3 text-center py-10">
+                    <i class="fas fa-spinner fa-spin text-3xl text-brand-600"></i>
+                    <p class="mt-4 text-sm text-gray-500">Loading products from Database...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Production Process (Refined with Science) -->
+    <section id="production" class="py-20 bg-white dark:bg-wood-900 overflow-hidden transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <div class="order-2 lg:order-1 reveal">
+                    <span class="text-gbhpl-green dark:text-gold-400 font-bold tracking-widest uppercase text-[10px] transition-colors">From Soil to Seal</span>
+                    <h2 class="text-3xl md:text-4xl font-extrabold text-brand-900 dark:text-white mt-2 mb-8 transition-colors">The Architectural Process</h2>
+                    
+                    <div class="space-y-4 relative">
+                        <div class="process-connector h-full left-[24px] w-[2px] bg-gray-200 dark:bg-gray-800 absolute top-0 z-0"></div>
+                        
+                        <div class="process-step flex items-start gap-6 p-4 rounded-2xl border border-transparent hover:bg-gray-50 dark:hover:bg-wood-800 group" onclick="setProcess(1)">
+                            <div class="w-12 h-12 rounded-full border-2 border-brand-900 bg-brand-50 text-brand-900 dark:border-white dark:bg-wood-800 dark:text-white flex items-center justify-center font-bold text-lg relative z-10 transition-colors">01</div>
+                            <div>
+                                <h4 class="font-bold text-brand-900 dark:text-white text-lg">Selective Harvesting</h4>
+                                <span class="text-brand-600 dark:text-gold-400 text-xs font-bold uppercase tracking-wider block mt-1">Ayensu Valley Orchards</span>
+                            </div>
+                        </div>
+
+                        <div class="process-step flex items-start gap-6 p-4 rounded-2xl border border-transparent hover:bg-gray-50 dark:hover:bg-wood-800 group" onclick="setProcess(2)">
+                            <div class="w-12 h-12 rounded-full border-2 border-gray-300 bg-white text-gray-400 dark:border-gray-700 dark:bg-wood-900 dark:text-gray-500 flex items-center justify-center font-bold text-lg relative z-10 transition-colors">02</div>
+                            <div>
+                                <h4 class="font-bold text-gray-500 dark:text-gray-400 text-lg group-hover:text-brand-900 dark:group-hover:text-white transition-colors">Cold Press Extraction</h4>
+                            </div>
+                        </div>
+
+                        <div class="process-step flex items-start gap-6 p-4 rounded-2xl border border-transparent hover:bg-gray-50 dark:hover:bg-wood-800 group" onclick="setProcess(3)">
+                            <div class="w-12 h-12 rounded-full border-2 border-gray-300 bg-white text-gray-400 dark:border-gray-700 dark:bg-wood-900 dark:text-gray-500 flex items-center justify-center font-bold text-lg relative z-10 transition-colors">03</div>
+                            <div>
+                                <h4 class="font-bold text-gray-500 dark:text-gray-400 text-lg group-hover:text-brand-900 dark:group-hover:text-white transition-colors">Oak Barrel Fermentation</h4>
+                            </div>
+                        </div>
+
+                        <div class="process-step flex items-start gap-6 p-4 rounded-2xl border border-transparent hover:bg-gray-50 dark:hover:bg-wood-800 group" onclick="setProcess(4)">
+                            <div class="w-12 h-12 rounded-full border-2 border-gray-300 bg-white text-gray-400 dark:border-gray-700 dark:bg-wood-900 dark:text-gray-500 flex items-center justify-center font-bold text-lg relative z-10 transition-colors">04</div>
+                            <div>
+                                <h4 class="font-bold text-gray-500 dark:text-gray-400 text-lg group-hover:text-brand-900 dark:group-hover:text-white transition-colors">Raw Architectural Bottling</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="order-1 lg:order-2 relative h-[500px] rounded-[2.5rem] overflow-hidden shadow-2xl reveal delay-100 group cursor-pointer tilt-card" onclick="openProcessModal()">
+                    <div id="process-content-wrapper" class="w-full h-full relative">
+                        <img id="process-img" src="https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover transition duration-700 group-hover:scale-105 filter brightness-90">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-10 flex flex-col justify-end">
+                            <div class="flex justify-between items-end mb-4">
+                                <div>
+                                    <span id="process-tag" class="bg-gold-500 text-brand-900 text-[10px] font-black px-2 py-1 rounded uppercase tracking-widest mb-3 inline-block">Phase 01</span>
+                                    <h3 id="process-title" class="text-3xl font-bold text-white mb-2">Selective Harvesting</h3>
+                                </div>
+                                <div class="text-5xl font-black text-white/10" id="process-idx-img">1</div>
+                            </div>
+                            <p id="process-desc" class="text-gray-300 text-sm leading-relaxed mb-6">We manually select only the ripest, organic apples from the Ayensu orchards. Every apple is tree-picked to ensure maximum sugar content for fermentation.</p>
+                            
+                            <div class="grid grid-cols-2 gap-4 border-t border-white/20 pt-4" id="process-specs">
+                                <!-- Specs injected by JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Grid (Scientific) -->
+    <section id="benefits" class="py-24 bg-brand-50 dark:bg-wood-800 transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-16 reveal">
+                <span class="text-brand-500 dark:text-gold-400 font-bold tracking-widest uppercase text-[10px] transition-colors">Evidence-Based Results</span>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-brand-900 dark:text-white mt-2 mb-4 transition-colors">The Science of Vinegar</h2>
+                <p class="text-gray-500 dark:text-gray-400 text-sm max-w-2xl mx-auto">Backed by modern research: How our structural fermentation improves biological function.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id="benefits-grid">
+                <!-- Benefits injected by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Locations -->
+    <section id="locations" class="py-20 bg-white dark:bg-wood-950 transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-12 reveal">
+                <span class="text-gbhpl-green dark:text-gold-400 font-bold tracking-widest uppercase text-[10px] transition-colors">Where to Buy</span>
+                <h2 class="text-2xl md:text-3xl font-extrabold text-brand-900 dark:text-white transition-colors">Locations & Partners</h2>
+            </div>
+            <div class="flex flex-col lg:flex-row gap-10">
+                <div class="w-full lg:w-1/2 reveal cursor-pointer" onclick="openLocationDetails('factory')">
+                    <div class="bg-brand-50 dark:bg-[#2b0a0b] rounded-[2rem] shadow-xl border border-gray-200 dark:border-brand-900 overflow-hidden hover:-translate-y-2 transition-all duration-300 border-enhanced group h-full flex flex-col hover:shadow-2xl">
+                        <div class="p-8 bg-white dark:bg-wood-900 border-b border-gray-100 dark:border-gray-800">
+                            <h3 class="text-2xl font-bold text-brand-900 dark:text-white flex items-center gap-3">
+                                <i class="fas fa-map-marker-alt text-brand-600 dark:text-gold-400"></i> Ayensu HQ & Factory
+                            </h3>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mt-2 pl-7">Plot No. 78,79 Amamoma, UCC, Cape Coast</p>
+                        </div>
+                        <div class="h-64 relative overflow-hidden">
+                            <img id="img-factory" src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=800&q=80" alt="Factory Store" class="w-full h-full object-cover group-hover:scale-110 transition duration-1000">
+                            <div class="absolute bottom-4 left-4 bg-brand-900/90 backdrop-blur-sm text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow-lg">Factory Store</div>
+                        </div>
+                        <div class="relative flex-1 min-h-[250px] border-t border-white/20">
+                            <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10 w-auto">
+                                <a href="https://www.google.com/maps/dir/?api=1&destination=Cape+Coast+Ghana" target="_blank" class="bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold px-8 py-3 rounded-full flex items-center gap-2 shadow-xl hover:scale-105 transition-all ring-4 ring-white/20 backdrop-blur-md" onclick="event.stopPropagation()">
+                                    <i class="fas fa-location-arrow"></i> Get Directions
+                                </a>
+                            </div>
+                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d254151.3078058776!2d-1.384992176052524!3d5.196347221187993!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xfdf9084b2b7a773%3A0x406116800f59026!2sCape%20Coast%2C%20Ghana!5e0!3m2!1sen!2sgh!4v1708901234567!5m2!1sen!2sgh" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" class="map-filter transition duration-500 pointer-events-none w-full h-full"></iframe>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="w-full lg:w-1/2 flex flex-col gap-6 reveal delay-100">
+                     <div class="bg-white dark:bg-[#2b0a0b] p-8 md:p-10 rounded-[2rem] shadow-xl border border-gray-100 dark:border-brand-900 transition border-enhanced group h-full flex flex-col hover:shadow-2xl">
+                        <div class="flex justify-between items-center mb-10">
+                            <div>
+                                <h4 class="font-bold text-brand-900 dark:text-white text-xl"><i class="fas fa-store text-brand-500 mr-2"></i>Retail Partners</h4>
+                                <p class="text-xs text-gray-500 mt-1">Official Licensed Distributors</p>
+                            </div>
+                            <button onclick="openRetailersModal()" class="text-xs font-bold text-brand-600 dark:text-gold-400 hover:bg-brand-50 dark:hover:bg-wood-800 px-4 py-2 rounded-xl transition-colors border border-transparent hover:border-brand-200">View All</button>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-6 flex-1">
+                            <div class="bg-gray-50 dark:bg-wood-800 p-6 rounded-2xl border border-gray-100 dark:border-brand-800 flex flex-col items-center text-center justify-center hover:bg-white dark:hover:bg-[#3e1a1a] hover:shadow-lg dark:hover:border-gold-500/30 transition-all duration-300 cursor-pointer group/partner relative overflow-hidden tilt-card">
+                                <div class="w-14 h-14 rounded-full bg-white dark:bg-wood-900 flex items-center justify-center mb-4 shadow-sm group-hover/partner:scale-110 transition-transform text-xl"><i class="fas fa-shopping-cart text-brand-500"></i></div>
+                                <p class="text-sm font-bold text-brand-900 dark:text-white">Shoprite</p><p class="text-[10px] text-gray-500 dark:text-gray-400 mt-1">Accra Mall</p>
+                            </div>
+                            <div class="bg-gray-50 dark:bg-wood-800 p-6 rounded-2xl border border-gray-100 dark:border-brand-800 flex flex-col items-center text-center justify-center hover:bg-white dark:hover:bg-[#3e1a1a] hover:shadow-lg dark:hover:border-gold-500/30 transition-all duration-300 cursor-pointer group/partner relative overflow-hidden tilt-card">
+                                <div class="w-14 h-14 rounded-full bg-white dark:bg-wood-900 flex items-center justify-center mb-4 shadow-sm group-hover/partner:scale-110 transition-transform text-xl"><i class="fas fa-building text-brand-500"></i></div>
+                                <p class="text-sm font-bold text-brand-900 dark:text-white">Melcom</p><p class="text-[10px] text-gray-500 dark:text-gray-400 mt-1">Nationwide</p>
+                            </div>
+                            <div class="bg-gray-50 dark:bg-wood-800 p-6 rounded-2xl border border-gray-100 dark:border-brand-800 flex flex-col items-center text-center justify-center hover:bg-white dark:hover:bg-[#3e1a1a] hover:shadow-lg dark:hover:border-gold-500/30 transition-all duration-300 cursor-pointer group/partner relative overflow-hidden tilt-card">
+                                <div class="w-14 h-14 rounded-full bg-white dark:bg-wood-900 flex items-center justify-center mb-4 shadow-sm group-hover/partner:scale-110 transition-transform text-xl"><i class="fas fa-gamepad text-brand-500"></i></div>
+                                <p class="text-sm font-bold text-brand-900 dark:text-white">Game</p><p class="text-[10px] text-gray-500 dark:text-gray-400 mt-1">Accra Mall</p>
+                            </div>
+                            <div class="bg-gray-50 dark:bg-wood-800 p-6 rounded-2xl border border-gray-100 dark:border-brand-800 flex flex-col items-center text-center justify-center hover:bg-white dark:hover:bg-[#3e1a1a] hover:shadow-lg dark:hover:border-gold-500/30 transition-all duration-300 cursor-pointer group/partner relative overflow-hidden tilt-card">
+                                <div class="w-14 h-14 rounded-full bg-white dark:bg-wood-900 flex items-center justify-center mb-4 shadow-sm group-hover/partner:scale-110 transition-transform text-xl"><i class="fas fa-leaf text-brand-500"></i></div>
+                                <p class="text-sm font-bold text-brand-900 dark:text-white">Max Mart</p><p class="text-[10px] text-gray-500 dark:text-gray-400 mt-1">37 & East Legon</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW: TRUSTED DISTRIBUTORS SECTION -->
+    <section id="partners" class="py-20 bg-brand-50 dark:bg-wood-800 transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-16 reveal">
+                <span class="text-brand-500 dark:text-gold-400 font-bold tracking-widest uppercase text-[10px] transition-colors">Our Extended Family</span>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-brand-900 dark:text-white mt-2 mb-4 transition-colors">Trusted Distributors</h2>
+                <p class="text-gray-500 dark:text-gray-400 text-sm max-w-2xl mx-auto">Meet the certified partners who bring Gid's Organic ACV closer to your home.</p>
+            </div>
+            
+            <div id="distributors-grid" class="flex flex-wrap justify-center gap-8">
+                <!-- Distributors injected by JS -->
+                <div class="text-center w-full py-10">
+                    <i class="fas fa-spinner fa-spin text-3xl text-brand-600 mb-4"></i>
+                    <p class="text-sm text-gray-500">Loading distributors from database...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Careers -->
+    <section id="careers" class="py-16 bg-white dark:bg-wood-900 transition-colors duration-300">
+        <div class="max-w-5xl mx-auto px-4">
+            <div class="text-center mb-10 reveal">
+                <h2 class="text-3xl font-extrabold text-brand-900 dark:text-white transition-colors">Join GBHPL</h2>
+                <p class="text-gray-500 dark:text-gray-300 text-sm mt-2 transition-colors">Build a career with purpose.</p>
+            </div>
+            <!-- UPDATED: Added Wholesale Partner Card in Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="border border-gray-200 dark:border-gray-600 p-6 rounded-2xl hover:shadow-xl transition-all cursor-pointer reveal bg-white dark:bg-wood-900 group hover:-translate-y-2 border-enhanced tilt-card" onclick="openJobModal('Sales Representative', 'Drive distribution of our wholesale boxes to pharmacies.')">
+                    <h3 class="font-bold text-xl text-brand-900 dark:text-white group-hover:text-brand-600 transition-colors">Sales Rep</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">Accra & Kumasi • Full Time</p>
+                    <div class="mt-2 text-brand-600 dark:text-gold-400 text-xs font-bold uppercase tracking-widest flex items-center gap-2 group-hover:gap-3 transition-all">Apply Now <i class="fas fa-arrow-right"></i></div>
+                </div>
+                <div class="border border-gray-200 dark:border-gray-600 p-6 rounded-2xl hover:shadow-xl transition-all cursor-pointer reveal bg-white dark:bg-wood-900 group delay-75 hover:-translate-y-2 border-enhanced tilt-card" onclick="openJobModal('Fermentation Specialist', 'Monitor fermentation cycles.')">
+                    <h3 class="font-bold text-xl text-brand-900 dark:text-white group-hover:text-brand-600 transition-colors">Brew Specialist</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">Ayensu HQ • Full Time</p>
+                    <div class="mt-2 text-brand-600 dark:text-gold-400 text-xs font-bold uppercase tracking-widest flex items-center gap-2 group-hover:gap-3 transition-all">Apply Now <i class="fas fa-arrow-right"></i></div>
+                </div>
+                <!-- NEW CARD: Wholesale Partner -->
+                <div class="border-2 border-dashed border-brand-500 dark:border-gold-500 p-6 rounded-2xl hover:shadow-xl transition-all cursor-pointer reveal bg-brand-50 dark:bg-wood-800 group delay-100 hover:-translate-y-2 tilt-card" onclick="openWholesaleModal()">
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="font-bold text-xl text-brand-900 dark:text-white group-hover:text-brand-600 transition-colors">Wholesale Partner</h3>
+                        <i class="fas fa-truck-loading text-brand-500 dark:text-gold-400 text-xl"></i>
+                    </div>
+                    <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">Pharmacies & Supermarkets</p>
+                    <div class="mt-2 text-brand-600 dark:text-gold-400 text-xs font-bold uppercase tracking-widest flex items-center gap-2 group-hover:gap-3 transition-all">Apply to Distribute <i class="fas fa-file-signature"></i></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CEO Profile Section -->
+    <section id="ceo" class="py-20 bg-wood-900 text-white relative overflow-hidden">
+        <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/wood-pattern.png')] opacity-20"></div>
+        <div class="max-w-7xl mx-auto px-4 relative z-10">
+            <div class="flex flex-col md:flex-row gap-12 items-center">
+                <div class="w-full md:w-5/12 reveal">
+                    <div class="relative rounded-[2.5rem] overflow-hidden shadow-2xl border-4 border-gold-500/30 h-[500px] group tilt-card">
+                        <!-- FIXED: CEO Image with loading placeholder -->
+                        <div id="ceo-image-container" class="w-full h-full image-loading">
+                            <img id="img-ceo" src="" alt="Mr. Gideon Charles Mensah" class="w-full h-full object-cover object-top transition duration-700 group-hover:scale-105 opacity-0 transition-opacity duration-700" onload="this.classList.remove('opacity-0'); this.parentElement.classList.remove('image-loading');">
+                        </div>
+                        <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black via-black/70 to-transparent p-8 pt-32">
+                            <div class="bg-brand-600 text-white text-[10px] font-bold px-3 py-1 rounded inline-block mb-2 shadow-lg">Founder</div>
+                            <h3 class="text-3xl font-bold font-sans text-white">Mr. Gideon Charles Mensah</h3>
+                            <p class="text-gold-400 font-bold tracking-wider text-xs uppercase mt-1">CEO & Architect</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-full md:w-7/12 reveal delay-200">
+                    <i class="fas fa-quote-left text-4xl text-brand-500 mb-6 block opacity-50"></i>
+                    <h2 class="text-3xl md:text-5xl font-extrabold font-sans mb-6 leading-tight text-white">"Architecture isn't just buildings.<br>It's about building health."</h2>
+                    <div class="space-y-6 text-lg text-gray-300 leading-relaxed font-light">
+                        <p>As a trained <strong>Architect</strong>, Mr. Gideon Mensah applies structural precision to biological processes. He founded <strong>GBHPL</strong> with a vision: to construct a foundation of wellness using Ghana's organic resources.</p>
+                        <div id="bio-more" class="hidden space-y-6 animate-fade-in-up">
+                            <p>Mr. Gideon Charles Mensah is a visionary leader who combines his architectural background with a passion for organic health. After years of researching traditional fermentation methods, he developed the unique process used at GBHPL to ensure the 'Mother' culture thrives in the Ghanaian climate. His commitment to quality and structural integrity is the bedrock of the company.</p>
+                            <p>His philosophy is simple: just as a building needs a strong foundation to stand, the human body needs a strong foundation of nutrition to thrive. GBHPL's apple cider vinegar is that foundation.</p>
+                        </div>
+                        <button onclick="toggleBio()" id="bio-btn" class="text-gold-400 text-sm font-bold hover:text-white transition flex items-center gap-2 mt-4 group">Read Full Biography <i class="fas fa-chevron-down group-hover:translate-y-1 transition-transform"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer (Enhanced Interaction) -->
+    <footer class="bg-black text-white pt-20 pb-10 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+                <div>
+                    <!-- UPDATED: Picture-only logo in footer -->
+                    <div class="footer-logo-container mb-6">
+                        <img id="footer-logo" src="" alt="GBHPL Logo" class="h-8 w-auto object-contain transition-opacity duration-500 opacity-0">
+                        <div id="footer-logo-fallback" class="h-8 w-12 flex items-center justify-center text-white font-bold text-sm">
+                            GBHPL
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-400 leading-relaxed mb-6">Pioneering organic wellness in Ghana through architectural precision.</p>
+                    <div class="flex gap-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-900 flex items-center justify-center hover:bg-brand-600 transition-all hover:-translate-y-1"><i class="fab fa-facebook-f text-sm"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-900 flex items-center justify-center hover:bg-brand-600 transition-all hover:-translate-y-1"><i class="fab fa-twitter text-sm"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-900 flex items-center justify-center hover:bg-brand-600 transition-all hover:-translate-y-1"><i class="fab fa-instagram text-sm"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="font-bold text-brand-500 mb-6 text-sm uppercase tracking-widest border-l-2 border-brand-500 pl-3">Quick Links</h4>
+                    <ul class="space-y-4 text-sm text-gray-400">
+                        <li><button onclick="openContentModal('Our History', 'The history of vinegar dates back to 5,000 BCE when Babylonians used date vinegar as a preservative. In 400 BCE, Hippocrates, the father of medicine, prescribed apple cider vinegar mixed with honey (Oxymel). Historically, warriors like the Japanese Samurai drank it for strength. Today, GBHPL continues this ancient tradition, refining the fermentation process with modern architectural precision to deliver the purest form of health.')" class="hover:text-white transition-colors hover:translate-x-2 inline-block text-left w-full group transition-transform"><i class="fas fa-history text-xs mr-2 opacity-50 group-hover:opacity-100 transition-opacity"></i>Our History</button></li>
+                        <li><a href="#shop" class="hover:text-white transition-colors hover:translate-x-2 inline-block w-full group transition-transform"><i class="fas fa-shopping-bag text-xs mr-2 opacity-50 group-hover:opacity-100 transition-opacity"></i>Shop Products</a></li>
+                        <li><a href="#locations" class="hover:text-white transition-colors hover:translate-x-2 inline-block w-full group transition-transform"><i class="fas fa-map-marker-alt text-xs mr-2 opacity-50 group-hover:opacity-100 transition-opacity"></i>Find a Store</a></li>
+                        <li><a href="#careers" class="hover:text-white transition-colors hover:translate-x-2 inline-block w-full group transition-transform"><i class="fas fa-briefcase text-xs mr-2 opacity-50 group-hover:opacity-100 transition-opacity"></i>Careers</a></li>
+                        <li><button onclick="openTrackingModal()" class="hover:text-white transition-colors hover:translate-x-2 inline-block text-left w-full group transition-transform"><i class="fas fa-search-location text-xs mr-2 opacity-50 group-hover:opacity-100 transition-opacity"></i>Track Order</button></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-brand-500 mb-6 text-sm uppercase tracking-widest border-l-2 border-brand-500 pl-3">Legal & Support</h4>
+                    <ul class="space-y-4 text-sm text-gray-400">
+                        <li><button onclick="openContentModal('Privacy Policy', '<strong>Your Data Privacy Commitment</strong><br><br>At GBHPL, we strictly protect your personal information. We collect only essential data (name, contact, shipping address) required to process your order. We do not sell, trade, or rent your personal identification information to others. All payment transactions are encrypted and processed securely through Paystack. We comply with all relevant data protection laws to ensure your digital safety.')" class="hover:text-white transition-colors text-left w-full group hover:translate-x-2 transition-transform"><i class="fas fa-shield-alt text-xs mr-2 opacity-50 group-hover:opacity-100 transition-opacity"></i>Privacy Policy</button></li>
+                        <li><button onclick="openContentModal('Terms of Service', '<strong>Usage Agreement</strong><br><br>By accessing this website and purchasing our products, you agree to our terms. Our Apple Cider Vinegar is sold as a dietary supplement and not intended to diagnose, treat, cure, or prevent any disease. Always consult a healthcare professional before starting any new supplement regimen. Unauthorized resale or misuse of our brand assets is strictly prohibited.')" class="hover:text-white transition-colors text-left w-full group hover:translate-x-2 transition-transform"><i class="fas fa-file-contract text-xs mr-2 opacity-50 group-hover:opacity-100 transition-opacity"></i>Terms of Service</button></li>
+                        <li><button onclick="openContentModal('Return Policy', '<strong>7-Day Satisfaction Guarantee</strong><br><br>We stand by the quality of our products. If you are unsatisfied with your purchase, unopened items may be returned within 7 days of delivery for a full refund. For health and safety reasons, we cannot accept returns on opened bottles unless the product is defective or damaged upon arrival. Please contact support immediately if you receive a damaged shipment.')" class="hover:text-white transition-colors text-left w-full group hover:translate-x-2 transition-transform"><i class="fas fa-undo text-xs mr-2 opacity-50 group-hover:opacity-100 transition-opacity"></i>Return Policy</button></li>
+                        <li><button onclick="openContentModal('Wholesale Inquiries', '<strong>Partner with GBHPL</strong><br><br>Join our network of authorized retailers. We offer competitive wholesale pricing for pharmacies, supermarkets, and health shops. Minimum Order Quantity (MOQ) is 10 boxes (100 units). Wholesale partners receive marketing materials, priority support, and listing on our website locator. Valid business registration is required to apply.')" class="hover:text-white transition-colors text-left w-full group hover:translate-x-2 transition-transform"><i class="fas fa-boxes text-xs mr-2 opacity-50 group-hover:opacity-100 transition-opacity"></i>Wholesale Info</button></li>
+                        <li><a href="admin.html" target="_blank" class="hover:text-white transition-colors text-left w-full flex items-center gap-2 group hover:translate-x-2 transition-transform"><i class="fas fa-lock text-xs group-hover:text-brand-500 transition-colors"></i> Staff Access</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-brand-500 mb-6 text-sm uppercase tracking-widest border-l-2 border-brand-500 pl-3">Stay Connected</h4>
+                    <p class="text-sm text-gray-400 mb-4">Subscribe for health tips and exclusive offers.</p>
+                    <form onsubmit="event.preventDefault(); showToast('Subscribed successfully!');" class="flex flex-col gap-3">
+                        <input type="email" placeholder="Enter your email" class="bg-gray-900 text-white text-sm p-4 rounded-xl border border-gray-700 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 focus:outline-none transition-colors">
+                        <button type="submit" class="bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 rounded-xl transition-all shadow-lg hover:shadow-brand-500/20 text-sm uppercase tracking-wide">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500"><div class="flex flex-col md:flex-row gap-4 items-center"><p>&copy; 2025 GBHPL. All rights reserved.</p><span class="hidden md:inline text-gray-700">|</span><p>FDA/DK 18-273</p></div><div class="flex gap-4"><div class="flex items-center gap-2"><i class="fas fa-map-marker-alt"></i> <span>Plot No. 78,79 Amamoma, UCC, Cape Coast</span></div><div class="flex items-center gap-2"><i class="fas fa-phone"></i> <span>0240908531</span></div></div></div>
+        </div>
+    </footer>
+
+    <!-- Checkout Modal -->
+    <div id="checkout-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4"><div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeCheckoutModal()"></div><div class="relative w-full max-w-md bg-white dark:bg-wood-900 rounded-2xl shadow-2xl overflow-hidden transform scale-100 transition-all border dark:border-gray-600 p-6"><div class="flex justify-between items-center mb-6 border-b border-gray-100 dark:border-gray-700 pb-4"><h3 class="text-xl font-bold text-brand-900 dark:text-white"><i class="fas fa-credit-card mr-2 text-brand-600"></i>Secure Checkout</h3><button onclick="closeCheckoutModal()" class="text-gray-400 hover:text-red-500 transition-colors"><i class="fas fa-times text-xl"></i></button></div><form id="paymentForm" onsubmit="processPayment(event)" class="space-y-4"><div><label class="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1 uppercase">Email Address</label><input type="email" id="email-address" required class="w-full p-3 rounded-lg bg-gray-50 dark:bg-wood-800 border border-gray-200 dark:border-gray-600 text-sm focus:ring-2 focus:ring-brand-500 outline-none dark:text-white transition-colors" placeholder="you@example.com"></div><div><label class="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1 uppercase">Full Name</label><input type="text" id="full-name" required class="w-full p-3 rounded-lg bg-gray-50 dark:bg-wood-800 border border-gray-200 dark:border-gray-600 text-sm focus:ring-2 focus:ring-brand-500 outline-none dark:text-white transition-colors" placeholder="John Doe"></div><div><label class="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1 uppercase">Phone</label><input type="tel" id="phone-number" required class="w-full p-3 rounded-lg bg-gray-50 dark:bg-wood-800 border border-gray-200 dark:border-gray-600 text-sm focus:ring-2 focus:ring-brand-500 outline-none dark:text-white transition-colors" placeholder="024 XXX XXXX"></div><div class="bg-brand-50 dark:bg-wood-800 p-4 rounded-lg border border-brand-100 dark:border-gray-700 flex justify-between items-center"><span class="text-sm font-bold text-gray-700 dark:text-gray-300">Total Amount</span><span id="checkout-total" class="text-lg font-black text-brand-600 dark:text-gold-400">GH₵0.00</span></div><button type="submit" id="pay-btn" class="w-full bg-gradient-to-r from-brand-600 to-brand-700 dark:bg-gold-500 dark:text-brand-900 dark:hover:bg-gold-600 text-white font-bold py-3 rounded-lg shadow-lg transform active:scale-95 transition-all flex justify-center items-center gap-2">Pay Now <i class="fas fa-lock text-xs"></i></button><p class="text-[10px] text-center text-gray-400 mt-2"><i class="fas fa-shield-alt text-green-500"></i> Secured by Paystack</p></form></div></div>
+
+    <!-- Scripts -->
+    <script>
+        // ==========================================
+        //  FIREBASE CONFIGURATION (LIVE CONNECTION)
+        // ==========================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyBcaDhHrTKER4EePU1Lr4_DAq1zr46z7ko",
+            authDomain: "apple-vinegar.firebaseapp.com",
+            projectId: "apple-vinegar",
+            storageBucket: "apple-vinegar.firebasestorage.app",
+            messagingSenderId: "176381249452",
+            appId: "1:176381249452:web:9b3db68d07c4682d081c09",
+            measurementId: "G-B65KJE42Z5"
+        };
+        // ==========================================
+        
+        let db = null;
+        let storage = null;
+        
+        // Initialize Firebase
+        if (typeof firebase !== 'undefined') {
+            try {
+                firebase.initializeApp(firebaseConfig);
+                db = firebase.firestore();
+                storage = firebase.storage();
+                console.log("Firebase initialized successfully");
+            } catch (e) {
+                console.error("Firebase init failed:", e);
+            }
+        } else {
+            console.warn("Firebase SDK not loaded.");
+        }
+
+        // --- DATA ---
+        let products = []; // Initial empty state, filled by Firebase
+        let siteContent = {}; // To store dynamic site images
+        let distributorsData = []; // Will be populated from Firebase
+        let modalQuantity = 1;
+        let currentModalPrice = 0;
+
+        // Quiz Logic Variables
+        let quizStep = 1;
+        let quizAnswers = {};
+        let quizQuestions = [
+            {
+                id: 1,
+                question: "What is your primary health goal?",
+                options: [
+                    { value: 'weight', icon: 'weight', label: 'Weight Loss' },
+                    { value: 'digestion', icon: 'apple-alt', label: 'Gut Health' },
+                    { value: 'general', icon: 'spa', label: 'General Detox' }
+                ]
+            },
+            {
+                id: 2,
+                question: "How often do you plan to take ACV?",
+                options: [
+                    { value: 'daily', icon: 'calendar-check', label: 'Daily Routine', subtext: 'Every morning or with meals' },
+                    { value: 'occasional', icon: 'glass-whiskey', label: 'Occasionally', subtext: 'As needed for detox' }
+                ]
+            },
+            {
+                id: 3,
+                question: "Who will be using this?",
+                options: [
+                    { value: 'self', icon: 'user', label: 'Just Me' },
+                    { value: 'family', icon: 'users', label: 'My Family' },
+                    { value: 'retail', icon: 'store', label: 'I want to Sell' }
+                ]
+            }
+        ];
+
+        // Initialize shops array (will be populated from database)
+        let shops = [];
+
+        // UPDATED BENEFITS BASED ON PDF DATA
+        const benefits=[
+            {icon:"weight",title:"Weight Reduction",text:"Increases satiety & metabolism.", detail:"Daily intake lowers BMI, body weight, and visceral fat while increasing resting energy expenditure.", clinical: "2009 Study: Lowered triglycerides & weight."},
+            {icon:"droplet",title:"Type 2 Diabetes",text:"Mimics Insulin Effect.", detail:"Reduces post-meal blood sugar by 20% and improves insulin sensitivity significantly.", clinical: "2010 Trial: Comparable to insulin in glucose control."},
+            {icon:"heart",title:"Heart Health",text:"Atherosclerosis Defense.", detail:"Reduces serum cholesterol (LDL) and inhibits fat creation in the liver.", clinical: "Protects against lipid oxidation."},
+            {icon:"shield-virus",title:"Cancer Protection",text:"Induces Apoptosis.", detail:"Shown to induce cell death in stomach and leukemia cancer cells in controlled studies.", clinical: "2004 Study: Significant anti-tumor properties."},
+            {icon:"bacteria",title:"Hypertension",text:"Regulates Blood Pressure.", detail:"Down-regulates angiotensin II receptors, a key player in high blood pressure mechanics.", clinical: "Effective reduction in pre-hypertensive models."},
+            {icon:"brain",title:"Detoxification",text:"Antioxidant Defense.", detail:"Balances the ratio of oxidants to antioxidants, reducing bodily stress and toxins.", clinical: "Enhances antioxidant enzyme activity."},
+            {icon:"bolt",title:"Local Antiseptic",text:"Potent Antimicrobial.", detail:"Effective against antibiotic-resistant organisms and even jellyfish stings at 3% concentration.", clinical: "Therapeutic antiseptic implications."},
+            {icon:"utensils",title:"Skin Health",text:"Natural Astringent.", detail:"Closes pores and prevents bacteria accumulation. Treats acne, skin tags, and warts.", clinical: "Supports skin pH balance."}
+        ];
+        
+        const historyData = [
+            { year: "5000 BCE", title: "Babylonian Origins", desc: "The Babylonians used date vinegar as a preservative and condiment.", extra: "Used by healers to clean wounds and preserve food for long journeys." },
+            { year: "400 BCE", title: "The Hippocratic Oath", desc: "Hippocrates prescribed apple cider vinegar mixed with honey (Oxymel).", extra: "It was one of the few medicines available in ancient Greece." },
+            { year: "1958", title: "The 'Mother' Defined", desc: "Dr. D.C. Jarvis publishes 'Folk Medicine', popularized the health benefits.", extra: "This shifted public perception from a condiment to a daily health tonic." },
+            { year: "2018", title: "GBHPL Founded", desc: "Architect Gideon Mensah establishes Gid's Beverages & Health Product Ltd.", extra: "Starting with just 5 barrels, the architectural approach was born." },
+            { year: "2024", title: "FDA Certification", desc: "Achieved full FDA approval (FDA/DK 18-273).", extra: "Now distributed in over 25 major retail outlets across the nation." }
+        ];
+
+        let cart=[], currentProcess=1;
+        
+        // UPDATED PROCESS STEPS BASED ON PDF DATA
+        let processSteps=[
+            { title:"Selective Harvesting", tag: "Phase 01", text:"We manually select only the ripest, organic apples from the Ayensu orchards. Every apple is tree-picked.", img:"https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?auto=format&fit=crop&w=600&q=80", specs: [ {label: "Standard", val: "Organic Grade A"}, {label: "Region", val: "Ayensu Valley"}, {label: "Method", val: "Hand-picked"}, {label: "Quality", val: "High Brix Lvl"} ] },
+            { title:"Cold Press Extraction", tag: "Phase 02", text:"Apples are washed and cold-pressed within 24 hours of harvest to preserve delicate enzymes.", img:"https://images.unsplash.com/photo-1516594915697-87eb3b1c14ea?auto=format&fit=crop&w=600&q=80", specs: [ {label: "Temp", val: "< 4°C"}, {label: "Timeframe", val: "24h post-harvest"}, {label: "Yield", val: "Pure Juice"}, {label: "Filtration", val: "None"} ] },
+            { title:"Oak Barrel Fermentation", tag: "Phase 03", text:"The critical 'Double Fermentation'. First, yeast converts sugars to alcohol. Second, bacteria convert alcohol to acetic acid (5-20%), forming the 'Mother'.", img:"https://images.unsplash.com/photo-1597481499750-3e6b22637e12?auto=format&fit=crop&w=600&q=80", specs: [ {label: "Process", val: "Double Ferment"}, {label: "Vessel", val: "French Oak"}, {label: "Acidity", val: "5-20%"}, {label: "Result", val: "The Mother"} ] },
+            { title:"Raw Architectural Bottling", tag: "Phase 04", text:"Bottled raw and unfiltered. No pasteurization ensures enzymes and probiotics remain biologically active and structurally potent.", img:"https://images.unsplash.com/photo-1606757349633-8c4f79923e3e?auto=format&fit=crop&w=600&q=80", specs: [ {label: "State", val: "Raw/Unfiltered"}, {label: "Pasteurized", val: "No"}, {label: "Enzymes", val: "Active"}, {label: "Shelf Life", val: "5+ Years"} ] }
+        ];
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await fetchSiteContent();
+            await fetchProducts(); 
+            await fetchRetailPartners();
+            renderProducts(); 
+            renderBenefits(); 
+            renderTimeline();
+            preloadProcessImages(); 
+            setProcess(1);
+            initQuiz(); 
+            
+            // Navbar Scroll Effect
+            window.addEventListener('scroll', () => {
+                const nav = document.getElementById('navbar');
+                const backToTop = document.getElementById('back-to-top');
+                if(window.scrollY > 50) {
+                    nav.classList.remove('nav-transparent', 'h-20');
+                    nav.classList.add('glass-nav', 'h-16', 'shadow-sm');
+                    backToTop.classList.remove('opacity-0', 'pointer-events-none');
+                } else {
+                    nav.classList.add('nav-transparent', 'h-20');
+                    nav.classList.remove('glass-nav', 'h-16', 'shadow-sm');
+                    backToTop.classList.add('opacity-0', 'pointer-events-none');
+                }
+            });
+            
+            const toggleTheme=()=>{document.documentElement.classList.toggle('dark');localStorage.setItem('theme',document.documentElement.classList.contains('dark')?'dark':'light');};
+            document.getElementById('theme-toggle').addEventListener('click',toggleTheme);
+            document.getElementById('mobile-theme-toggle').addEventListener('click',toggleTheme);
+            if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark');
+            
+            document.getElementById('mobile-menu-btn').addEventListener('click',()=>document.getElementById('mobile-menu').classList.toggle('hidden'));
+            
+            const obs=new IntersectionObserver(e=>e.forEach(i=>{if(i.isIntersecting)i.target.classList.add('active')}),{threshold:0.1});
+            document.querySelectorAll('.reveal').forEach(e=>obs.observe(e));
+            
+            // Start animation loop
+            requestAnimationFrame(updateHeroAnimation);
+
+            // BASH LISTENER
+            document.addEventListener('keydown', (e) => {
+                if (e.key === '`' || e.key === '~') {
+                    e.preventDefault();
+                    toggleBash();
+                }
+            });
+            
+            document.getElementById('bash-input').addEventListener('keydown', function(e) {
+                if(e.key === 'Enter') {
+                    processBashCommand(this.value);
+                    this.value = '';
+                }
+            });
+        });
+        
+        // Preload images function
+        function preloadProcessImages() {
+            processSteps.forEach(step => {
+                const img = new Image();
+                img.src = step.img;
+            });
+        }
+
+        // --- DATABASE FETCH FUNCTIONS ---
+        
+        async function fetchSiteContent() {
+            if(!db) return;
+            try {
+                const snapshot = await db.collection('site_content').get();
+                if(!snapshot.empty) {
+                    snapshot.forEach(doc => {
+                        const data = doc.data();
+                        siteContent[data.key] = data.value;
+                    });
+                    
+                    // MODIFIED: Handle Hero Image Loading Gracefully
+                    const heroImg = document.getElementById('img-hero');
+                    if(siteContent['img_hero'] && heroImg) {
+                        heroImg.onload = function() {
+                            this.classList.remove('opacity-0');
+                        };
+                        heroImg.src = siteContent['img_hero'];
+                    }
+
+                    // MODIFIED: Handle CEO Image Loading
+                    const ceoImg = document.getElementById('img-ceo');
+                    const ceoContainer = document.getElementById('ceo-image-container');
+                    if(siteContent['img_ceo'] && ceoImg) {
+                        ceoImg.onload = function() {
+                            this.classList.remove('opacity-0');
+                            if(ceoContainer) ceoContainer.classList.remove('image-loading');
+                        };
+                        ceoImg.src = siteContent['img_ceo'];
+                    } else {
+                        // If no CEO image in database, use a fallback
+                        const placeholderCEO = 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=600&q=80';
+                        if(ceoImg) {
+                            ceoImg.onload = function() {
+                                this.classList.remove('opacity-0');
+                                if(ceoContainer) ceoContainer.classList.remove('image-loading');
+                            };
+                            ceoImg.src = placeholderCEO;
+                        }
+                    }
+                    
+                    if(siteContent['img_factory']) document.getElementById('img-factory').src = siteContent['img_factory'];
+                    
+                    // UPDATED: Handle Favicon and Logos (navbar and footer)
+                    if(siteContent['img_favicon']) {
+                        const faviconLink = document.getElementById('favicon-link');
+                        faviconLink.href = siteContent['img_favicon'];
+                    }
+                    
+                    // Load navbar logo
+                    const navLogo = document.getElementById('nav-logo');
+                    const navLogoFallback = document.getElementById('nav-logo-fallback');
+                    if(siteContent['img_logo'] && navLogo) {
+                        navLogo.onload = function() {
+                            this.classList.remove('opacity-0');
+                            if(navLogoFallback) navLogoFallback.style.display = 'none';
+                        };
+                        navLogo.src = siteContent['img_logo'];
+                    } else if(navLogoFallback) {
+                        navLogoFallback.style.display = 'flex';
+                    }
+                    
+                    // Load footer logo (same logo as navbar)
+                    const footerLogo = document.getElementById('footer-logo');
+                    const footerLogoFallback = document.getElementById('footer-logo-fallback');
+                    if(siteContent['img_logo'] && footerLogo) {
+                        footerLogo.onload = function() {
+                            this.classList.remove('opacity-0');
+                            if(footerLogoFallback) footerLogoFallback.style.display = 'none';
+                        };
+                        footerLogo.src = siteContent['img_logo'];
+                    } else if(footerLogoFallback) {
+                        footerLogoFallback.style.display = 'flex';
+                    }
+
+                    // Update process steps
+                    if(siteContent['img_process_1']) processSteps[0].img = siteContent['img_process_1'];
+                    if(siteContent['img_process_2']) processSteps[1].img = siteContent['img_process_2'];
+                    if(siteContent['img_process_3']) processSteps[2].img = siteContent['img_process_3'];
+                    if(siteContent['img_process_4']) processSteps[3].img = siteContent['img_process_4'];
+                    
+                    // Refresh current process view
+                    setProcess(currentProcess);
+                }
+            } catch (error) {
+                console.error("Error fetching site content:", error);
+            }
+        }
+
+        async function fetchProducts() {
+            if(!db) return;
+            try {
+                const snapshot = await db.collection('products').orderBy('id', 'asc').get();
+                if(!snapshot.empty) {
+                    products = [];
+                    snapshot.forEach(doc => {
+                        const p = doc.data();
+                        products.push({
+                            id: p.id,
+                            name: p.name,
+                            price: parseFloat(p.price),
+                            image: p.image_url,
+                            tag: p.tag || 'Popular',
+                            desc: p.description || '',
+                            longDesc: p.long_description || p.description,
+                            shelfLife: p.shelf_life || 'N/A',
+                            available: p.available
+                        });
+                    });
+                }
+            } catch (error) {
+                console.error("Error fetching products:", error);
+            }
+        }
+
+        // NEW: Function to fetch distributors from Firebase
+        async function fetchDistributors() {
+            if(!db) return;
+            
+            try {
+                // Fetch distributors
+                const snapshot = await db.collection('distributors')
+                    .where('status', '==', 'Active')
+                    .get();
+                
+                if(!snapshot.empty) {
+                    distributorsData = [];
+                    
+                    snapshot.forEach(doc => {
+                        const dist = doc.data();
+                        // Get gallery from array field as per PDF spec
+                        // If 'gallery_urls' exists use it, otherwise fallback to main image
+                        const galleryImages = (dist.gallery_urls && dist.gallery_urls.length > 0) 
+                            ? dist.gallery_urls 
+                            : [dist.image_url];
+                        
+                        // Add to distributorsData
+                        distributorsData.push({
+                            id: doc.id, // Firestore ID
+                            name: dist.name,
+                            role: dist.role,
+                            location: dist.location,
+                            image: dist.image_url,
+                            gallery: galleryImages,
+                            bio: dist.bio || '',
+                            recommendation: {
+                                author: dist.recommendation_author || 'GBHPL Team',
+                                text: dist.recommendation_text || 'Trusted partner providing quality service.'
+                            }
+                        });
+                    });
+                    
+                    // Render distributors if section exists
+                    if(document.getElementById('distributors-grid')) {
+                        renderDistributors();
+                    }
+                }
+            } catch (err) {
+                console.error("Error fetching distributors:", err);
+            }
+        }
+
+        // NEW: Function to fetch retail partners (shops) from Firebase
+        async function fetchRetailPartners() {
+            if(!db) return;
+            
+            try {
+                const snapshot = await db.collection('retail_partners')
+                    .where('status', '==', 'Active')
+                    .get();
+                
+                if(!snapshot.empty) {
+                    shops = [];
+                    snapshot.forEach(doc => {
+                        const shop = doc.data();
+                        shops.push({
+                            name: shop.name,
+                            phone: shop.phone || 'Not available',
+                            loc: shop.location,
+                            type: shop.type
+                        });
+                    });
+                    // Sort locally
+                    shops.sort((a, b) => a.name.localeCompare(b.name));
+                }
+                
+                // Also fetch distributors
+                await fetchDistributors();
+            } catch (err) {
+                console.error("Error fetching retail partners:", err);
+            }
+        }
+
+        // --- BASH TERMINAL LOGIC ---
+        function toggleBash() {
+            const t = document.getElementById('bash-terminal-container');
+            const i = document.getElementById('bash-input');
+            if (t.classList.contains('hidden')) {
+                t.classList.remove('hidden');
+                i.focus();
+            } else {
+                t.classList.add('hidden');
+            }
+        }
+
+        function processBashCommand(cmd) {
+            const output = document.getElementById('bash-output');
+            const cleanCmd = cmd.trim().toLowerCase();
+            
+            // Echo command
+            output.innerHTML += `<div class="text-green-500 font-bold">visitor@gbhpl:~$ ${cmd}</div>`;
+            
+            let response = '';
+            
+            switch(cleanCmd.split(' ')[0]) {
+                case 'help':
+                    response = `Available commands:
+  help      - Show this message
+  ls        - List available site sections
+  cat [sec] - Go to section (e.g., 'cat shop')
+  date      - Show server time
+  clear     - Clear terminal screen
+  whoami    - Show current user info
+  shop      - Open products page
+  exit      - Close terminal`;
+                    break;
+                case 'ls':
+                    response = 'hero  history  quiz  shop  production  benefits  locations  partners  careers  contact  admin.html';
+                    break;
+                case 'cat':
+                    const args = cleanCmd.split(' ');
+                    if (args.length < 2) response = 'Usage: cat [section_name]';
+                    else {
+                        const section = args[1];
+                        const el = document.getElementById(section) || (section === 'quiz' ? document.getElementById('quiz-section') : null);
+                        if (el) {
+                            response = `Navigating to /${section}...`;
+                            setTimeout(() => { toggleBash(); el.scrollIntoView({behavior:'smooth'}); }, 500);
+                        } else {
+                            response = `cat: ${section}: No such file or directory`;
+                        }
+                    }
+                    break;
+                case 'date':
+                    response = new Date().toString();
+                    break;
+                case 'clear':
+                    output.innerHTML = '';
+                    return;
+                case 'whoami':
+                    response = 'visitor (guest privileges)';
+                    break;
+                case 'shop':
+                    response = 'Opening shop...';
+                    setTimeout(() => { toggleBash(); document.getElementById('shop').scrollIntoView({behavior:'smooth'}); }, 500);
+                    break;
+                case 'exit':
+                    toggleBash();
+                    return;
+                case '':
+                    return;
+                default:
+                    response = `bash: ${cleanCmd.split(' ')[0]}: command not found`;
+            }
+            
+            output.innerHTML += `<div class="mb-2 text-green-300 whitespace-pre-wrap">${response}</div>`;
+            output.scrollTop = output.scrollHeight;
+        }
+
+        // Smooth Animation Variables
+        let targetRotateX = 0, targetRotateY = 0;
+        let currentRotateX = 0, currentRotateY = 0;
+
+        function handleHero3D(e) {
+            const container = document.querySelector('.hero-3d-container');
+            
+            if(window.innerWidth > 1024 && container) {
+                const rect = container.getBoundingClientRect();
+                const x = e.clientX - rect.left; 
+                const y = e.clientY - rect.top;  
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                // Calculate target rotation
+                targetRotateX = ((centerY - y) / centerY) * 10; 
+                targetRotateY = ((x - centerX) / centerX) * 10;
+                
+                // Reflection logic (direct update for responsiveness)
+                const reflection = document.getElementById('hero-reflection');
+                if(reflection) {
+                    reflection.style.opacity = (y / rect.height) * 0.6 + 0.1;
+                    reflection.style.backgroundPosition = `${(x/rect.width) * 100}% ${(y/rect.height) * 100}%`;
+                }
+            }
+        }
+        
+        function resetHero3D() {
+            targetRotateX = 0;
+            targetRotateY = 0;
+            const reflection = document.getElementById('hero-reflection');
+            if(reflection) reflection.style.opacity = 0;
+        }
+        
+        function updateHeroAnimation() {
+            // Lerp (Linear Interpolation) for smoothness
+            // current = current + (target - current) * factor
+            const ease = 0.1;
+            currentRotateX += (targetRotateX - currentRotateX) * ease;
+            currentRotateY += (targetRotateY - currentRotateY) * ease;
+            
+            const imgWrapper = document.getElementById('hero-3d-wrapper');
+            const shadow = document.getElementById('hero-shadow');
+            
+            if (imgWrapper) {
+                imgWrapper.style.transform = `rotateX(${currentRotateX}deg) rotateY(${currentRotateY}deg)`;
+            }
+            
+            if (shadow) {
+                const shadowX = -currentRotateY * 1.5;
+                shadow.style.transform = `translate(-50%, 0) translateX(${shadowX}px) scale(${1 - Math.abs(currentRotateX)/100})`;
+            }
+            
+            requestAnimationFrame(updateHeroAnimation);
+        }
+
+        function parallaxHero(e) {
+            // Keep existing logic for blobs
+            const blob1 = document.getElementById('blob-1');
+            const blob2 = document.getElementById('blob-2');
+            
+            if(window.innerWidth > 768) {
+                const x = (window.innerWidth - e.pageX*2)/100;
+                const y = (window.innerHeight - e.pageY*2)/100;
+                if(blob1) blob1.style.transform = `translateX(${x}px) translateY(${y}px)`;
+                if(blob2) blob2.style.transform = `translateX(${-x}px) translateY(${-y}px)`;
+            }
+        }
+
+        // --- RANDOMIZED QUIZ FUNCTIONS ---
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function initQuiz() {
+            const wrapper = document.getElementById('quiz-question-wrapper');
+            wrapper.innerHTML = ''; // Clear existing
+            
+            // Shuffle questions order
+            let shuffledQuestions = shuffleArray([...quizQuestions]);
+            
+            // Re-render questions with shuffled options
+            quizQuestions.forEach((q, index) => {
+                const shuffledOptions = shuffleArray([...q.options]);
+                
+                const stepDiv = document.createElement('div');
+                stepDiv.id = `q${q.id}`;
+                stepDiv.className = `quiz-step ${index === 0 ? '' : 'hidden'} flex-1 w-full flex flex-col justify-center items-center text-center`; // Add w-full
+                
+                let optionsHtml = shuffledOptions.map(opt => `
+                    <button onclick="selectQuizOption(${q.id}, '${opt.value}')" class="quiz-option border-2 border-gray-100 dark:border-gray-700 rounded-2xl p-6 hover:border-brand-500 dark:hover:border-gold-400 group bg-gray-50/50 dark:bg-wood-900/50 transition-all w-full">
+                        <i class="fas fa-${opt.icon} text-4xl text-gray-300 group-hover:text-brand-500 dark:group-hover:text-gold-400 mb-4 block transition-colors"></i>
+                        <span class="font-bold text-gray-700 dark:text-gray-200 block">${opt.label}</span>
+                        ${opt.subtext ? `<p class="text-xs text-gray-500 mt-2">${opt.subtext}</p>` : ''}
+                    </button>
+                `).join('');
+
+                let gridCols = q.options.length === 2 ? 'md:grid-cols-2 max-w-2xl' : 'md:grid-cols-3';
+
+                stepDiv.innerHTML = `
+                    <h3 class="text-2xl font-bold text-brand-900 dark:text-white mb-10">${q.question}</h3>
+                    <div class="grid grid-cols-1 ${gridCols} gap-6 w-full">
+                        ${optionsHtml}
+                    </div>
+                    ${index > 0 ? `<button onclick="prevQuizStep(${quizQuestions[index-1].id})" class="mt-10 text-xs text-gray-400 hover:text-brand-600 underline">Back to previous question</button>` : ''}
+                `;
+                
+                wrapper.appendChild(stepDiv);
+            });
+            
+            // Reset progress
+            document.getElementById('quiz-progress').style.width = '33%';
+            document.getElementById('quiz-result').classList.add('hidden');
+            document.getElementById('quiz-question-wrapper').classList.remove('hidden');
+        }
+
+        function selectQuizOption(stepId, value) {
+            quizAnswers[stepId] = value;
+            
+            // Visual feedback
+            const currentStepDiv = document.getElementById(`q${stepId}`);
+            const buttons = currentStepDiv.querySelectorAll('.quiz-option');
+            buttons.forEach(btn => btn.classList.remove('selected', 'border-brand-500', 'dark:border-gold-400'));
+            
+            const currentQIndex = quizQuestions.findIndex(q => q.id === stepId);
+            
+            setTimeout(() => {
+                if(currentQIndex < quizQuestions.length - 1) {
+                    nextQuizStep(quizQuestions[currentQIndex + 1].id, currentQIndex + 2);
+                } else {
+                    showCalculatingState();
+                }
+            }, 400);
+        }
+
+        function nextQuizStep(nextId, progressStep) {
+            document.querySelectorAll('.quiz-step').forEach(el => el.classList.add('hidden'));
+            const nextEl = document.getElementById(`q${nextId}`);
+            if(nextEl) {
+                nextEl.classList.remove('hidden');
+                nextEl.classList.add('animate-fade-in-up');
+                document.getElementById('quiz-progress').style.width = `${(progressStep/3) * 100}%`;
+            }
+        }
+
+        function prevQuizStep(prevId) {
+            document.querySelectorAll('.quiz-step').forEach(el => el.classList.add('hidden'));
+            const prevEl = document.getElementById(`q${prevId}`);
+            if(prevEl) {
+                prevEl.classList.remove('hidden');
+                const progressStep = quizQuestions.findIndex(q => q.id === prevId) + 1;
+                document.getElementById('quiz-progress').style.width = `${(progressStep/3) * 100}%`;
+            }
+        }
+        
+        function showCalculatingState() {
+            document.querySelectorAll('.quiz-step').forEach(el => el.classList.add('hidden'));
+            document.getElementById('quiz-question-wrapper').classList.add('hidden'); // Hide wrapper
+            document.getElementById('quiz-calculating').classList.remove('hidden');
+            
+            setTimeout(() => {
+                calculateQuizResult();
+            }, 1500); 
+        }
+
+        function calculateQuizResult() {
+            document.getElementById('quiz-calculating').classList.add('hidden');
+            
+            // Logic for recommendation
+            let recommendedId = 1; 
+            let recommendedQty = 1;
+            let reasonText = "Based on your goals, we recommend:";
+
+            if (quizAnswers[3] === 'retail') {
+                recommendedId = 3; 
+                recommendedQty = 1; 
+                reasonText = "For retail purposes, the Wholesale Box is your best value option.";
+            } else if (quizAnswers[3] === 'family') {
+                if (quizAnswers[2] === 'daily') {
+                    recommendedId = 2; 
+                    recommendedQty = 2; 
+                    reasonText = "For a family using it daily, we recommend stocking up on 2 of our 1-Liter bottles.";
+                } else {
+                    recommendedId = 2; 
+                    recommendedQty = 1;
+                    reasonText = "For occasional family use, the 1-Liter bottle offers great longevity.";
+                }
+            } else {
+                if (quizAnswers[2] === 'daily') {
+                     recommendedId = 2; 
+                     recommendedQty = 1;
+                     reasonText = "For daily personal use, the 1-Liter bottle ensures you won't run out quickly.";
+                } else {
+                     recommendedId = 1; 
+                     recommendedQty = 1;
+                     reasonText = "For occasional personal use, our signature 500ml bottle is the perfect start.";
+                }
+            }
+
+            const product = products.find(p => p.id === recommendedId) || products[0]; 
+            
+            if(product) {
+                document.getElementById('quiz-result-text').innerText = reasonText;
+                document.getElementById('rec-product-name').innerText = product.name;
+                document.getElementById('rec-product-desc').innerText = product.desc;
+                document.getElementById('rec-product-price').innerText = `GH₵${product.price.toFixed(2)} x ${recommendedQty}`;
+                
+                const btn = document.getElementById('rec-add-btn');
+                btn.onclick = () => {
+                    addToCart(product.id, recommendedQty);
+                    showToast('Recommendation added to cart!');
+                };
+            }
+
+            const resDiv = document.getElementById('quiz-result');
+            resDiv.classList.remove('hidden');
+            resDiv.classList.add('animate-fade-in-up');
+            document.getElementById('quiz-progress').style.width = '100%';
+        }
+
+        function resetQuiz() {
+            quizAnswers = {};
+            initQuiz();
+        }
+
+        function renderProducts(){ 
+            const g=document.getElementById('product-grid'); 
+            if(products.length === 0) {
+                 g.innerHTML = '<div class="col-span-3 text-center py-10 text-gray-500">No products available at the moment.</div>';
+                 return;
+            }
+            if(g) g.innerHTML=products.map((p, index)=>`
+                <div style="transition-delay: ${index * 100}ms" class="reveal bg-white dark:bg-wood-900 rounded-[2rem] shadow-xl overflow-hidden group product-card-hover relative h-[450px] transition-all hover:shadow-2xl border border-gray-100 dark:border-gray-700 tilt-card">
+                    ${!p.available ? '<div class="absolute top-4 left-4 z-20 bg-red-600 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow">SOLD OUT</div>' : 
+                                     '<div class="absolute top-4 left-4 z-20 bg-gbhpl-green text-white text-[10px] font-bold px-3 py-1 rounded-full shadow">BEST SELLER</div>'}
+                    <div class="h-3/5 w-full bg-brand-50 dark:bg-wood-800 flex items-center justify-center relative overflow-hidden group">
+                        <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 pointer-events-none"></div>
+                        <img src="${p.image}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        <div class="overlay-actions absolute inset-0 bg-black/40 backdrop-blur-[4px] flex flex-col items-center justify-center gap-4 p-6 transition-transform duration-400 translate-y-full">
+                            <button onclick="addToCart(${p.id})" class="bg-white text-brand-900 font-bold py-3.5 px-6 rounded-xl w-full shadow-lg hover:bg-brand-50 transition-colors transform hover:-translate-y-1 text-xs uppercase tracking-widest flex items-center justify-center gap-2">
+                                <i class="fas fa-shopping-cart"></i> Add to Cart
+                            </button>
+                            <button onclick="openProductModal(${p.id})" class="bg-brand-900 text-white font-bold py-3.5 px-6 rounded-xl w-full shadow-lg hover:bg-brand-800 transition-colors transform hover:-translate-y-1 text-xs uppercase tracking-widest flex items-center justify-center gap-2">
+                                <i class="fas fa-eye"></i> Quick View
+                            </button>
+                        </div>
+                    </div>
+                    <div class="h-2/5 p-6 flex flex-col justify-between bg-white dark:bg-wood-900 relative z-10">
+                        <div>
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="font-bold text-lg text-brand-900 dark:text-white leading-tight">${p.name}</h3>
+                                <div class="flex flex-col items-end"><span class="font-extrabold text-xl text-brand-600 dark:text-gold-400">GH₵${p.price.toFixed(2)}</span></div>
+                            </div>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 leading-relaxed">${p.desc}</p>
+                        </div>
+                        <div class="flex items-center justify-between mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
+                            <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">${p.tag}</span>
+                            <div class="flex text-gold-400 text-xs gap-0.5"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                        </div>
+                    </div>
+                </div>`).join(''); 
+        }
+
+        function renderBenefits(){ 
+            const g=document.getElementById('benefits-grid'); 
+            if(g) g.innerHTML=benefits.map((b,i)=>`
+                <div style="transition-delay: ${i * 100}ms; touch-action: manipulation;" onclick="this.classList.toggle('flipped')" class="flip-card h-64 w-full group perspective-1000 reveal">
+                    <div class="flip-card-inner relative w-full h-full transition-transform duration-700 transform-style-3d shadow-xl rounded-2xl">
+                        <div class="flip-card-front bg-white dark:bg-wood-800 border border-gray-100 dark:border-gray-700 rounded-2xl flex flex-col items-center justify-center p-6 z-10 relative">
+                            <div class="absolute top-4 right-4 text-gray-300 dark:text-gray-600 text-[10px] flex items-center gap-1 animate-pulse"><i class="fas fa-hand-pointer"></i> Tap</div>
+                            <div class="w-16 h-16 bg-brand-50 dark:bg-wood-700 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-inner"><i class="fas fa-${b.icon} text-3xl text-brand-600 dark:text-gold-400"></i></div>
+                            <h4 class="font-bold text-lg text-brand-900 dark:text-white mb-2 text-center">${b.title}</h4>
+                            <p class="text-xs text-gray-500 dark:text-gray-300 leading-tight text-center max-w-[80%]">${b.text}</p>
+                        </div>
+                        <div class="flip-card-back bg-gradient-to-br from-brand-900 to-wood-900 text-white rounded-2xl flex flex-col items-center justify-center p-6 absolute inset-0 border border-brand-700 dark:border-gold-600 shadow-inner">
+                            <h5 class="font-bold text-sm text-gold-400 mb-3 uppercase tracking-wide border-b border-gold-500/30 pb-1">Brief Benefit</h5>
+                            <p class="text-sm font-medium text-white leading-relaxed mb-4 text-center">"${b.detail}"</p>
+                            <div class="bg-white/10 p-2 rounded-lg w-full text-center mt-auto backdrop-blur-sm"><p class="text-[10px] text-gray-200 italic"><i class="fas fa-microscope mr-1"></i> ${b.clinical}</p></div>
+                        </div>
+                    </div>
+                </div>`).join(''); 
+        }
+
+        // --- NEW: RENDER DISTRIBUTORS ---
+        function renderDistributors() {
+            const container = document.getElementById('distributors-grid');
+            if(!container) return;
+
+            if (distributorsData.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center w-full py-10">
+                        <i class="fas fa-store-slash text-3xl text-gray-300 mb-4"></i>
+                        <p class="text-sm text-gray-500">No distributors available at the moment.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = distributorsData.map((d, index) => `
+                <div class="group relative w-full sm:w-[calc(50%-1rem)] lg:w-[calc(33.33%-1rem)] h-96 rounded-[2rem] overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 cursor-pointer tilt-card reveal" style="transition-delay: ${index * 100}ms" onclick="openDistributorModal('${d.id}')">
+                    <!-- Image Background with Zoom -->
+                    <div class="absolute inset-0 bg-gray-900">
+                        <img src="${d.image}" alt="${d.name}" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700 ease-in-out">
+                    </div>
+                    
+                    <!-- Gradient Overlay -->
+                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-90 transition-opacity duration-300"></div>
+
+                    <!-- Verified Badge -->
+                    <div class="absolute top-4 right-4 bg-white/20 backdrop-blur-md border border-white/30 rounded-full px-3 py-1 flex items-center gap-2 transform translate-y-[-10px] opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+                        <i class="fas fa-check-circle text-gold-400 text-xs"></i>
+                        <span class="text-[10px] font-bold text-white uppercase tracking-wider">Verified</span>
+                    </div>
+
+                    <!-- Content -->
+                    <div class="absolute bottom-0 left-0 w-full p-8 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
+                        <span class="text-gold-400 font-bold text-[10px] uppercase tracking-widest mb-2 block border-l-2 border-gold-400 pl-2">${d.role}</span>
+                        <h3 class="text-2xl font-bold text-white mb-1 group-hover:text-gold-100 transition-colors">${d.name}</h3>
+                        <p class="text-gray-300 text-xs mb-6 flex items-center gap-2"><i class="fas fa-map-marker-alt text-brand-500"></i> ${d.location}</p>
+                        
+                        <!-- Recommendation Snippet -->
+                        <div class="bg-white/10 backdrop-blur-sm p-4 rounded-xl border-l-4 border-brand-500 mb-6 transform opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 delay-100">
+                            <p class="text-[10px] text-gray-200 italic line-clamp-2">"${d.recommendation.text}"</p>
+                        </div>
+
+                        <!-- Action Button -->
+                        <button class="w-full bg-brand-600 hover:bg-brand-500 text-white font-bold py-3 rounded-xl shadow-lg transform translate-y-10 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 delay-200 flex items-center justify-center gap-2">
+                            View Profile <i class="fas fa-arrow-right text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderTimeline() {
+            const container = document.getElementById('timeline-container');
+            let html = '<div class="timeline-line"></div>';
+            html += historyData.map((item, index) => `
+                <div class="relative flex flex-col md:flex-row items-center justify-between mb-16 reveal group cursor-pointer" onclick="toggleTimeline(${index})">
+                    <div class="md:w-5/12 text-left md:text-right pl-12 md:pl-0 md:pr-12 mb-2 md:mb-0 w-full relative">
+                        <span class="font-mono text-4xl font-black text-brand-100 dark:text-wood-800 absolute md:static -z-10 opacity-50 md:opacity-100 top-0 left-10 scale-150 md:scale-100 origin-left transition-colors group-hover:text-brand-200">${item.year}</span>
+                        <h3 class="font-bold text-brand-900 dark:text-white text-xl relative z-10 mt-[-10px]">${item.title}</h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-300 mt-2">${item.desc}</p>
+                        <div id="timeline-extra-${index}" class="hidden mt-4 pt-4 border-t border-brand-100 dark:border-gray-700"><p class="text-xs font-serif italic text-brand-600 dark:text-gold-400 bg-brand-50 dark:bg-wood-800 p-3 rounded-lg">${item.extra}</p></div>
+                    </div>
+                    <div class="absolute left-6 md:left-1/2 transform -translate-x-1/2 w-6 h-6 rounded-full bg-white dark:bg-wood-900 border-4 border-brand-500 dark:border-gold-400 z-10 shadow-lg group-hover:scale-125 group-hover:bg-brand-500 group-hover:border-white transition-all duration-300 flex items-center justify-center">
+                        <div class="w-2 h-2 bg-transparent group-hover:bg-white rounded-full transition-colors"></div>
+                    </div>
+                    <div class="hidden md:block md:w-5/12 pl-12"><button class="text-[10px] font-bold text-brand-400 dark:text-gray-500 uppercase tracking-widest hover:text-brand-600 dark:hover:text-gold-400 transition-colors group-hover:translate-x-2 transform duration-300 flex items-center gap-2">Explore Era <i class="fas fa-chevron-right text-[8px]"></i></button></div>
+                </div>`).join('');
+            container.innerHTML = html;
+        }
+
+        function toggleTimeline(idx) {
+            const el = document.getElementById(`timeline-extra-${idx}`);
+            if(el.classList.contains('hidden')) { el.classList.remove('hidden'); el.classList.add('animate-fade-in-up'); } else { el.classList.add('hidden'); }
+        }
+        
+        function toggleBio(){
+            const more = document.getElementById('bio-more'); const btn = document.getElementById('bio-btn');
+            if(more.classList.contains('hidden')){ more.classList.remove('hidden'); btn.innerHTML = 'Read Less <i class="fas fa-chevron-up"></i>'; } else { more.classList.add('hidden'); btn.innerHTML = 'Read Full Biography <i class="fas fa-chevron-down"></i>'; }
+        }
+        
+        function setProcess(idx){
+            const img = document.getElementById('process-img');
+            if (!img) return; 
+            
+            if (currentProcess === idx && img.src.includes('http')) return; 
+            currentProcess = idx; 
+            const s = processSteps[idx-1];
+            const contentWrapper = document.getElementById('process-content-wrapper');
+            
+            if(contentWrapper) contentWrapper.classList.add('opacity-0', 'scale-95');
+            
+            setTimeout(() => {
+                const titleEl = document.getElementById('process-title');
+                if(titleEl) titleEl.innerText = s.title;
+                
+                const descEl = document.getElementById('process-desc');
+                if(descEl) descEl.innerText = s.text;
+                
+                const tagEl = document.getElementById('process-tag');
+                if(tagEl) tagEl.innerText = s.tag;
+                
+                img.src = s.img;
+                
+                const idxEl = document.getElementById('process-idx-img');
+                if(idxEl) idxEl.innerText = idx;
+                
+                const specsEl = document.getElementById('process-specs');
+                if(specsEl) specsEl.innerHTML = s.specs.map(sp => `<div class="flex flex-col"><span class="text-[9px] text-gray-400 dark:text-gray-500 uppercase tracking-widest font-bold">${sp.label}</span><span class="font-mono text-sm font-bold text-brand-800 dark:text-gray-200 mt-1">${sp.val}</span></div>`).join('');
+                
+                if(contentWrapper) contentWrapper.classList.remove('opacity-0', 'scale-95');
+            }, 400); 
+            
+            document.querySelectorAll('.process-step').forEach((el,i)=>{
+                const num = el.querySelector('div'); 
+                const title = el.querySelector('h4'); // Target the title directly
+                const subtitle = el.querySelector('span'); // Target subtitle if exists
+
+                if(i+1===idx) { 
+                    el.classList.add('active'); 
+                    
+                    // Number Circle Active
+                    num.classList.remove('border-gray-300', 'text-gray-400', 'bg-white', 'dark:bg-wood-900/50'); 
+                    num.classList.add('border-brand-900', 'dark:border-white', 'text-brand-900', 'dark:text-white', 'bg-brand-50', 'dark:bg-wood-800');
+                    
+                    // Title Active
+                    if(title) {
+                        title.classList.remove('text-gray-500', 'dark:text-gray-400');
+                        title.classList.add('text-brand-900', 'dark:text-white');
+                    }
+                    
+                    // Subtitle Active (if exists)
+                    if(subtitle) {
+                        subtitle.classList.remove('text-brand-600', 'dark:text-gold-400'); // Optional: adjust if needed, mostly handled by CSS
+                    }
+
+                } else { 
+                    el.classList.remove('active'); 
+                    
+                    // Number Circle Inactive
+                    num.classList.remove('border-brand-900', 'dark:border-white', 'text-brand-900', 'dark:text-white', 'bg-brand-50', 'dark:bg-wood-800');
+                    num.classList.add('border-gray-300', 'text-gray-400', 'bg-white', 'dark:bg-wood-900/50');
+                    
+                    // Title Inactive
+                    if(title) {
+                        title.classList.remove('text-brand-900', 'dark:text-white');
+                        title.classList.add('text-gray-500', 'dark:text-gray-400');
+                    }
+                }
+            });
+        }
+
+        // --- NEW: OPEN DISTRIBUTOR MODAL ---
+        function openDistributorModal(id) {
+            const d = distributorsData.find(item => item.id === id);
+            if(!d) return;
+
+            const html = `
+                <div class="bg-white dark:bg-wood-900 rounded-[2.5rem] shadow-2xl overflow-hidden max-w-4xl w-full mx-auto border dark:border-gray-600 flex flex-col md:flex-row max-h-[90vh]">
+                    <!-- Close Button -->
+                    <button onclick="closeAllDrawers()" class="absolute top-4 right-4 z-50 bg-white/80 dark:bg-black/50 p-2 rounded-full text-gray-600 dark:text-white hover:scale-110 transition shadow-sm hover:bg-red-500 hover:text-white"><i class="fas fa-times text-lg"></i></button>
+
+                    <!-- Left: Gallery -->
+                    <div class="w-full md:w-5/12 bg-gray-900 relative flex flex-col h-64 md:h-auto">
+                        <div class="flex-1 relative overflow-hidden group">
+                            <img id="dist-main-img" src="${d.image}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-0 transition-opacity" onload="this.classList.remove('opacity-0')">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                            <div class="absolute bottom-6 left-6 text-white">
+                                <h2 class="text-2xl font-bold">${d.name}</h2>
+                                <p class="text-gold-400 text-xs font-bold uppercase tracking-widest">${d.role}</p>
+                            </div>
+                        </div>
+                        <!-- Thumbnails -->
+                        <div class="h-20 bg-black flex gap-1 p-1 overflow-x-auto">
+                            ${d.gallery.map((img, idx) => `
+                                <img src="${img}" onclick="document.getElementById('dist-main-img').src='${img}'" class="h-full w-20 object-cover cursor-pointer hover:opacity-100 opacity-60 transition-opacity border-2 border-transparent hover:border-gold-400 rounded-md">
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Right: Content -->
+                    <div class="w-full md:w-7/12 p-8 md:p-10 overflow-y-auto bg-brand-50/50 dark:bg-wood-800/50">
+                        
+                        <div class="flex items-center gap-2 mb-6 text-xs font-bold text-gray-500 dark:text-gray-400">
+                            <span class="bg-white dark:bg-wood-900 px-3 py-1 rounded-full shadow-sm border border-gray-200 dark:border-gray-700 flex items-center gap-2">
+                                <i class="fas fa-map-pin text-brand-600"></i> ${d.location}
+                            </span>
+                            <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full shadow-sm flex items-center gap-1">
+                                <i class="fas fa-check-circle"></i> Authorized
+                            </span>
+                        </div>
+
+                        <h3 class="text-lg font-bold text-brand-900 dark:text-white mb-3">About Partner</h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed mb-8">${d.bio}</p>
+
+                        <div class="bg-white dark:bg-wood-900 p-6 rounded-2xl border border-brand-100 dark:border-gray-700 relative mb-8">
+                            <i class="fas fa-quote-left text-4xl text-brand-100 dark:text-wood-700 absolute top-4 left-4 -z-0"></i>
+                            <div class="relative z-10">
+                                <p class="text-sm italic text-gray-700 dark:text-gray-200 mb-4 font-serif">"${d.recommendation.text}"</p>
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded-full bg-brand-600 text-white flex items-center justify-center font-bold text-xs">
+                                        ${d.recommendation.author.charAt(0)}
+                                    </div>
+                                    <div>
+                                        <p class="text-xs font-bold text-brand-900 dark:text-white">${d.recommendation.author}</p>
+                                        <p class="text-[10px] text-gray-400 uppercase tracking-wide">GBHPL Team</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                             <a href="tel:0240908531" class="bg-brand-600 hover:bg-brand-700 text-white py-3 rounded-xl font-bold text-sm text-center shadow-lg transition-transform hover:-translate-y-1">
+                                <i class="fas fa-phone mr-2"></i> Contact Us
+                            </a>
+                            <button onclick="closeAllDrawers(); navigateTo('locations')" class="bg-white dark:bg-wood-900 hover:bg-gray-100 dark:hover:bg-wood-700 text-brand-900 dark:text-white border border-gray-200 dark:border-gray-600 py-3 rounded-xl font-bold text-sm text-center shadow transition-transform hover:-translate-y-1">
+                                <i class="fas fa-map mr-2"></i> Find on Map
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            openModal(html);
+        }
+
+        // --- MODALS ---
+        function openNutritionModal(){ 
+            const html=`<div class="bg-[#F4E4BC] p-8 rounded-2xl text-black relative max-w-sm mx-auto shadow-2xl border-4 border-[#9b2c2c] transform scale-100 transition-transform"><button onclick="closeAllDrawers()" class="absolute top-3 right-3 text-black text-2xl hover:scale-110 hover:text-[#9b2c2c] transition-colors"><i class="fas fa-times-circle"></i></button><h1 class="text-4xl font-black border-b-4 border-black mb-2">Nutrition Facts</h1><p class="text-sm font-bold mb-2">33.5 servings (500ml) / 67 (1L)</p><div class="flex justify-between border-b-8 border-black mb-2 pb-1 font-bold text-sm"><span>Serv size</span><span>1tbsp (15mL)</span></div><div class="flex justify-between items-end border-b-4 border-black mb-2"><span class="font-black text-sm">Amount/serving</span><span class="text-4xl font-black">Calories 0</span></div><div class="text-right text-xs font-bold border-b border-black mb-1">% Daily Value</div><div class="nutrition-row flex justify-between border-b border-gray-400 py-1"><span><span class="font-bold">Total Fat</span> 0g</span><span class="font-bold">0%</span></div><div class="nutrition-row flex justify-between border-b border-gray-400 py-1"><span><span class="font-bold">Sodium</span> 0mg</span><span class="font-bold">0%</span></div><div class="nutrition-row flex justify-between border-b border-gray-400 py-1"><span><span class="font-bold">Total Carbohydrate</span> 0g</span><span class="font-bold">0%</span></div><div class="nutrition-row nutrition-thick mb-3 border-b-4 border-black py-1"><span><span class="font-bold">Protein</span> 0g</span><span></span></div><p class="text-[10px] leading-tight mb-4">Not a significant source of saturated fat, trans fat, cholesterol, dietary fiber, total sugars, added sugars, vitamins D, Calcium, iron and potassium.</p><div class="border-t-2 border-black pt-3 mt-2"><p class="text-xs font-bold">INGREDIENTS:</p><p class="text-xs">Filtered Water, Apples and Acetic Acid Bacteria.</p></div><div class="mt-4 flex gap-2 justify-center"><span class="border border-black rounded px-2 py-0.5 font-bold text-[10px] uppercase bg-white/50">Gluten-Free</span><span class="border border-black rounded px-2 py-0.5 font-bold text-[10px] uppercase bg-white/50">Made in Ghana</span></div><div class="mt-3 text-center opacity-70"><p class="text-[9px] font-bold">Mfd by: GID'S BEVERAGES & HEALTH PRODUCTS LTD.</p><p class="text-[9px]">Location: Plot No. 78,79 Amamoma, UCC, Cape Coast</p><p class="text-[9px]">Tel: 0240908531 • Exp: 31/07/2030</p></div></div>`;
+            openModal(html); 
+        }
+        function openContentModal(t,c){ openModal(`<div class="bg-white dark:bg-wood-900 rounded-3xl p-8 shadow-2xl max-w-lg mx-auto border dark:border-gray-600"><div class="flex justify-between items-center mb-6 border-b border-gray-100 dark:border-gray-700 pb-4"><h3 class="text-2xl font-bold text-brand-900 dark:text-white">${t}</h3><button onclick="closeAllDrawers()" class="text-gray-400 hover:text-red-500 transition-colors bg-gray-100 dark:bg-wood-800 p-2 rounded-full"><i class="fas fa-times text-lg"></i></button></div><div class="text-base text-gray-600 dark:text-gray-200 leading-relaxed">${c}</div></div>`); }
+        
+        function openProductModal(id){ 
+            const p=products.find(x=>x.id===id); 
+            modalQuantity = 1;
+            currentModalPrice = p.price;
+            
+            openModal(`
+            <div class="bg-white dark:bg-wood-900 rounded-[2rem] shadow-2xl overflow-hidden flex flex-col md:flex-row max-h-[85vh] w-full border dark:border-gray-600 relative">
+                <button onclick="closeAllDrawers()" class="absolute top-4 right-4 z-50 bg-white/80 dark:bg-black/50 p-2 rounded-full text-gray-600 dark:text-white hover:scale-110 transition shadow-sm"><i class="fas fa-times text-lg"></i></button>
+                
+                <div class="w-full md:w-1/2 h-64 md:h-auto bg-brand-50 dark:bg-wood-800 flex items-center justify-center p-8 relative overflow-hidden group">
+                    <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+                    <img src="${p.image}" class="w-auto h-full max-h-[350px] object-contain drop-shadow-xl transform group-hover:scale-110 transition duration-700">
+                    <div class="absolute top-4 left-4 bg-white/90 dark:bg-wood-900/90 backdrop-blur text-xs font-bold px-3 py-1 rounded-full shadow-sm text-brand-700 dark:text-gold-400 border border-brand-100 dark:border-gray-600">
+                        <i class="fas fa-check-circle mr-1"></i> In Stock
+                    </div>
+                </div>
+                
+                <div class="w-full md:w-1/2 p-8 flex flex-col overflow-y-auto">
+                    <div class="flex justify-between items-start mb-2">
+                        <h2 class="text-3xl font-extrabold text-brand-900 dark:text-white leading-tight">${p.name}</h2>
+                        <button class="text-gray-400 hover:text-red-500 transition hover:scale-110" onclick="this.classList.toggle('text-red-500'); showToast('Added to Wishlist')"><i class="fas fa-heart text-2xl"></i></button>
+                    </div>
+                    
+                    <div class="flex items-center gap-2 mb-6">
+                        <div class="flex text-gold-400 text-sm"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                        <span class="text-xs text-gray-400 font-bold uppercase tracking-wider">(45 Verified Reviews)</span>
+                    </div>
+                    
+                    <p class="text-4xl font-black text-brand-600 dark:text-gold-400 mb-6" id="modal-price-display">GH₵${p.price.toFixed(2)}</p>
+                    
+                    <div class="prose prose-sm dark:prose-invert mb-8 bg-gray-50 dark:bg-wood-800/50 p-4 rounded-xl">
+                        <p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">${p.longDesc}</p>
+                    </div>
+                    
+                    <div class="mt-auto space-y-6">
+                        <div class="flex items-center justify-between bg-gray-50 dark:bg-wood-800 p-4 rounded-2xl border border-gray-100 dark:border-gray-700">
+                            <span class="text-sm font-bold text-gray-500 uppercase tracking-wide">Quantity</span>
+                            <div class="flex items-center gap-4 bg-white dark:bg-wood-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-600 px-4 py-2">
+                                <button onclick="adjustModalQty(-1, ${p.price})" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-brand-600 hover:bg-gray-100 dark:hover:bg-wood-800 rounded-full transition"><i class="fas fa-minus text-xs"></i></button>
+                                <span id="modal-qty" class="font-mono font-bold text-lg w-6 text-center">1</span>
+                                <button onclick="adjustModalQty(1, ${p.price})" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-brand-600 hover:bg-gray-100 dark:hover:bg-wood-800 rounded-full transition"><i class="fas fa-plus text-xs"></i></button>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between text-[10px] text-gray-400 dark:text-gray-500 font-mono uppercase tracking-widest mb-2">
+                            <span>Shelf Life: ${p.shelfLife}</span>
+                            <span>SKU: GB-${p.id}00${p.id}</span>
+                        </div>
+
+                        <button onclick="addToCart(${p.id}, modalQuantity); closeAllDrawers()" class="w-full bg-gradient-to-r from-brand-600 to-brand-700 hover:from-brand-500 hover:to-brand-600 dark:from-gold-500 dark:to-gold-600 text-white dark:text-brand-900 py-4 rounded-xl font-bold text-base shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all flex items-center justify-center gap-3 group">
+                            <span>Add to Basket</span>
+                            <i class="fas fa-shopping-bag group-hover:scale-110 transition-transform"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>`); 
+        }
+
+        function adjustModalQty(change, basePrice) {
+            let newQty = modalQuantity + change;
+            if(newQty < 1) newQty = 1;
+            modalQuantity = newQty;
+            document.getElementById('modal-qty').innerText = modalQuantity;
+            currentModalPrice = basePrice * modalQuantity;
+            document.getElementById('modal-price-display').innerText = `GH₵${currentModalPrice.toFixed(2)}`;
+        }
+
+        function openRetailersModal(){
+            openModal(`<div class="bg-white dark:bg-wood-900 rounded-2xl shadow-2xl max-w-2xl w-full mx-auto border dark:border-gray-600 flex flex-col max-h-[85vh]"><div class="p-6 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center bg-brand-50 dark:bg-wood-800 rounded-t-2xl"><h3 class="text-xl font-bold text-brand-900 dark:text-white">Retail Partners</h3><button onclick="closeAllDrawers()" class="text-gray-400 hover:text-red-500 bg-white dark:bg-wood-900 p-2 rounded-full"><i class="fas fa-times text-lg"></i></button></div><div class="p-4 bg-gray-50 dark:bg-wood-900"><input id="shop-search" onkeyup="filterShops()" class="w-full p-4 rounded-xl bg-white dark:bg-wood-800 text-sm text-gray-900 dark:text-white border border-gray-200 dark:border-gray-600 outline-none focus:ring-2 focus:ring-brand-500 transition-shadow shadow-sm" placeholder="Search shops by name or location..."></div><div id="shops-list" class="p-4 overflow-y-auto space-y-3 flex-1 bg-white dark:bg-wood-900">${shops.map(s=>`<div class="shop-item p-4 rounded-xl border border-gray-100 dark:border-gray-700 hover:bg-brand-50 dark:hover:bg-wood-800 transition flex justify-between items-center group cursor-default"><div><h4 class="font-bold text-sm text-brand-900 dark:text-white">${s.name}</h4><p class="text-xs text-gray-500 dark:text-gray-400 mt-1"><i class="fas fa-map-marker-alt text-brand-400 mr-1"></i> ${s.loc}</p></div><a href="tel:${s.phone.split(',')[0]}" class="bg-white border border-gray-200 text-brand-600 text-xs font-bold px-4 py-2 rounded-lg shadow-sm group-hover:bg-brand-600 group-hover:text-white transition-colors flex items-center gap-2"><i class="fas fa-phone"></i> Call</a></div>`).join('')}</div></div>`);
+        }
+        function openJobModal(t,d){ openModal(`<div class="bg-white dark:bg-wood-900 rounded-3xl p-8 shadow-2xl max-w-md mx-auto border dark:border-gray-600"><div class="flex justify-between items-center mb-6"><h3 class="text-xl font-bold text-brand-900 dark:text-white">Apply: ${t}</h3><button onclick="closeAllDrawers()" class="text-gray-400 hover:text-brand-600 dark:hover:text-gold-400 bg-gray-50 dark:bg-wood-800 p-2 rounded-full"><i class="fas fa-times text-lg"></i></button></div><p class="text-sm text-gray-500 dark:text-gray-200 mb-6 bg-brand-50 dark:bg-wood-800 p-4 rounded-xl border border-brand-100 dark:border-gray-700">"${d}"</p><form onsubmit="submitJobApp(event, '${t}')" class="space-y-4"><div class="grid grid-cols-2 gap-4"><input id="job-fname" required class="w-full bg-gray-50 dark:bg-wood-800 p-3 rounded-xl text-sm dark:text-white border border-transparent focus:border-gbhpl-green outline-none transition focus:bg-white dark:focus:bg-black" placeholder="First Name"><input id="job-lname" required class="w-full bg-gray-50 dark:bg-wood-800 p-3 rounded-xl text-sm dark:text-white border border-transparent focus:border-gbhpl-green outline-none transition focus:bg-white dark:focus:bg-black" placeholder="Last Name"></div><input id="job-email" required type="email" class="w-full bg-gray-50 dark:bg-wood-800 p-3 rounded-xl text-sm dark:text-white border border-transparent focus:border-gbhpl-green outline-none transition focus:bg-white dark:focus:bg-black" placeholder="Email Address"><div class="w-full"><label class="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-2 uppercase tracking-wide">Upload Resume (PDF/Doc)</label><input type="file" id="job-resume" accept=".pdf,.doc,.docx" class="w-full bg-gray-50 dark:bg-wood-800 p-2 rounded-xl text-xs dark:text-white border border-dashed border-gray-300 dark:border-gray-600 hover:border-brand-500 transition cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-brand-100 file:text-brand-700 hover:file:bg-brand-200"></div><button type="submit" id="submit-app-btn" class="w-full bg-gradient-to-r from-gbhpl-green to-green-700 hover:from-green-700 hover:to-gbhpl-green text-white py-3.5 rounded-xl font-bold mt-4 transition shadow-lg hover:shadow-green-500/30 text-sm flex justify-center items-center gap-2">Submit Application <i class="fas fa-paper-plane"></i></button></form></div>`);}
+
+        async function submitJobApp(e, role) {
+            e.preventDefault();
+            
+            // UI Feedback
+            const btn = document.getElementById('submit-app-btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
+            btn.disabled = true;
+
+            const fname = document.getElementById('job-fname').value;
+            const lname = document.getElementById('job-lname').value;
+            const email = document.getElementById('job-email').value;
+            const resumeInput = document.getElementById('job-resume');
+            const file = resumeInput.files[0];
+            
+            let resumeUrl = null;
+            let resumeName = 'No file uploaded';
+
+            if(db && storage) {
+                try {
+                    // 1. Upload File (if exists)
+                    if (file) {
+                        resumeName = file.name;
+                        // Create unique file name: timestamp_cleanfilename
+                        const fileName = `${Date.now()}_${file.name.replace(/[^a-zA-Z0-9.]/g, '_')}`;
+                        
+                        console.log("Attempting upload to 'resumes' folder..."); // Debug
+                        const storageRef = storage.ref().child('resumes/' + fileName);
+                        const snapshot = await storageRef.put(file);
+                        
+                        // Get Public URL
+                        resumeUrl = await snapshot.ref.getDownloadURL();
+                        console.log("File uploaded. URL:", resumeUrl); // Debug
+                    }
+
+                    // 2. Save Data
+                    await db.collection('applications').add({
+                        name: `${fname} ${lname}`,
+                        contact: email,
+                        type: `Job: ${role}`,
+                        detail: `Resume: ${resumeName}`,
+                        status: 'Pending',
+                        resume_url: resumeUrl,
+                        created_at: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+
+                    showToast('Application Sent Successfully!'); 
+                    closeAllDrawers();
+
+                } catch (error) {
+                    console.error("Submission Error:", error);
+                    let msg = error.message;
+                    showToast(`Error: ${msg}`, 'error');
+                } finally {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }
+            } else {
+                // Demo Mode
+                setTimeout(() => {
+                    showToast('Application Sent! (Demo Mode)', 'success'); 
+                    closeAllDrawers();
+                }, 1000);
+            }
+        }
+
+        // --- NEW: WHOLESALE FORM FUNCTIONS ---
+        function openWholesaleModal() {
+            openModal(`
+                <div class="bg-white dark:bg-wood-900 rounded-3xl p-8 shadow-2xl max-w-lg mx-auto border dark:border-gray-600">
+                    <div class="flex justify-between items-center mb-6 border-b border-gray-100 dark:border-gray-700 pb-4">
+                        <h3 class="text-2xl font-bold text-brand-900 dark:text-white">Wholesale Application</h3>
+                        <button onclick="closeAllDrawers()" class="text-gray-400 hover:text-red-500 bg-gray-50 dark:bg-wood-800 p-2 rounded-full"><i class="fas fa-times text-lg"></i></button>
+                    </div>
+                    <p class="text-sm text-gray-500 dark:text-gray-300 mb-6 bg-brand-50 dark:bg-wood-800 p-4 rounded-xl border border-brand-100 dark:border-gray-700">Join our network of authorized distributors. Minimum order quantity applies.</p>
+                    <form onsubmit="submitWholesaleApp(event)" class="space-y-4">
+                        <div class="space-y-4">
+                            <input id="ws-biz-name" required class="w-full bg-gray-50 dark:bg-wood-800 p-3 rounded-xl text-sm dark:text-white border border-transparent focus:border-brand-500 outline-none" placeholder="Business Name">
+                            <div class="grid grid-cols-2 gap-4">
+                                <input id="ws-contact" required class="w-full bg-gray-50 dark:bg-wood-800 p-3 rounded-xl text-sm dark:text-white border border-transparent focus:border-brand-500 outline-none" placeholder="Contact Person">
+                                <input id="ws-phone" required class="w-full bg-gray-50 dark:bg-wood-800 p-3 rounded-xl text-sm dark:text-white border border-transparent focus:border-brand-500 outline-none" placeholder="Phone Number">
+                            </div>
+                            <input id="ws-email" type="email" required class="w-full bg-gray-50 dark:bg-wood-800 p-3 rounded-xl text-sm dark:text-white border border-transparent focus:border-brand-500 outline-none" placeholder="Email Address">
+                            <div class="relative">
+                                <select id="ws-type" class="w-full bg-gray-50 dark:bg-wood-800 p-3 rounded-xl text-sm dark:text-white border border-transparent focus:border-brand-500 outline-none appearance-none cursor-pointer">
+                                    <option value="" disabled selected>Select Business Type</option>
+                                    <option value="Pharmacy">Pharmacy</option>
+                                    <option value="Supermarket">Supermarket</option>
+                                    <option value="Health Shop">Health Shop</option>
+                                    <option value="Individual">Individual Distributor</option>
+                                </select>
+                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500"><i class="fas fa-chevron-down text-xs"></i></div>
+                            </div>
+                            <textarea id="ws-location" required class="w-full bg-gray-50 dark:bg-wood-800 p-3 rounded-xl text-sm dark:text-white border border-transparent focus:border-brand-500 outline-none h-24 resize-none" placeholder="Business Location / Address"></textarea>
+                        </div>
+                        <button type="submit" id="ws-submit-btn" class="w-full bg-brand-900 hover:bg-brand-800 text-white font-bold py-3.5 rounded-xl shadow-lg transform active:scale-95 transition-all flex justify-center items-center gap-2">
+                            Submit Application <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+            `);
+        }
+
+        async function submitWholesaleApp(e) {
+            e.preventDefault();
+            const btn = document.getElementById('ws-submit-btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            btn.disabled = true;
+
+            const bizName = document.getElementById('ws-biz-name').value;
+            const contact = document.getElementById('ws-contact').value;
+            const phone = document.getElementById('ws-phone').value;
+            const email = document.getElementById('ws-email').value;
+            const type = document.getElementById('ws-type').value;
+            const location = document.getElementById('ws-location').value;
+
+            if (db) {
+                try {
+                    // Insert into 'applications' table
+                    await db.collection('applications').add({
+                        name: bizName,
+                        contact: email,
+                        phone: phone,
+                        type: `Wholesale: ${type}`, // Prefix ensures Admin panel colors it correctly
+                        detail: `Contact Person: ${contact}. Location: ${location}`, // Combine details for Admin view
+                        status: 'Pending',
+                        created_at: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    
+                    showToast('Application Received! We will contact you soon.', 'success');
+                    closeAllDrawers();
+                } catch (err) {
+                    console.error('Wholesale App Error:', err);
+                    let msg = err.message || "Submission failed";
+                    showToast(`Error: ${msg}`, 'error');
+                } finally {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }
+            } else {
+                // Demo Mode
+                setTimeout(() => {
+                    showToast('Application Received! (Demo Mode)', 'success');
+                    closeAllDrawers();
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }, 1500);
+            }
+        }
+
+        function openLocationDetails(locId) {
+             const html = `<div class="bg-white dark:bg-wood-900 rounded-2xl shadow-2xl overflow-hidden max-w-2xl mx-auto border dark:border-gray-600 animate-fade-in-up"><div class="relative h-64 w-full bg-gray-200"><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d254151.3078058776!2d-1.384992176052524!3d5.196347221187993!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xfdf9084b2b7a773%3A0x406116800f59026!2sCape%20Coast%2C%20Ghana!5e0!3m2!1sen!2sgh!4v1708901234567!5m2!1sen!2sgh" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" class="filter grayscale hover:grayscale-0 transition duration-500"></iframe><div class="absolute top-0 right-0 p-4"><button onclick="closeAllDrawers()" class="bg-white/80 dark:bg-wood-900/80 text-gray-600 dark:text-white p-2 rounded-full hover:bg-white transition"><i class="fas fa-times"></i></button></div></div><div class="p-6"><h3 class="text-2xl font-bold text-brand-900 dark:text-white mb-1 flex items-center gap-2"><i class="fas fa-map-pin text-gbhpl-green"></i> Ayensu HQ & Factory</h3><p class="text-sm text-gray-700 dark:text-gray-200 mb-4 leading-relaxed">Plot No. 78,79 Amamoma, UCC, Cape Coast, Ghana</p><a href="https://goo.gl/maps/placeholder" target="_blank" class="block w-full bg-brand-600 hover:bg-brand-700 dark:bg-gold-500 dark:hover:bg-gold-600 dark:text-brand-900 text-white text-center py-3 rounded-xl font-bold text-sm transition shadow-md flex items-center justify-center gap-2"><i class="fas fa-location-arrow"></i> Open in Google Maps</a></div></div>`;
+             openModal(html);
+        }
+        function openProcessModal(){const s=processSteps[currentProcess-1]; openModal(`<div class="bg-white dark:bg-wood-900 rounded-2xl p-0 shadow-xl max-w-lg mx-auto border dark:border-gray-600 overflow-hidden"><div class="h-48 w-full relative"><img src="${s.img}" class="w-full h-full object-cover"><button onclick="closeAllDrawers()" class="absolute top-4 right-4 bg-white text-black p-2 rounded-full"><i class="fas fa-times"></i></button></div><div class="p-6"><h3 class="text-xl font-bold text-brand-900 dark:text-white mb-2">${s.title}</h3><p class="text-sm text-gray-600 dark:text-gray-300">${s.text}</p></div></div>`);}
+        function openModal(h){const c=document.getElementById('modal-container');document.getElementById('modal-content').innerHTML=h;c.classList.remove('hidden');}
+        function closeAllDrawers(){document.getElementById('cart-drawer').classList.add('translate-x-full');document.getElementById('overlay').classList.add('hidden');document.getElementById('modal-container').classList.add('hidden');document.getElementById('mobile-menu').classList.add('hidden');document.getElementById('checkout-modal').classList.add('hidden');}
+
+        // --- TRACKING LOGIC ---
+        function openTrackingModal(){
+             const html = `<div class="bg-white dark:bg-wood-900 rounded-2xl p-6 shadow-xl max-w-sm mx-auto border dark:border-gray-600 w-full"><div class="flex justify-between items-center mb-4"><h3 class="text-lg font-bold text-brand-900 dark:text-white">Track Order</h3><button onclick="closeAllDrawers()" class="text-gray-400"><i class="fas fa-times"></i></button></div><div class="flex gap-2 mb-4"><input id="track-input" class="flex-1 bg-gray-100 dark:bg-wood-800 p-3 rounded-lg text-sm dark:text-white border-none outline-none focus:ring-2 focus:ring-brand-500" placeholder="Enter Order ID (e.g., ORD-1234)"><button onclick="trackOrder()" class="bg-brand-600 text-white px-4 rounded-lg text-sm font-bold"><i class="fas fa-search"></i></button></div><div id="track-result" class="hidden border-t border-gray-100 dark:border-gray-700 pt-4"></div></div>`;
+            openModal(html);
+        }
+
+        async function trackOrder() {
+            const id = document.getElementById('track-input').value.trim();
+            if(!id) return;
+            const resDiv = document.getElementById('track-result');
+            resDiv.classList.remove('hidden');
+            
+            if (!db) {
+                resDiv.innerHTML = '<p class="text-center text-red-500 text-sm font-bold">Database Error</p>';
+                return;
+            }
+
+            // Real-time listener for order status
+            db.collection('orders').where('order_id', '==', id)
+                .onSnapshot((snapshot) => {
+                    if (!snapshot.empty) {
+                        const data = snapshot.docs[0].data();
+                        renderTrackingUI(data.status, data.customer_name, data.total);
+                        showToast('Order info updated!');
+                    } else {
+                        resDiv.innerHTML = '<p class="text-center text-red-500 text-sm font-bold">Order Not Found</p>';
+                    }
+                }, (error) => {
+                    console.error("Tracking Error:", error);
+                    resDiv.innerHTML = '<p class="text-center text-red-500 text-sm font-bold">Error fetching order</p>';
+                });
+        }
+
+        function renderTrackingUI(status, customerName, total) {
+            const resDiv = document.getElementById('track-result');
+            
+            // Define Steps
+            const steps = ['Paid', 'Processing', 'Shipped', 'Delivered'];
+            
+            if (status === 'Cancelled') {
+                 resDiv.innerHTML = `
+                    <div class="text-center animate-fade-in-up">
+                        <div class="w-16 h-16 bg-red-100 text-red-500 rounded-full flex items-center justify-center mx-auto mb-3"><i class="fas fa-times text-2xl"></i></div>
+                        <h3 class="text-xl font-bold text-red-600 mb-1">Order Cancelled</h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Please contact support.</p>
+                    </div>`;
+                 return;
+            }
+
+            let currentStepIndex = steps.indexOf(status);
+            if (currentStepIndex === -1 && (status === 'Pending' || status === 'New')) currentStepIndex = 0; // Default to start
+            
+            // Calculate progress bar width
+            const progressWidth = (currentStepIndex / (steps.length - 1)) * 100;
+
+            let stepsHtml = steps.map((step, index) => {
+                const isActive = index <= currentStepIndex;
+                const icon = index === 0 ? 'check' : index === 1 ? 'cog' : index === 2 ? 'truck' : 'home';
+                
+                return `
+                    <div class="relative flex flex-col items-center z-10 w-1/4">
+                        <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-500 border-2 ${isActive ? 'bg-brand-600 border-brand-600 text-white scale-110' : 'bg-white dark:bg-wood-800 border-gray-300 text-gray-400'}">
+                            <i class="fas fa-${icon}"></i>
+                        </div>
+                        <div class="text-[10px] font-bold mt-2 uppercase tracking-wider ${isActive ? 'text-brand-900 dark:text-white' : 'text-gray-400'}">${step}</div>
+                    </div>
+                `;
+            }).join('');
+
+            resDiv.innerHTML = `
+                <div class="animate-fade-in-up pt-2">
+                    <div class="flex justify-between items-center mb-8 relative">
+                        <!-- Progress Bar Background -->
+                        <div class="absolute top-4 left-0 w-full h-1 bg-gray-200 dark:bg-gray-700 -z-0"></div>
+                        <!-- Active Progress Bar -->
+                        <div class="absolute top-4 left-0 h-1 bg-brand-600 transition-all duration-1000 ease-out -z-0 animate-progress" style="width: ${progressWidth}%"></div>
+                        
+                        ${stepsHtml}
+                    </div>
+                    
+                    <div class="bg-gray-50 dark:bg-wood-800 p-4 rounded-xl border border-gray-100 dark:border-gray-700 flex justify-between items-center">
+                        <div class="text-left">
+                            <p class="text-[10px] uppercase text-gray-400 font-bold tracking-widest">Customer</p>
+                            <p class="font-bold text-brand-900 dark:text-white text-sm">${customerName}</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-[10px] uppercase text-gray-400 font-bold tracking-widest">Total</p>
+                            <p class="font-bold text-brand-600 dark:text-gold-400 text-lg">GH₵${total.toFixed(2)}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- CHECKOUT LOGIC ---
+        function addToCart(id, qty = 1){ 
+            const prod = products.find(x=>x.id===id); 
+            if(prod) { 
+                for(let i = 0; i < qty; i++) {
+                    cart.push(prod); 
+                }
+                updateCartUI(); 
+                showToast(`Added ${qty} item(s) to cart`); 
+            } 
+        }
+        function updateCartUI(){
+            document.getElementById('cart-count').innerText=cart.length; const c=document.getElementById('cart-count'); if(cart.length>0)c.classList.remove('scale-0'); else c.classList.add('scale-0');
+            document.getElementById('cart-count-mobile').innerText=cart.length; const cm=document.getElementById('cart-count-mobile'); if(cart.length>0)cm.classList.remove('scale-0'); else cm.classList.add('scale-0');
+            const cont=document.getElementById('cart-items'); cont.innerHTML=''; let t=0;
+            if(cart.length===0) cont.innerHTML='<div class="flex flex-col items-center justify-center h-full text-gray-400 dark:text-gray-500 opacity-50"><i class="fas fa-basket-shopping text-3xl mb-1"></i><p class="text-xs mt-2">Empty</p></div>';
+            else cart.forEach((i,idx)=>{t+=i.price; cont.innerHTML+=`<div class="flex justify-between items-center bg-gray-50 dark:bg-wood-800 p-2 rounded mb-2 text-xs"><div class="font-bold text-brand-900 dark:text-white">${i.name}</div><div class="text-gray-500 dark:text-gray-400">${i.price.toFixed(2)}</div><button onclick="cart.splice(${idx},1);updateCartUI()" class="text-red-500 hover:text-red-700"><i class="fas fa-trash"></i></button></div>`;
+            });
+            document.getElementById('cart-total').innerText=`GH₵${t.toFixed(2)}`;
+        }
+        function toggleCart(){document.getElementById('cart-drawer').classList.toggle('translate-x-full');document.getElementById('overlay').classList.toggle('hidden');}
+        function openCheckoutModal(){ if(cart.length===0)return showToast("Cart Empty","error"); closeAllDrawers(); document.getElementById('checkout-modal').classList.remove('hidden'); const t = cart.reduce((sum, item) => sum + item.price, 0); document.getElementById('checkout-total').innerText = `GH₵${t.toFixed(2)}`; }
+        function closeCheckoutModal(){document.getElementById('checkout-modal').classList.add('hidden');}
+
+        function processPayment(e){
+            e.preventDefault();
+            const email = document.getElementById('email-address').value;
+            const amount = cart.reduce((sum, item) => sum + item.price, 0);
+            const publicKey = 'pk_test_xxxxxxxxxxxxxxxxxxxx'; 
+            
+            // Note: Replace with real public key for production
+            if(publicKey.includes('xxxx')) {
+                 const btn = document.getElementById('pay-btn'); const originalText = btn.innerHTML;
+                 btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Processing...';
+                 setTimeout(() => { const simRef = 'REF-' + Math.floor(Math.random() * 1000000); saveOrderToFirebase(simRef); btn.innerHTML = originalText; }, 2000);
+            } else {
+                const handler = PaystackPop.setup({ key: publicKey, email: email, amount: amount * 100, currency: 'GHS', callback: function(response) { saveOrderToFirebase(response.reference); }, onClose: function() { showToast("Payment cancelled", "error"); } });
+                handler.openIframe();
+            }
+        }
+
+        async function saveOrderToFirebase(ref) {
+            const orderId = `ORD-${Math.floor(1000 + Math.random() * 9000)}`;
+            const fname = document.getElementById('full-name').value;
+            const t = cart.reduce((sum, item) => sum + item.price, 0);
+            const itemsList = cart.map(i => i.name).join(", "); 
+
+            if (!db) return;
+
+            try {
+                await db.collection('orders').add({
+                    order_id: orderId,
+                    customer_name: fname,
+                    email: document.getElementById('email-address').value,
+                    phone: document.getElementById('phone-number').value,
+                    items: itemsList, 
+                    total: t,
+                    status: 'Paid',
+                    payment_ref: ref,
+                    created_at: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                closeCheckoutModal(); cart = []; updateCartUI();
+                openModal(`<div class="bg-white dark:bg-wood-900 rounded-2xl p-8 text-center shadow-xl"><div class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl"><i class="fas fa-check"></i></div><h3 class="text-2xl font-bold text-brand-900 dark:text-white mb-2">Order Confirmed!</h3><p class="text-sm text-gray-500 dark:text-gray-300 mb-6">Order ID: <span class="font-mono font-bold text-brand-600 bg-brand-50 px-2 py-1 rounded select-all">${orderId}</span></p><button onclick="closeAllDrawers()" class="bg-brand-600 text-white px-6 py-2 rounded-lg font-bold text-sm">Close</button></div>`);
+            } catch (error) { 
+                console.error("Error adding order: ", error); 
+                showToast("Failed to save order", "error"); 
+            } 
+        }
+
+        function showToast(m,t='success'){const c=document.getElementById('toast-container'),d=document.createElement('div');d.className=`${t==='error'?'bg-red-500':'bg-brand-600'} text-white px-4 py-2 rounded-lg shadow-xl text-xs transform translate-x-full transition-all duration-300`;d.innerHTML=m;c.appendChild(d);setTimeout(()=>d.classList.remove('translate-x-full'),10);setTimeout(()=>{d.classList.add('translate-x-full');setTimeout(()=>d.remove(),300)},3000);}
+        function navigateTo(id){document.getElementById(id).scrollIntoView({behavior:'smooth'});}
+        function filterShops(){ const q=document.getElementById('shop-search').value.toLowerCase(); document.getElementById('shops-list').innerHTML = shops.filter(s=>s.name.toLowerCase().includes(q)||s.loc.toLowerCase().includes(q)).map(s=>`<div class="shop-item p-3 rounded-lg border border-gray-100 dark:border-gray-700 hover:bg-brand-50 dark:hover:bg-wood-800 transition flex justify-between items-center"><div><h4 class="font-bold text-xs text-brand-900 dark:text-white">${s.name}</h4><p class="text-[10px] text-gray-500 dark:text-gray-400">${s.loc}</p></div><a href="tel:${s.phone.split(',')[0]}" class="bg-brand-600 text-white text-[10px] font-bold px-3 py-1.5 rounded">Call</a></div>`).join(''); }
+
+        // --- GLOBAL BINDING ---
+        window.addToCart=addToCart;
+        window.openCheckoutModal=openCheckoutModal;
+        window.processPayment=processPayment;
+        window.trackOrder=trackOrder;
+        window.openTrackingModal=openTrackingModal;
+        window.openModal=openModal;
+        window.closeAllDrawers=closeAllDrawers;
+        window.setProcess=setProcess;
+        window.toggleCart=toggleCart;
+        window.navigateTo=navigateTo;
+        window.openNutritionModal=openNutritionModal;
+        window.openContentModal=openContentModal;
+        window.closeCheckoutModal=closeCheckoutModal;
+        window.openLocationDetails=openLocationDetails;
+        window.openProcessModal=openProcessModal;
+        window.openRetailersModal=openRetailersModal;
+        window.openJobModal=openJobModal;
+        window.submitJobApp=submitJobApp;
+        window.toggleBio=toggleBio;
+        window.filterShops=filterShops;
+        window.openProductModal=openProductModal;
+        window.toggleTimeline=toggleTimeline;
+        window.adjustModalQty=adjustModalQty;
+        window.parallaxHero=parallaxHero;
+        window.selectQuizOption = selectQuizOption;
+        window.nextQuizStep = nextQuizStep;
+        window.prevQuizStep = prevQuizStep;
+        window.calculateQuizResult = calculateQuizResult;
+        window.resetQuiz = resetQuiz;
+        window.handleHero3D = handleHero3D;
+        window.initQuiz = initQuiz;
+        window.openWholesaleModal = openWholesaleModal;
+        window.submitWholesaleApp = submitWholesaleApp;
+        window.openDistributorModal = openDistributorModal;
+        window.renderDistributors = renderDistributors;
+        window.fetchDistributors = fetchDistributors;
+        
+        // --- BASH EXPORTS ---
+        window.toggleBash = toggleBash;
+        window.processBashCommand = processBashCommand;
+    </script>
+</body>
+</html>
