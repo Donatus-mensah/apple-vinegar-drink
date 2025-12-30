@@ -238,7 +238,7 @@
             padding: 0.5rem 1rem;
         }
 
-        /* NEW: Interactive Logo Border */
+        /* Interactive Logo Border */
         .logo-interactive-wrap {
             position: relative;
             padding: 2px;
@@ -260,7 +260,7 @@
             100% { background-position: 200% 50%; }
         }
 
-        /* NEW: Hero Picture Border Frame - UPDATED TO SQUARE */
+        /* Hero Picture Border Frame - UPDATED TO SQUARE */
         .hero-frame-border {
             position: absolute;
             inset: -15px;
@@ -302,9 +302,64 @@
             justify-content: center;
             padding: 0.25rem 0.75rem;
         }
+
+        /* FLY TO CART ANIMATION */
+        .fly-item {
+            position: fixed;
+            z-index: 100;
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 50%;
+            pointer-events: none;
+            transition: all 0.8s cubic-bezier(0.2, 1, 0.3, 1);
+            animation: fly 0.8s forwards;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        @keyframes fly {
+            0% { transform: scale(1) rotate(0deg); opacity: 1; }
+            100% { transform: scale(0.2) rotate(360deg) translate(20px, -20px); opacity: 0; }
+        }
+        
+        /* SCROLL PROGRESS */
+        #scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #9b2c2c, #FFD700);
+            z-index: 100;
+            width: 0%;
+            transition: width 0.1s;
+        }
+
+        /* TYPEWRITER CURSOR */
+        .typewriter-cursor::after {
+            content: '|';
+            animation: blink 1s step-end infinite;
+        }
+        
+        /* CONFETTI */
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            animation: confetti-fall 3s linear forwards;
+            top: -10px;
+            z-index: 9999;
+        }
+        @keyframes confetti-fall {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
     </style>
 </head>
 <body oncontextmenu="return false" class="bg-brand-50 text-wood-900 dark:bg-wood-900 dark:text-gray-100 transition-colors duration-500 font-sans selection:bg-brand-500 selection:text-white leading-snug">
+
+    <!-- Scroll Progress Indicator -->
+    <div id="scroll-progress"></div>
+    <div id="confetti-container" class="fixed inset-0 pointer-events-none z-[100] overflow-hidden"></div>
 
     <div id="toast-container" class="fixed top-24 right-5 z-[60] flex flex-col gap-2 pointer-events-none"></div>
 
@@ -376,7 +431,7 @@
                 
                 <button id="theme-toggle" class="w-9 h-9 rounded-full bg-white/50 dark:bg-black/20 backdrop-blur flex items-center justify-center hover:bg-brand-100 dark:hover:bg-wood-700 transition shadow-sm text-brand-600 dark:text-gold-400 border border-brand-100 dark:border-gray-700"><i class="fas fa-moon dark:hidden"></i><i class="fas fa-sun hidden dark:block"></i></button>
                 
-                <button class="relative w-9 h-9 flex items-center justify-center group" onclick="toggleCart()">
+                <button class="relative w-9 h-9 flex items-center justify-center group" onclick="toggleCart()" id="cart-btn">
                     <div class="absolute inset-0 bg-white/50 dark:bg-black/20 backdrop-blur rounded-full transform group-hover:scale-110 transition-transform border border-brand-100 dark:border-gray-700"></div>
                     <i class="fas fa-bag-shopping text-lg text-brand-600 dark:text-gold-400 relative z-10"></i>
                     <span id="cart-count" class="absolute -top-1 -right-1 bg-gbhpl-green text-white text-[8px] font-bold rounded-full h-3.5 w-3.5 flex items-center justify-center border border-white dark:border-brand-900 shadow-sm transform scale-0 transition-transform duration-200">0</span>
@@ -384,7 +439,7 @@
             </div>
              <div class="lg:hidden flex items-center gap-3">
                 <button id="mobile-theme-toggle" class="w-8 h-8 rounded-full bg-gray-100 dark:bg-wood-800 flex items-center justify-center text-brand-900 dark:text-gold-400"><i class="fas fa-moon dark:hidden"></i><i class="fas fa-sun hidden dark:block"></i></button>
-                 <button class="relative p-2 text-brand-900 dark:text-white" onclick="toggleCart()"><i class="fas fa-bag-shopping text-xl dark:text-gold-400"></i><span id="cart-count-mobile" class="absolute top-0 right-0 bg-gbhpl-green text-white text-[9px] rounded-full h-3.5 w-3.5 flex items-center justify-center transform scale-0 transition-transform">0</span></button>
+                 <button class="relative p-2 text-brand-900 dark:text-white" onclick="toggleCart()" id="cart-btn-mobile"><i class="fas fa-bag-shopping text-xl dark:text-gold-400"></i><span id="cart-count-mobile" class="absolute top-0 right-0 bg-gbhpl-green text-white text-[9px] rounded-full h-3.5 w-3.5 flex items-center justify-center transform scale-0 transition-transform">0</span></button>
                 <button id="mobile-menu-btn" class="text-xl focus:outline-none p-1 text-brand-900 dark:text-white"><i class="fas fa-bars"></i></button>
             </div>
         </div>
@@ -455,7 +510,7 @@
                     </p>
                     
                     <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                        <a href="#quiz-section" class="bg-brand-900 hover:bg-brand-800 dark:bg-gold-500 dark:hover:bg-gold-400 text-white dark:text-brand-900 text-sm font-bold py-4 px-12 rounded-full shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-3">
+                        <a href="#quiz-section" class="magnetic-btn bg-brand-900 hover:bg-brand-800 dark:bg-gold-500 dark:hover:bg-gold-400 text-white dark:text-brand-900 text-sm font-bold py-4 px-12 rounded-full shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-3">
                             Take the Health Quiz <i class="fas fa-magic"></i>
                         </a>
                         <button onclick="openNutritionModal()" class="group bg-white/80 dark:bg-wood-800/80 backdrop-blur-md text-brand-900 dark:text-white text-sm font-bold py-4 px-8 rounded-full shadow-md hover:shadow-lg transition-all border border-gray-200 dark:border-gray-700 flex items-center justify-center gap-2 hover:bg-white dark:hover:bg-wood-700">
@@ -563,9 +618,14 @@
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-10" id="product-grid">
-                <div class="col-span-3 text-center py-10">
-                    <i class="fas fa-spinner fa-spin text-3xl text-brand-600"></i>
-                    <p class="mt-4 text-sm text-gray-500">Loading products from Database...</p>
+                <div class="col-span-3 text-center py-10 animate-pulse">
+                    <!-- Skeleton Loader for Products -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                        <div class="h-[450px] bg-gray-200 dark:bg-wood-900 rounded-[2rem]"></div>
+                        <div class="h-[450px] bg-gray-200 dark:bg-wood-900 rounded-[2rem]"></div>
+                        <div class="h-[450px] bg-gray-200 dark:bg-wood-900 rounded-[2rem]"></div>
+                    </div>
+                    <p class="mt-8 text-sm text-gray-500">Retrieving collection...</p>
                 </div>
             </div>
         </div>
@@ -626,7 +686,8 @@
                                 </div>
                                 <div class="text-5xl font-black text-white/10" id="process-idx-img">1</div>
                             </div>
-                            <p id="process-desc" class="text-gray-300 text-sm leading-relaxed mb-6">We manually select only the ripest, organic apples from the Ayensu orchards. Every apple is tree-picked to ensure maximum sugar content for fermentation.</p>
+                            <!-- Typewriter Effect Container -->
+                            <p id="process-desc" class="text-gray-300 text-sm leading-relaxed mb-6 min-h-[60px] typewriter-cursor">We manually select only the ripest, organic apples from the Ayensu orchards. Every apple is tree-picked to ensure maximum sugar content for fermentation.</p>
                             
                             <div class="grid grid-cols-2 gap-4 border-t border-white/20 pt-4" id="process-specs">
                                 <!-- Specs injected by JS -->
@@ -696,7 +757,11 @@
                         
                         <!-- Dynamic Shops List injected here -->
                         <div id="retail-partners-grid" class="grid grid-cols-2 gap-6 flex-1">
-                            <div class="col-span-2 text-center py-4 text-gray-400"><i class="fas fa-spinner fa-spin"></i> Loading locations...</div>
+                            <!-- Skeleton loader -->
+                            <div class="col-span-2 space-y-4">
+                                <div class="h-24 bg-gray-100 dark:bg-wood-800 rounded-2xl animate-pulse"></div>
+                                <div class="h-24 bg-gray-100 dark:bg-wood-800 rounded-2xl animate-pulse"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -809,9 +874,9 @@
                     </div>
                     <p class="text-sm text-gray-400 leading-relaxed mb-6">Pioneering organic wellness in Ghana through architectural precision.</p>
                     <div class="flex gap-4">
-                        <a href="#" class="w-10 h-10 rounded-full bg-gray-900 flex items-center justify-center hover:bg-brand-600 transition-all hover:-translate-y-1"><i class="fab fa-facebook-f text-sm"></i></a>
-                        <a href="#" class="w-10 h-10 rounded-full bg-gray-900 flex items-center justify-center hover:bg-brand-600 transition-all hover:-translate-y-1"><i class="fab fa-twitter text-sm"></i></a>
-                        <a href="#" class="w-10 h-10 rounded-full bg-gray-900 flex items-center justify-center hover:bg-brand-600 transition-all hover:-translate-y-1"><i class="fab fa-instagram text-sm"></i></a>
+                        <a href="https://facebook.com/gbhpl_official" class="w-10 h-10 rounded-full bg-gray-900 flex items-center justify-center hover:bg-brand-600 transition-all hover:-translate-y-1"><i class="fab fa-facebook-f text-sm"></i></a>
+                        <a href="https://twitter.com/gbhpl_official" class="w-10 h-10 rounded-full bg-gray-900 flex items-center justify-center hover:bg-brand-600 transition-all hover:-translate-y-1"><i class="fab fa-twitter text-sm"></i></a>
+                        <a href="https://instagram.com/gbhpl_official" class="w-10 h-10 rounded-full bg-gray-900 flex items-center justify-center hover:bg-brand-600 transition-all hover:-translate-y-1"><i class="fab fa-instagram text-sm"></i></a>
                     </div>
                 </div>
                 <div>
@@ -946,7 +1011,8 @@
         ];
 
         let cart=[], currentProcess=1;
-        
+        let typewriterTimeout;
+
         // UPDATED PROCESS STEPS BASED ON PDF DATA
         let processSteps=[
             { title:"Selective Harvesting", tag: "Phase 01", text:"We manually select only the ripest, organic apples from the Ayensu orchards. Every apple is tree-picked.", img:"", specs: [ {label: "Standard", val: "Organic Grade A"}, {label: "Region", val: "Ayensu Valley"}, {label: "Method", val: "Hand-picked"}, {label: "Quality", val: "High Brix Lvl"} ] },
@@ -968,6 +1034,13 @@
             window.addEventListener('scroll', () => {
                 const nav = document.getElementById('navbar');
                 const backToTop = document.getElementById('back-to-top');
+                
+                // Scroll Progress
+                const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+                const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                const scrolled = (winScroll / height) * 100;
+                document.getElementById("scroll-progress").style.width = scrolled + "%";
+
                 if(window.scrollY > 50) {
                     nav.classList.remove('nav-transparent', 'h-20');
                     nav.classList.add('glass-nav', 'h-16', 'shadow-sm');
@@ -979,6 +1052,20 @@
                 }
             });
             
+            // Magnetic Button Effect
+            const magneticBtns = document.querySelectorAll('.magnetic-btn');
+            magneticBtns.forEach(btn => {
+                btn.addEventListener('mousemove', (e) => {
+                    const rect = btn.getBoundingClientRect();
+                    const x = e.clientX - rect.left - rect.width / 2;
+                    const y = e.clientY - rect.top - rect.height / 2;
+                    btn.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px)`;
+                });
+                btn.addEventListener('mouseleave', () => {
+                    btn.style.transform = 'translate(0px, 0px)';
+                });
+            });
+
             const toggleTheme=()=>{document.documentElement.classList.toggle('dark');localStorage.setItem('theme',document.documentElement.classList.contains('dark')?'dark':'light');};
             document.getElementById('theme-toggle').addEventListener('click',toggleTheme);
             document.getElementById('mobile-theme-toggle').addEventListener('click',toggleTheme);
@@ -1008,8 +1095,9 @@
             });
         });
         
-        // --- DATABASE FETCH FUNCTIONS ---
-        
+        // --- DATA FETCH & UTIL FUNCTIONS ---
+        // (Similar to previous implementation but enhanced where necessary)
+
         async function fetchSiteContent() {
             if(!db) return;
             try {
@@ -1020,99 +1108,54 @@
                         siteContent[data.key] = data.value;
                     });
                     
-                    // Handle Hero Image
-                    const heroImg = document.getElementById('img-hero');
-                    if(siteContent['img_hero'] && heroImg) {
-                        heroImg.onload = function() {
-                            this.classList.remove('opacity-0');
-                        };
-                        heroImg.src = siteContent['img_hero'];
-                    }
-
-                    // Handle CEO Image
-                    const ceoImg = document.getElementById('img-ceo');
-                    const ceoContainer = document.getElementById('ceo-image-container');
-                    if(siteContent['img_ceo'] && ceoImg) {
-                        ceoImg.onload = function() {
-                            this.classList.remove('opacity-0');
-                            if(ceoContainer) ceoContainer.classList.remove('image-loading');
-                        };
-                        ceoImg.src = siteContent['img_ceo'];
-                    } else {
-                        // Fallback
-                        const placeholderCEO = 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=600&q=80';
-                        if(ceoImg) {
-                            ceoImg.onload = function() {
-                                this.classList.remove('opacity-0');
-                                if(ceoContainer) ceoContainer.classList.remove('image-loading');
+                    // Handle Images (Hero, CEO, Factory, Logo, Favicon)
+                    const handleImg = (id, key) => {
+                        const el = document.getElementById(id);
+                        if(el && siteContent[key]) {
+                            el.onload = () => {
+                                el.classList.remove('opacity-0');
+                                if(el.parentElement.classList.contains('image-loading')) el.parentElement.classList.remove('image-loading');
                             };
-                            ceoImg.src = placeholderCEO;
+                            el.src = siteContent[key];
                         }
-                    }
+                    };
+
+                    handleImg('img-hero', 'img_hero');
+                    handleImg('img-ceo', 'img_ceo');
+                    handleImg('img-factory', 'img_factory');
                     
-                    // Handle Factory Image
-                    if(siteContent['img_factory']) document.getElementById('img-factory').src = siteContent['img_factory'];
+                    if(siteContent['img_favicon']) document.getElementById('favicon-link').href = siteContent['img_favicon'];
                     
-                    // Handle Favicon
-                    if(siteContent['img_favicon']) {
-                        const faviconLink = document.getElementById('favicon-link');
-                        faviconLink.href = siteContent['img_favicon'];
-                    }
-                    
-                    // Load navbar/footer logo
-                    const logoSrc = siteContent['img_logo'];
-                    if (logoSrc) {
+                    if (siteContent['img_logo']) {
                         const navLogo = document.getElementById('nav-logo');
                         const footerLogo = document.getElementById('footer-logo');
-                        if (navLogo) { navLogo.src = logoSrc; navLogo.onload = () => navLogo.classList.remove('opacity-0'); document.getElementById('nav-logo-fallback').style.display='none'; }
-                        if (footerLogo) { footerLogo.src = logoSrc; footerLogo.onload = () => footerLogo.classList.remove('opacity-0'); document.getElementById('footer-logo-fallback').style.display='none'; }
+                        if (navLogo) { navLogo.src = siteContent['img_logo']; navLogo.onload = () => navLogo.classList.remove('opacity-0'); document.getElementById('nav-logo-fallback').style.display='none'; }
+                        if (footerLogo) { footerLogo.src = siteContent['img_logo']; footerLogo.onload = () => footerLogo.classList.remove('opacity-0'); document.getElementById('footer-logo-fallback').style.display='none'; }
                     }
 
-                    // Preload Process Images for smoother transitions
+                    // Preload Process Images
                     [1, 2, 3, 4].forEach(num => {
                         const url = siteContent[`img_process_${num}`];
-                        if (url) {
-                            processSteps[num-1].img = url;
-                            // Actual preloading logic
-                            const preload = new Image();
-                            preload.src = url;
-                        }
+                        if (url) { processSteps[num-1].img = url; (new Image()).src = url; }
                     });
-                    
-                    // Refresh current process view to show image now that DB is loaded
                     setProcess(currentProcess);
                 }
-            } catch (error) {
-                console.error("Error fetching site content:", error);
-            }
+            } catch (error) { console.error("Error fetching site content:", error); }
         }
 
         async function fetchProducts() {
             if(!db) return;
             try {
-                // Sorting by 'id' as suggested in PDF
                 const snapshot = await db.collection('products').orderBy('id', 'asc').get();
                 if(!snapshot.empty) {
                     products = [];
                     snapshot.forEach(doc => {
                         const p = doc.data();
-                        products.push({
-                            id: p.id,
-                            name: p.name,
-                            price: parseFloat(p.price),
-                            image: p.image_url,
-                            tag: p.tag || 'Popular',
-                            desc: p.description || '',
-                            longDesc: p.long_description || p.description,
-                            shelfLife: p.shelf_life || 'N/A',
-                            available: p.available
-                        });
+                        products.push({ id: p.id, name: p.name, price: parseFloat(p.price), image: p.image_url, tag: p.tag || 'Popular', desc: p.description || '', longDesc: p.long_description || p.description, shelfLife: p.shelf_life || 'N/A', available: p.available });
                     });
                     renderProducts();
                 }
-            } catch (error) {
-                console.error("Error fetching products:", error);
-            }
+            } catch (error) { console.error("Error fetching products:", error); }
         }
 
         async function fetchDistributors() {
@@ -1123,28 +1166,12 @@
                     distributorsData = [];
                     snapshot.forEach(doc => {
                         const dist = doc.data();
-                        // Handle array field logic
                         const galleryImages = (dist.gallery_urls && dist.gallery_urls.length > 0) ? dist.gallery_urls : [dist.image_url];
-                        
-                        distributorsData.push({
-                            id: doc.id,
-                            name: dist.name,
-                            role: dist.role,
-                            location: dist.location,
-                            image: dist.image_url,
-                            gallery: galleryImages,
-                            bio: dist.bio || '',
-                            recommendation: {
-                                author: dist.recommendation_author || 'GBHPL Team',
-                                text: dist.recommendation_text || 'Trusted partner providing quality service.'
-                            }
-                        });
+                        distributorsData.push({ id: doc.id, name: dist.name, role: dist.role, location: dist.location, image: dist.image_url, gallery: galleryImages, bio: dist.bio || '', recommendation: { author: dist.recommendation_author || 'GBHPL Team', text: dist.recommendation_text || 'Trusted partner providing quality service.' } });
                     });
                     renderDistributors();
                 }
-            } catch (err) {
-                console.error("Error fetching distributors:", err);
-            }
+            } catch (err) { console.error("Error fetching distributors:", err); }
         }
 
         async function fetchRetailPartners() {
@@ -1155,21 +1182,13 @@
                     shops = [];
                     snapshot.forEach(doc => {
                         const shop = doc.data();
-                        shops.push({
-                            name: shop.name,
-                            phone: shop.phone || 'Not available',
-                            loc: shop.location,
-                            type: shop.type
-                        });
+                        shops.push({ name: shop.name, phone: shop.phone || 'Not available', loc: shop.location, type: shop.type });
                     });
                     shops.sort((a, b) => a.name.localeCompare(b.name));
                     updateRetailPartnersUI();
                 }
-                // Also fetch distributors as part of initialization
                 await fetchDistributors();
-            } catch (err) {
-                console.error("Error fetching retail partners:", err);
-            }
+            } catch (err) { console.error("Error fetching retail partners:", err); }
         }
         
         function updateRetailPartnersUI() {
@@ -1188,20 +1207,13 @@
         function toggleBash() {
             const t = document.getElementById('bash-terminal-container');
             const i = document.getElementById('bash-input');
-            if (t.classList.contains('hidden')) {
-                t.classList.remove('hidden');
-                i.focus();
-            } else {
-                t.classList.add('hidden');
-            }
+            if (t.classList.contains('hidden')) { t.classList.remove('hidden'); i.focus(); } else { t.classList.add('hidden'); }
         }
-
         function processBashCommand(cmd) {
             const output = document.getElementById('bash-output');
             const cleanCmd = cmd.trim().toLowerCase();
             output.innerHTML += `<div class="text-green-500 font-bold">visitor@gbhpl:~$ ${cmd}</div>`;
             let response = '';
-            
             switch(cleanCmd.split(' ')[0]) {
                 case 'help': response = `Available commands:\n  help - Show this message\n  ls - List sections\n  cat [sec] - Go to section\n  date - Server time\n  shop - Open products\n  exit - Close`; break;
                 case 'ls': response = 'hero history quiz shop production benefits locations partners careers contact'; break;
@@ -1223,9 +1235,8 @@
             output.scrollTop = output.scrollHeight;
         }
 
-        // Smooth Animation Variables
+        // --- 3D & ANIMATION LOGIC ---
         let targetRotateX = 0, targetRotateY = 0, currentRotateX = 0, currentRotateY = 0;
-
         function handleHero3D(e) {
             const container = document.querySelector('.hero-3d-container');
             if(window.innerWidth > 1024 && container) {
@@ -1240,9 +1251,7 @@
                 }
             }
         }
-        
         function resetHero3D() { targetRotateX = 0; targetRotateY = 0; const r = document.getElementById('hero-reflection'); if(r) r.style.opacity = 0; }
-        
         function updateHeroAnimation() {
             currentRotateX += (targetRotateX - currentRotateX) * 0.1;
             currentRotateY += (targetRotateY - currentRotateY) * 0.1;
@@ -1252,6 +1261,71 @@
             if (shadow) shadow.style.transform = `translate(-50%, 0) translateX(${-currentRotateY * 1.5}px) scale(${1 - Math.abs(currentRotateX)/100})`;
             requestAnimationFrame(updateHeroAnimation);
         }
+
+        function typeWriter(element, text, speed = 30) {
+            if(typewriterTimeout) clearTimeout(typewriterTimeout);
+            element.innerHTML = '';
+            let i = 0;
+            function type() {
+                if (i < text.length) {
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                    typewriterTimeout = setTimeout(type, speed);
+                }
+            }
+            type();
+        }
+
+        function fireConfetti() {
+            const colors = ['#9b2c2c', '#FFD700', '#2E5902', '#ffffff'];
+            const container = document.getElementById('confetti-container');
+            for (let i = 0; i < 50; i++) {
+                const conf = document.createElement('div');
+                conf.classList.add('confetti');
+                conf.style.left = Math.random() * 100 + 'vw';
+                conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                conf.style.animationDuration = (Math.random() * 2 + 1.5) + 's';
+                container.appendChild(conf);
+                setTimeout(() => conf.remove(), 3000);
+            }
+        }
+
+        function flyToCart(btnElement, imgUrl) {
+            if(!btnElement) return;
+            const cartBtn = window.innerWidth < 1024 ? document.getElementById('cart-btn-mobile') : document.getElementById('cart-btn');
+            if(!cartBtn) return;
+            
+            const item = document.createElement('img');
+            item.src = imgUrl || 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=100&q=80'; // Fallback
+            item.classList.add('fly-item');
+            
+            const startRect = btnElement.getBoundingClientRect();
+            const endRect = cartBtn.getBoundingClientRect();
+            
+            item.style.top = startRect.top + 'px';
+            item.style.left = startRect.left + 'px';
+            
+            document.body.appendChild(item);
+            
+            // Trigger animation via CSS variable calculation if needed, or stick to CSS keyframes logic
+            // CSS Animation handles movement via translate, but we need dynamic values.
+            // Simplified approach: Set CSS var or just use element.animate for dynamic coords
+            
+            const deltaX = endRect.left - startRect.left;
+            const deltaY = endRect.top - startRect.top;
+            
+            item.animate([
+                { transform: 'translate(0,0) scale(1) rotate(0deg)', opacity: 1 },
+                { transform: `translate(${deltaX}px, ${deltaY}px) scale(0.2) rotate(360deg)`, opacity: 0.5 }
+            ], {
+                duration: 800,
+                easing: 'cubic-bezier(0.2, 1, 0.3, 1)',
+                fill: 'forwards'
+            }).onfinish = () => {
+                item.remove();
+            };
+        }
+
 
         // --- QUIZ FUNCTIONS ---
         function shuffleArray(array) {
@@ -1332,11 +1406,12 @@
                 document.getElementById('rec-product-name').innerText = product.name;
                 document.getElementById('rec-product-desc').innerText = product.desc;
                 document.getElementById('rec-product-price').innerText = `GH₵${product.price.toFixed(2)} x ${recommendedQty}`;
-                document.getElementById('rec-add-btn').onclick = () => { addToCart(product.id, recommendedQty); showToast('Recommendation added to cart!'); };
+                document.getElementById('rec-add-btn').onclick = function() { addToCart(product.id, recommendedQty, this); showToast('Recommendation added to cart!'); };
             }
             const resDiv = document.getElementById('quiz-result');
             resDiv.classList.remove('hidden'); resDiv.classList.add('animate-fade-in-up');
             document.getElementById('quiz-progress').style.width = '100%';
+            fireConfetti();
         }
 
         function renderProducts(){ 
@@ -1349,7 +1424,7 @@
                         <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 pointer-events-none"></div>
                         <img src="${p.image}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
                         <div class="overlay-actions absolute inset-0 bg-black/40 backdrop-blur-[4px] flex flex-col items-center justify-center gap-4 p-6 transition-transform duration-400 translate-y-full">
-                            <button onclick="addToCart(${p.id})" class="bg-white text-brand-900 font-bold py-3.5 px-6 rounded-xl w-full shadow-lg hover:bg-brand-50 transition-colors transform hover:-translate-y-1 text-xs uppercase tracking-widest flex items-center justify-center gap-2"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+                            <button onclick="addToCart(${p.id}, 1, this)" class="bg-white text-brand-900 font-bold py-3.5 px-6 rounded-xl w-full shadow-lg hover:bg-brand-50 transition-colors transform hover:-translate-y-1 text-xs uppercase tracking-widest flex items-center justify-center gap-2"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
                             <button onclick="openProductModal(${p.id})" class="bg-brand-900 text-white font-bold py-3.5 px-6 rounded-xl w-full shadow-lg hover:bg-brand-800 transition-colors transform hover:-translate-y-1 text-xs uppercase tracking-widest flex items-center justify-center gap-2"><i class="fas fa-eye"></i> Quick View</button>
                         </div>
                     </div>
@@ -1418,39 +1493,26 @@
             
             // Text updates
             document.getElementById('process-title').innerText = s.title;
-            document.getElementById('process-desc').innerText = s.text;
+            const descEl = document.getElementById('process-desc');
+            typeWriter(descEl, s.text); // Use Typewriter Effect
+            
             document.getElementById('process-tag').innerText = s.tag;
             document.getElementById('process-idx-img').innerText = idx;
             document.getElementById('process-specs').innerHTML = s.specs.map(sp => `<div class="flex flex-col"><span class="text-[9px] text-gray-400 dark:text-gray-500 uppercase tracking-widest font-bold">${sp.label}</span><span class="font-mono text-sm font-bold text-brand-800 dark:text-gray-200 mt-1">${sp.val}</span></div>`).join('');
             
-            // Optimized Image Loading: Only fade if source changes and is valid
+            // Optimized Image Loading
             const newSrc = s.img || '';
-            // Only update if src is different and newSrc is valid (not empty)
             if (newSrc && img.src !== newSrc) {
                 const contentWrapper = document.getElementById('process-content-wrapper');
-                // Trigger fade out
                 if(contentWrapper) contentWrapper.classList.add('opacity-0', 'scale-95');
-                
-                // Wait for fade out to complete before swapping source
                 setTimeout(() => {
                     img.src = newSrc;
-                    // When new image is ready, fade in
-                    img.onload = () => {
-                        if(contentWrapper) contentWrapper.classList.remove('opacity-0', 'scale-95');
-                    };
-                    // Handle cached images that load instantly
-                    if (img.complete) {
-                        if(contentWrapper) contentWrapper.classList.remove('opacity-0', 'scale-95');
-                    }
+                    img.onload = () => { if(contentWrapper) contentWrapper.classList.remove('opacity-0', 'scale-95'); };
+                    if (img.complete && contentWrapper) contentWrapper.classList.remove('opacity-0', 'scale-95');
                 }, 300);
-            } else if (!newSrc) {
-                // If no image, maybe show a fallback or just keep hidden
-                const contentWrapper = document.getElementById('process-content-wrapper');
-                if(contentWrapper) contentWrapper.classList.remove('opacity-0', 'scale-95'); // Ensure text is visible even if img fails
-            } else {
-                 // Text changed but image is same (rare) -> ensure visible
-                const contentWrapper = document.getElementById('process-content-wrapper');
-                if(contentWrapper) contentWrapper.classList.remove('opacity-0', 'scale-95');
+            } else if (img.parentElement) {
+                 const contentWrapper = document.getElementById('process-content-wrapper');
+                 if(contentWrapper) contentWrapper.classList.remove('opacity-0', 'scale-95');
             }
             
             // Step Indicators logic
@@ -1516,7 +1578,7 @@
                     <div class="mt-auto space-y-6">
                         <div class="flex items-center justify-between bg-gray-50 dark:bg-wood-800 p-4 rounded-2xl border border-gray-100 dark:border-gray-700"><span class="text-sm font-bold text-gray-500 uppercase tracking-wide">Quantity</span><div class="flex items-center gap-4 bg-white dark:bg-wood-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-600 px-4 py-2"><button onclick="adjustModalQty(-1, ${p.price})" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-brand-600 hover:bg-gray-100 dark:hover:bg-wood-800 rounded-full transition"><i class="fas fa-minus text-xs"></i></button><span id="modal-qty" class="font-mono font-bold text-lg w-6 text-center">1</span><button onclick="adjustModalQty(1, ${p.price})" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-brand-600 hover:bg-gray-100 dark:hover:bg-wood-800 rounded-full transition"><i class="fas fa-plus text-xs"></i></button></div></div>
                         <div class="flex items-center justify-between text-[10px] text-gray-400 dark:text-gray-500 font-mono uppercase tracking-widest mb-2"><span>Shelf Life: ${p.shelfLife}</span><span>SKU: GB-${p.id}00${p.id}</span></div>
-                        <button onclick="addToCart(${p.id}, modalQuantity); closeAllDrawers()" class="w-full bg-gradient-to-r from-brand-600 to-brand-700 hover:from-brand-500 hover:to-brand-600 dark:from-gold-500 dark:to-gold-600 text-white dark:text-brand-900 py-4 rounded-xl font-bold text-base shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all flex items-center justify-center gap-3 group"><span>Add to Basket</span><i class="fas fa-shopping-bag group-hover:scale-110 transition-transform"></i></button>
+                        <button onclick="addToCart(${p.id}, modalQuantity, this); closeAllDrawers()" class="w-full bg-gradient-to-r from-brand-600 to-brand-700 hover:from-brand-500 hover:to-brand-600 dark:from-gold-500 dark:to-gold-600 text-white dark:text-brand-900 py-4 rounded-xl font-bold text-base shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all flex items-center justify-center gap-3 group"><span>Add to Basket</span><i class="fas fa-shopping-bag group-hover:scale-110 transition-transform"></i></button>
                     </div>
                 </div>
             </div>`); 
@@ -1553,9 +1615,7 @@
                         const snapshot = await storageRef.put(file);
                         resumeUrl = await snapshot.ref.getDownloadURL();
                     }
-                    await db.collection('applications').add({
-                        name: `${fname} ${lname}`, contact: email, type: `Job: ${role}`, detail: `Resume: ${resumeName}`, status: 'Pending', resume_url: resumeUrl, created_at: firebase.firestore.FieldValue.serverTimestamp()
-                    });
+                    await db.collection('applications').add({ name: `${fname} ${lname}`, contact: email, type: `Job: ${role}`, detail: `Resume: ${resumeName}`, status: 'Pending', resume_url: resumeUrl, created_at: firebase.firestore.FieldValue.serverTimestamp() });
                     showToast('Application Sent Successfully!'); closeAllDrawers();
                 } catch (error) { console.error("Submission Error:", error); showToast(`Error: ${error.message}`, 'error'); } finally { btn.innerHTML = originalText; btn.disabled = false; }
             }
@@ -1649,11 +1709,13 @@
         }
 
         // --- CHECKOUT LOGIC ---
-        function addToCart(id, qty = 1){ 
+        function addToCart(id, qty = 1, triggerElement = null){ 
             const prod = products.find(x=>x.id===id); 
             if(prod) { 
                 for(let i = 0; i < qty; i++) { cart.push(prod); }
-                updateCartUI(); showToast(`Added ${qty} item(s) to cart`); 
+                updateCartUI(); 
+                showToast(`Added ${qty} item(s) to cart`); 
+                if(triggerElement) flyToCart(triggerElement, prod.image);
             } 
         }
         function updateCartUI(){
@@ -1675,7 +1737,6 @@
             const amount = cart.reduce((sum, item) => sum + item.price, 0);
             const publicKey = 'pk_test_xxxxxxxxxxxxxxxxxxxx'; 
             
-            // Note: Replace with real public key for production
             if(publicKey.includes('xxxx')) {
                  const btn = document.getElementById('pay-btn'); const originalText = btn.innerHTML;
                  btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Processing...';
@@ -1709,6 +1770,7 @@
 
                 closeCheckoutModal(); cart = []; updateCartUI();
                 openModal(`<div class="bg-white dark:bg-wood-900 rounded-2xl p-8 text-center shadow-xl"><div class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl"><i class="fas fa-check"></i></div><h3 class="text-2xl font-bold text-brand-900 dark:text-white mb-2">Order Confirmed!</h3><p class="text-sm text-gray-500 dark:text-gray-300 mb-6">Order ID: <span class="font-mono font-bold text-brand-600 bg-brand-50 px-2 py-1 rounded select-all">${orderId}</span></p><button onclick="closeAllDrawers()" class="bg-brand-600 text-white px-6 py-2 rounded-lg font-bold text-sm">Close</button></div>`);
+                fireConfetti();
             } catch (error) { 
                 console.error("Error adding order: ", error); 
                 showToast("Failed to save order", "error"); 
@@ -1743,12 +1805,10 @@
         window.openProductModal=openProductModal;
         window.toggleTimeline=toggleTimeline;
         window.adjustModalQty=adjustModalQty;
-        window.parallaxHero=parallaxHero;
         window.selectQuizOption = selectQuizOption;
         window.nextQuizStep = nextQuizStep;
         window.prevQuizStep = prevQuizStep;
         window.calculateQuizResult = calculateQuizResult;
-        window.resetQuiz = resetQuiz;
         window.handleHero3D = handleHero3D;
         window.initQuiz = initQuiz;
         window.openWholesaleModal = openWholesaleModal;
